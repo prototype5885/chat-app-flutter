@@ -1,0 +1,135 @@
+import 'package:flutter/material.dart';
+
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _firstPasswordController =
+      TextEditingController();
+  final TextEditingController _secondPasswordController =
+      TextEditingController();
+
+  // bool _passwordsMatch = true;
+  String _errorMessages = 'error1\nerror2';
+
+  @override
+  void initState() {
+    super.initState();
+    // _firstPasswordController.addListener(_comparePasswords);
+    // _secondPasswordController.addListener(_comparePasswords);
+  }
+
+  void _register() {
+    String email = _emailController.text;
+    String firstPassword = _firstPasswordController.text;
+    String secondPassword = _secondPasswordController.text;
+  }
+
+  // void _comparePasswords() {
+  //   print('First password: ${_firstPasswordController.text}');
+  //   print('Second password: ${_secondPasswordController.text}');
+  //   setState(() {
+  //     _passwordsMatch =
+  //         _firstPasswordController.text == _secondPasswordController.text;
+  //   });
+  // }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _firstPasswordController.dispose();
+    _secondPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Register')),
+      body: Center(
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 450),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  const Text(
+                    'Register',
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 32.0),
+
+                  TextField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      hintText: 'Enter your email address',
+                      prefixIcon: Icon(Icons.email),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16.0),
+
+                  TextField(
+                    controller: _firstPasswordController,
+                    obscureText: false,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                      hintText: 'Enter your password',
+                      prefixIcon: Icon(Icons.lock),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16.0),
+
+                  TextField(
+                    controller: _secondPasswordController,
+                    obscureText: false,
+                    decoration: const InputDecoration(
+                      labelText: 'Password again',
+                      hintText: 'Enter your password again',
+                      prefixIcon: Icon(Icons.lock),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16.0),
+
+                  Text(_errorMessages, style: TextStyle(color: Colors.red)),
+
+                  const SizedBox(height: 16.0),
+
+                  ElevatedButton(
+                    onPressed: _register,
+                    child: const Text(
+                      'Register',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
