@@ -9,5 +9,5 @@ const String serverOfflineText = 'Server is offline';
 final DioClient dioClient = DioClient();
 
 final String backendAddress = !kIsWeb && Platform.isAndroid
-    ? "http://10.0.2.2:5083"
-    : 'http://127.0.0.1:5083';
+    ? "http://10.0.2.2:3000"
+    : 'http://127.0.0.1:3000';
