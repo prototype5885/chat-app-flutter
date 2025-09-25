@@ -1,0 +1,2 @@
+String currentChannel = "";
+String currentServer = "";

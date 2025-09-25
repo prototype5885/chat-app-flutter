@@ -26,3 +26,19 @@
 //     return 'UserModel(id: $id, displayName: $displayName, picture: $picture)';
 //   }
 // }
+
+class ServerModel {
+  final String id;
+  final String ownerID;
+  final String name;
+  final String picture;
+  final String banner;
+
+  const ServerModel({
+    required this.id,
+    required this.ownerID,
+    required this.name,
+    required this.picture,
+    required this.banner,
+  });
+}
