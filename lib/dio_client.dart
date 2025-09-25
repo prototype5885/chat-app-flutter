@@ -12,8 +12,8 @@ class DioClient {
 
   Future<void> init() async {
     dio.options.baseUrl = backendAddress;
-    dio.options.connectTimeout = const Duration(seconds: 3);
-    dio.options.receiveTimeout = const Duration(seconds: 3);
+    dio.options.connectTimeout = const Duration(seconds: 10);
+    dio.options.receiveTimeout = const Duration(seconds: 10);
 
     if (!kIsWeb) {
       final directory = await getApplicationDocumentsDirectory();

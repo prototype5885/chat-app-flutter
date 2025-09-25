@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 const Color _discordBlue = Color(0xff5865F2);
 
