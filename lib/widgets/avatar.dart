@@ -18,26 +18,32 @@ class Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: pressed,
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black),
-        child: ClipOval(
-          child: pic.isNotEmpty
-              ? Image.network(
-                  '$backendAddress/cdn/avatars/$pic',
-                  fit: BoxFit.cover,
-                  cacheWidth: optimizeImageCache(size, context),
-                  cacheHeight: optimizeImageCache(size, context),
-                  width: size,
-                  height: size,
-                  errorBuilder: (context, error, stackTrace) {
-                    return _noPicture();
-                  },
-                )
-              : _noPicture(),
+    return Center(
+      child: GestureDetector(
+        onTap: pressed,
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: ClipOval(
+            child: SizedBox(
+              width: size,
+              height: size,
+              child: ClipOval(
+                child: pic.isNotEmpty
+                    ? Image.network(
+                        '$backendAddress/cdn/avatars/$pic',
+                        fit: BoxFit.cover,
+                        cacheWidth: optimizeImageCache(size, context),
+                        cacheHeight: optimizeImageCache(size, context),
+                        width: size,
+                        height: size,
+                        errorBuilder: (context, error, stackTrace) {
+                          return _noPicture();
+                        },
+                      )
+                    : _noPicture(),
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -53,8 +59,8 @@ class Avatar extends StatelessWidget {
         name[0].toUpperCase(),
         style: TextStyle(
           color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: size / 2,
+          fontWeight: FontWeight.normal,
+          fontSize: size / 3,
         ),
       ),
     );
