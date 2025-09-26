@@ -1,14 +1,14 @@
 import 'package:chat_app_flutter/widgets/server_list.dart';
 import 'package:flutter/material.dart';
 
-class MobileHome extends StatefulWidget {
-  const MobileHome({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key});
 
   @override
-  State<MobileHome> createState() => _MobileHomeState();
+  State<Home> createState() => _HomeState();
 }
 
-class _MobileHomeState extends State<MobileHome> {
+class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();

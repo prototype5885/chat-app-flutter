@@ -1,9 +1,10 @@
 import 'package:chat_app_flutter/globals.dart';
-import 'package:chat_app_flutter/mobile_pages/chat.dart';
 import 'package:chat_app_flutter/pages/login.dart';
 import 'package:chat_app_flutter/pages/register.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
+import 'chat.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});

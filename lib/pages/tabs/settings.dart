@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 
 import '../../globals.dart';
 
-class MobileSettings extends StatefulWidget {
+class Settings extends StatefulWidget {
   final bool isDemo;
 
-  const MobileSettings({super.key, required this.isDemo});
+  const Settings({super.key, required this.isDemo});
 
   @override
-  State<MobileSettings> createState() => _MobileSettingsState();
+  State<Settings> createState() => _SettingsState();
 }
 
-class _MobileSettingsState extends State<MobileSettings> {
+class _SettingsState extends State<Settings> {
   String _displayName = '';
   String _profilePic = '';
 

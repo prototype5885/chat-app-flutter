@@ -1,4 +1,4 @@
-import 'package:chat_app_flutter/mobile_pages/tabs/home.dart';
+import 'package:chat_app_flutter/pages/tabs/home.dart';
 import 'package:flutter/material.dart';
 import 'tabs/settings.dart';
 
@@ -33,9 +33,9 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> widgetOptions = <Widget>[
-      MobileHome(),
+      Home(),
       Text('Notifications'),
-      MobileSettings(isDemo: widget.isDemo),
+      Settings(isDemo: widget.isDemo),
     ];
 
     return Scaffold(
