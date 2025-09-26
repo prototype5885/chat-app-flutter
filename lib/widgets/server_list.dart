@@ -40,18 +40,12 @@ class _ServerListState extends State<ServerList> {
     super.dispose();
   }
 
-  bool isServerSelected(String serverID) {
-    return serverID == state.currentServer;
-  }
-
   void selectServer(String serverID) {
     if (serverList.isNotEmpty) {
       ServerModel server = serverList.firstWhere(
         (server) => server.id == serverID,
       );
-      setState(() {
-        state.currentServer = server.id;
-      });
+      state.currentServer.value = server.id;
     }
   }
 
@@ -77,7 +71,7 @@ class _ServerListState extends State<ServerList> {
                   id: server.id,
                   name: server.name,
                   pic: server.picture,
-                  selected: isServerSelected(server.id),
+                  selected: server.id == state.currentServer.value,
                   onClicked: selectServer,
                 );
               },

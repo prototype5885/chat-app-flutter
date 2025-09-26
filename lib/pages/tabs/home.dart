@@ -1,5 +1,6 @@
 import 'package:chat_app_flutter/widgets/server_list.dart';
 import 'package:flutter/material.dart';
+import 'package:chat_app_flutter/state.dart' as state;
 
 class Home extends StatefulWidget {
   final bool isDemo;
@@ -29,7 +30,12 @@ class _HomeState extends State<Home> {
           ServerList(isDemo: widget.isDemo),
           Expanded(
             child: Center(
-              child: Text('stuff', style: TextStyle(color: Colors.white)),
+              child: ValueListenableBuilder(
+                valueListenable: state.currentServer,
+                builder: (context, value, child) {
+                  return Text(value, style: TextStyle(color: Colors.white));
+                },
+              ),
             ),
           ),
         ],
