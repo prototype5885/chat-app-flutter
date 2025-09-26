@@ -2,7 +2,9 @@ import 'package:chat_app_flutter/widgets/server_list.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final bool isDemo;
+
+  const Home({super.key, required this.isDemo});
 
   @override
   State<Home> createState() => _HomeState();
@@ -24,7 +26,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: Row(
         children: [
-          ServerList(),
+          ServerList(isDemo: widget.isDemo),
           Expanded(
             child: Center(
               child: Text('stuff', style: TextStyle(color: Colors.white)),

@@ -5,26 +5,33 @@ import 'package:chat_app_flutter/widgets/server_base.dart';
 import 'package:flutter/material.dart';
 
 class ServerList extends StatefulWidget {
-  const ServerList({super.key});
+  final bool isDemo;
+
+  const ServerList({super.key, required this.isDemo});
 
   @override
   State<ServerList> createState() => _ServerListState();
 }
 
 class _ServerListState extends State<ServerList> {
-  List<ServerModel> serverList = List.generate(50, (index) {
-    final serverNumber = index + 1;
-    return ServerModel(
-      id: serverNumber.toString(),
-      ownerID: '0',
-      name: serverNumber.toString(),
-      picture: '',
-      banner: '',
-    );
-  });
+  late List<ServerModel> serverList;
 
   @override
   void initState() {
+    if (widget.isDemo) {
+      serverList = List.generate(50, (index) {
+        final serverNumber = index + 1;
+        return ServerModel(
+          id: serverNumber.toString(),
+          ownerID: '0',
+          name: serverNumber.toString(),
+          picture: '',
+          banner: '',
+        );
+      });
+    } else {
+      serverList = [];
+    }
     super.initState();
   }
 

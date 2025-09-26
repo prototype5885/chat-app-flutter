@@ -33,7 +33,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> widgetOptions = <Widget>[
-      Home(),
+      Home(isDemo: widget.isDemo),
       Text('Notifications'),
       Settings(isDemo: widget.isDemo),
     ];
