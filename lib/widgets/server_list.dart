@@ -45,7 +45,9 @@ class _ServerListState extends State<ServerList> {
       ServerModel server = serverList.firstWhere(
         (server) => server.id == serverID,
       );
-      state.currentServer.value = server.id;
+      setState(() {
+        state.currentServer.value = server.id;
+      });
     }
   }
 
