@@ -1,4 +1,5 @@
 import 'package:chat_app_flutter/globals.dart';
+import 'package:chat_app_flutter/language.dart';
 import 'package:chat_app_flutter/pages/login.dart';
 import 'package:chat_app_flutter/pages/register.dart';
 import 'package:dio/dio.dart';
@@ -14,7 +15,7 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  String _loggedInText = 'Loading...';
+  String _loggedInText = lang.loading;
 
   @override
   void initState() {
@@ -28,7 +29,7 @@ class _WelcomePageState extends State<WelcomePage> {
     try {
       await dioClient.dio.get('/api/auth/isLoggedIn');
       setState(() {
-        _loggedInText = 'Logged in!';
+        _loggedInText = lang.loggedIn;
       });
 
       if (!mounted) return;
@@ -37,18 +38,18 @@ class _WelcomePageState extends State<WelcomePage> {
         MaterialPageRoute(builder: (context) => const ChatPage(isDemo: false)),
       );
     } on DioException catch (e) {
-      debugPrint('Error: $e');
+      debugPrint('$e');
       setState(() {
         if (e.type == DioExceptionType.connectionError) {
-          _loggedInText = serverOfflineText;
+          _loggedInText = lang.serverOffline;
         } else if (e.type == DioExceptionType.badResponse) {
-          _loggedInText = 'Not logged in!';
+          _loggedInText = lang.notLoggedIn;
         } else {
           _loggedInText = e.type.toString();
         }
       });
     } catch (e) {
-      debugPrint('Error: $e');
+      debugPrint('$e');
     }
   }
 
@@ -98,7 +99,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         ),
                       ),
                     },
-                    child: const Text('Login', style: TextStyle(fontSize: 18)),
+                    child: Text(lang.login, style: TextStyle(fontSize: 18)),
                   ),
 
                   const SizedBox(height: 16.0),
@@ -112,10 +113,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         ),
                       ),
                     },
-                    child: const Text(
-                      'Register',
-                      style: TextStyle(fontSize: 18),
-                    ),
+                    child: Text(lang.register, style: TextStyle(fontSize: 18)),
                   ),
 
                   const SizedBox(height: 16.0),
@@ -129,7 +127,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         ),
                       ),
                     },
-                    child: const Text('Demo', style: TextStyle(fontSize: 18)),
+                    child: Text(lang.demo, style: TextStyle(fontSize: 18)),
                   ),
                 ],
               ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chat_app_flutter/language.dart';
 import 'package:chat_app_flutter/widgets/avatar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _SettingsState extends State<Settings> {
 
   Future<void> getUserInfo() async {
     if (widget.isDemo) {
-      _displayName = 'Demo Name';
+      _displayName = lang.demoName;
       _profilePic = '';
     } else {
       try {
@@ -49,7 +50,7 @@ class _SettingsState extends State<Settings> {
           _profilePic = parsed['picture'];
         });
       } on DioException catch (e) {
-        debugPrint('Error: $e');
+        debugPrint('$e');
         // setState(() {
         //   if (e.type == DioExceptionType.connectionError) {
         //     _loggedInText = serverOfflineText;
@@ -60,7 +61,7 @@ class _SettingsState extends State<Settings> {
         //   }
         // });
       } catch (e) {
-        debugPrint('Error: $e');
+        debugPrint('$e');
       }
     }
   }
@@ -94,7 +95,7 @@ class _SettingsState extends State<Settings> {
             ElevatedButton.icon(
               onPressed: () => {},
               icon: const Icon(Icons.edit),
-              label: const Text('Edit profile', style: TextStyle(fontSize: 18)),
+              label: Text(lang.editProfile, style: TextStyle(fontSize: 18)),
             ),
 
             const SizedBox(height: 32),

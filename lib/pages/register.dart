@@ -1,3 +1,4 @@
+import 'package:chat_app_flutter/language.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -50,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
+      appBar: AppBar(title: Text(lang.register)),
       body: Center(
         child: SingleChildScrollView(
           child: ConstrainedBox(
@@ -61,8 +62,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  const Text(
-                    'Register',
+                  Text(
+                    lang.register,
                     style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
@@ -71,9 +72,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      hintText: 'Enter your email address',
+                    decoration: InputDecoration(
+                      labelText: lang.email,
+                      hintText: lang.enterEmail,
                       prefixIcon: Icon(Icons.email),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12.0)),
@@ -86,9 +87,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   TextField(
                     controller: _firstPasswordController,
                     obscureText: false,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      hintText: 'Enter your password',
+                    decoration: InputDecoration(
+                      labelText: lang.password,
+                      hintText: lang.enterPassword,
                       prefixIcon: Icon(Icons.lock),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12.0)),
@@ -101,9 +102,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   TextField(
                     controller: _secondPasswordController,
                     obscureText: false,
-                    decoration: const InputDecoration(
-                      labelText: 'Password again',
-                      hintText: 'Enter your password again',
+                    decoration: InputDecoration(
+                      labelText: lang.passwordAgain,
+                      hintText: lang.enterPasswordAgain,
                       prefixIcon: Icon(Icons.lock),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12.0)),
@@ -119,10 +120,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   ElevatedButton(
                     onPressed: _register,
-                    child: const Text(
-                      'Register',
-                      style: TextStyle(fontSize: 18),
-                    ),
+                    child: Text(lang.register, style: TextStyle(fontSize: 18)),
                   ),
                 ],
               ),

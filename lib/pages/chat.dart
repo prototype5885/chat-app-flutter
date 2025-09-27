@@ -1,3 +1,4 @@
+import 'package:chat_app_flutter/language.dart';
 import 'package:chat_app_flutter/pages/tabs/home.dart';
 import 'package:flutter/material.dart';
 import 'tabs/settings.dart';
@@ -34,7 +35,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     final List<Widget> widgetOptions = <Widget>[
       Home(isDemo: widget.isDemo),
-      Text('Notifications'),
+      Text(lang.notifications),
       Settings(isDemo: widget.isDemo),
     ];
 
@@ -43,13 +44,13 @@ class _ChatPageState extends State<ChatPage> {
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(splashFactory: NoSplash.splashFactory),
         child: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(label: 'Home', icon: Icon(Icons.home)),
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(label: lang.home, icon: Icon(Icons.home)),
             BottomNavigationBarItem(
-              label: 'Notifications',
+              label: lang.notifications,
               icon: Icon(Icons.notifications),
             ),
-            BottomNavigationBarItem(label: 'You', icon: Icon(Icons.circle)),
+            BottomNavigationBarItem(label: lang.you, icon: Icon(Icons.circle)),
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,

@@ -1,3 +1,4 @@
+import 'package:chat_app_flutter/language.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -44,20 +45,20 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       setState(() {
-        _successMessages = 'Successful login!';
+        _successMessages = lang.loginSuccess;
       });
     } on DioException catch (e) {
       setState(() {
         if (e.type == DioExceptionType.connectionError) {
-          _errorMessage = serverOfflineText;
+          _errorMessage = lang.serverOffline;
         } else if (e.type == DioExceptionType.badResponse) {
-          _errorMessage = 'Incorrect login';
+          _errorMessage = lang.loginFail;
         } else {
           _errorMessage = '${e.type}';
         }
       });
     } catch (e) {
-      debugPrint('Error: $e');
+      debugPrint('$e');
     }
 
     setState(() {
@@ -81,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(title: Text(lang.login)),
       body: Center(
         child: SingleChildScrollView(
           child: ConstrainedBox(
@@ -92,9 +93,12 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  const Text(
-                    'Login',
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                  Text(
+                    lang.login,
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 32.0),
@@ -102,9 +106,9 @@ class _LoginPageState extends State<LoginPage> {
                   TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      hintText: 'Enter your email address',
+                    decoration: InputDecoration(
+                      labelText: lang.email,
+                      hintText: lang.enterEmail,
                       prefixIcon: Icon(Icons.email),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12.0)),
@@ -118,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                     controller: _passwordController,
                     obscureText: _passwordHidden,
                     decoration: InputDecoration(
-                      labelText: 'Password',
+                      labelText: lang.password,
                       suffixIcon: IconButton(
                         icon: Icon(
                           _passwordHidden
@@ -127,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         onPressed: _togglePasswordVisibility,
                       ),
-                      hintText: 'Enter your password',
+                      hintText: lang.enterPassword,
                       prefixIcon: const Icon(Icons.lock),
                       border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12.0)),
@@ -138,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 8.0),
 
                   CheckboxListTile(
-                    title: Text('Remember me'),
+                    title: Text(lang.rememberMe),
                     value: _rememberMe,
                     onChanged: (bool? value) {
                       setState(() {
@@ -167,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                   ElevatedButton(
                     onPressed: _loading ? null : _login,
                     child: Text(
-                      _loading ? 'Logging in...' : 'Login',
+                      _loading ? lang.loggingIn : lang.login,
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
