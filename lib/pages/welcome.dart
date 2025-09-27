@@ -31,6 +31,7 @@ class _WelcomePageState extends State<WelcomePage> {
         _loggedInText = 'Logged in!';
       });
 
+      if (!mounted) return;
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const ChatPage(isDemo: false)),
