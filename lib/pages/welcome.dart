@@ -15,41 +15,56 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  String _loggedInText = lang.loading;
+  late Future<void> _loading;
+  int _attempt = 0;
+  String _statusText = lang.loading;
 
   @override
   void initState() {
     super.initState();
-    _isLoggedIn();
+    _loading = _isLoggedIn();
   }
 
   Future<void> _isLoggedIn() async {
     await dioClient.init();
 
-    try {
-      await dioClient.dio.get('/api/auth/isLoggedIn');
-      setState(() {
-        _loggedInText = lang.loggedIn;
-      });
+    const retryDelay = Duration(seconds: 5);
 
-      if (!mounted) return;
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ChatPage(isDemo: false)),
-      );
-    } on DioException catch (e) {
-      debugPrint('$e');
+    while (true) {
+      try {
+        await dioClient.dio.get('/api/auth/isLoggedIn');
+        setState(() {
+          _statusText = lang.loggedIn;
+        });
+
+        if (!mounted) return;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ChatPage(isDemo: false),
+          ),
+        );
+        return;
+      } catch (e) {
+        debugPrint('$e');
+        setState(() {
+          if (e is DioException) {
+            if (e.type == DioExceptionType.connectionError) {
+              _statusText = lang.serverOffline;
+            } else if (e.type == DioExceptionType.badResponse) {
+              _statusText = lang.notLoggedIn;
+            } else {
+              _statusText = e.type.toString();
+            }
+          } else {
+            _statusText = "$e";
+          }
+        });
+        await Future.delayed(retryDelay);
+      }
       setState(() {
-        if (e.type == DioExceptionType.connectionError) {
-          _loggedInText = lang.serverOffline;
-        } else if (e.type == DioExceptionType.badResponse) {
-          _loggedInText = lang.notLoggedIn;
-        } else {
-          _loggedInText = e.type.toString();
-        }
+        _attempt++;
       });
-    } catch (e) {
-      debugPrint('$e');
     }
   }
 
@@ -67,74 +82,90 @@ class _WelcomePageState extends State<WelcomePage> {
             constraints: BoxConstraints(maxWidth: 450),
             child: Padding(
               padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  const Center(
-                    child: Text(
-                      'Willkommen!',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
+              child: FutureBuilder(
+                future: _loading,
+                builder: (context, asyncSnapshot) {
+                  if (asyncSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return Center(
+                      child: Column(
+                        spacing: 24,
+                        children: [
+                          CircularProgressIndicator(),
+                          Text("$_statusText, attempt: $_attempt"),
+                        ],
                       ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 64.0),
-
-                  ElevatedButton(
-                    onPressed: _isLoggedIn,
-                    child: Text(_loggedInText, style: TextStyle(fontSize: 18)),
-                  ),
-
-                  const SizedBox(height: 32.0),
-
-                  ElevatedButton(
-                    onPressed: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
+                    );
+                  } else {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: 16,
+                      children: <Widget>[
+                        const Center(
+                          child: Text(
+                            'Willkommen!',
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
-                    },
-                    child: Text(lang.login, style: TextStyle(fontSize: 18)),
-                  ),
 
-                  const SizedBox(height: 16.0),
-
-                  ElevatedButton(
-                    onPressed: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RegisterPage(),
+                        ElevatedButton(
+                          onPressed: () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginPage(),
+                              ),
+                            ),
+                          },
+                          child: Text(
+                            lang.login,
+                            style: TextStyle(fontSize: 18),
+                          ),
                         ),
-                      ),
-                    },
-                    child: Text(lang.register, style: TextStyle(fontSize: 18)),
-                  ),
 
-                  const SizedBox(height: 16.0),
-
-                  ElevatedButton(
-                    onPressed: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ChatPage(isDemo: true),
+                        // const SizedBox(height: 16.0),
+                        ElevatedButton(
+                          onPressed: () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const RegisterPage(),
+                              ),
+                            ),
+                          },
+                          child: Text(
+                            lang.register,
+                            style: TextStyle(fontSize: 18),
+                          ),
                         ),
-                      ),
-                    },
-                    child: Text(lang.demo, style: TextStyle(fontSize: 18)),
-                  ),
-                ],
+                      ],
+                    );
+                  }
+                },
               ),
             ),
           ),
         ),
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 16.0, right: 16.0),
+        child: FloatingActionButton(
+          onPressed: () => {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ChatPage(isDemo: true),
+              ),
+            ),
+          },
+          child: Text(lang.demo),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
