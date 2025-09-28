@@ -35,6 +35,7 @@ class _ServerListState extends State<ServerList> {
           banner: '',
         );
       });
+      _serverListLoaded = Future.value();
     } else {
       _serverListLoaded = _fetchServers();
     }
