@@ -1,3 +1,4 @@
+import 'package:chat_app_flutter/widgets/channel_list.dart';
 import 'package:chat_app_flutter/widgets/server_list.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app_flutter/state.dart' as state;
@@ -36,15 +37,45 @@ class _HomeState extends State<Home> {
           ),
           SizedBox(
             width: 240.0,
-            child: Container(color: Color.fromRGBO(0, 0, 0, 0.2)),
-          ),
-          Expanded(
-            child: Center(
+            child: Container(
+              color: Color.fromRGBO(0, 0, 0, 0.2),
               child: ValueListenableBuilder(
                 valueListenable: state.currentServer,
                 builder: (context, value, child) {
-                  return Text(value, style: TextStyle(color: Colors.white));
+                  return ChannelList(
+                    key: ValueKey(value),
+                    isDemo: widget.isDemo,
+                    serverID: value,
+                  );
                 },
+              ),
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ValueListenableBuilder(
+                    valueListenable: state.currentServer,
+                    builder: (context, value, child) {
+                      return Text(
+                        "Server: $value",
+                        style: TextStyle(color: Colors.white),
+                      );
+                    },
+                  ),
+                  ValueListenableBuilder(
+                    valueListenable: state.currentChannel,
+                    builder: (context, value, child) {
+                      return Text(
+                        "Channel: $value",
+                        style: TextStyle(color: Colors.white),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
           ),

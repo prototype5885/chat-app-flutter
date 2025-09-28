@@ -52,3 +52,19 @@ class ServerModel {
     );
   }
 }
+
+class ChannelModel {
+  final String id;
+  final String serverID;
+  final String name;
+
+  ChannelModel({required this.id, required this.serverID, required this.name});
+
+  factory ChannelModel.fromJson(Map<String, dynamic> json) {
+    return ChannelModel(
+      id: json['id'] ?? '',
+      serverID: json['serverID'] ?? '',
+      name: json['name'] ?? '',
+    );
+  }
+}
