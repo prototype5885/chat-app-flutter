@@ -21,7 +21,6 @@ class Channel extends StatefulWidget {
 }
 
 class _ChannelState extends State<Channel> {
-  static const double size = 48;
   bool isHovering = false;
 
   @override

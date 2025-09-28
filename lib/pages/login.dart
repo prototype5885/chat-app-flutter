@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app_flutter/language.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
+      log("Logging in...");
       await dioClient.dio.post(
         '/api/auth/login',
         queryParameters: {'rememberMe': _rememberMe.toString()},

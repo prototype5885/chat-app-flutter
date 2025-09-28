@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:chat_app_flutter/models.dart';
 import 'package:chat_app_flutter/state.dart' as state;
@@ -19,7 +20,7 @@ class ServerList extends StatefulWidget {
 }
 
 class _ServerListState extends State<ServerList> {
-  late Future<void> _serverListLoaded;
+  late Future<void> serverListLoaded;
   late List<ServerModel> serverList = [];
 
   @override
@@ -35,9 +36,9 @@ class _ServerListState extends State<ServerList> {
           banner: '',
         );
       });
-      _serverListLoaded = Future.value();
+      serverListLoaded = Future.value();
     } else {
-      _serverListLoaded = _fetchServers();
+      serverListLoaded = fetchServers();
     }
     super.initState();
   }
@@ -47,8 +48,9 @@ class _ServerListState extends State<ServerList> {
     super.dispose();
   }
 
-  Future<void> _fetchServers() async {
+  Future<void> fetchServers() async {
     try {
+      log("Fetching servers...");
       final response = await dioClient.dio.get('/api/server/fetch');
       final List<dynamic> rawList = jsonDecode(response.data);
 
@@ -77,6 +79,7 @@ class _ServerListState extends State<ServerList> {
   }
 
   void selectServer(String serverID) {
+    log("Selected server ID $serverID");
     if (serverList.isNotEmpty) {
       ServerModel server = serverList.firstWhere(
         (server) => server.id == serverID,
@@ -92,7 +95,7 @@ class _ServerListState extends State<ServerList> {
     return ScrollConfiguration(
       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
       child: FutureBuilder(
-        future: _serverListLoaded,
+        future: serverListLoaded,
         builder: (context, asyncSnapshot) {
           if (asyncSnapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

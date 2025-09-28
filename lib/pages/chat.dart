@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app_flutter/language.dart';
 import 'package:chat_app_flutter/pages/tabs/home.dart';
 import 'package:dio/dio.dart';
@@ -38,18 +40,10 @@ class _ChatPageState extends State<ChatPage> {
 
   Future<void> _createSession() async {
     try {
+      log("Fetching session ID...");
       await dioClient.dio.get('/api/auth/newSession');
     } on DioException catch (e) {
       debugPrint('$e');
-      // setState(() {
-      //   if (e.type == DioExceptionType.connectionError) {
-      //     // _loggedInText = lang.serverOffline;
-      //   } else if (e.type == DioExceptionType.badResponse) {
-      //     // _loggedInText = lang.notLoggedIn;
-      //   } else {
-      //     // _loggedInText = e.type.toString();
-      //   }
-      // });
       return;
     } catch (e) {
       debugPrint('$e');

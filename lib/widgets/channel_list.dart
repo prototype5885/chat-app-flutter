@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:chat_app_flutter/models.dart';
 import 'package:chat_app_flutter/state.dart' as state;
@@ -48,6 +49,7 @@ class _ChannelListState extends State<ChannelList> {
 
   Future<void> fetchChannels() async {
     try {
+      log("Fetching channels for server ID ${widget.serverID}...");
       final response = await dioClient.dio.get(
         '/api/channel/fetch',
         queryParameters: {"serverID": widget.serverID},
@@ -79,6 +81,7 @@ class _ChannelListState extends State<ChannelList> {
   }
 
   void selectChannel(String channelID) {
+    log("Selected channel ID $channelID");
     if (channelList.isNotEmpty) {
       ChannelModel channel = channelList.firstWhere(
         (server) => server.id == channelID,

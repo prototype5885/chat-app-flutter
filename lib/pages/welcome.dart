@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app_flutter/language.dart';
 import 'package:chat_app_flutter/pages/login.dart';
 import 'package:chat_app_flutter/pages/register.dart';
@@ -32,6 +34,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
     while (true) {
       try {
+        log("Checking if is logged in already...");
         await dioClient.dio.get('/api/auth/isLoggedIn');
         setState(() {
           _statusText = lang.loggedIn;
