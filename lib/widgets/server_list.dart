@@ -89,42 +89,30 @@ class _ServerListState extends State<ServerList> {
 
   @override
   Widget build(BuildContext context) {
-    return Transform.scale(
-      scale: 1,
-      alignment: Alignment.topLeft,
-      child: SizedBox(
-        width: 72.0,
-        child: Container(
-          color: Colors.black.withAlpha(45),
-          child: ScrollConfiguration(
-            behavior: ScrollConfiguration.of(
-              context,
-            ).copyWith(scrollbars: false),
-            child: FutureBuilder(
-              future: _serverListLoaded,
-              builder: (context, asyncSnapshot) {
-                if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else {
-                  return ListView.builder(
-                    itemCount: serverList.length,
-                    itemBuilder: (context, index) {
-                      final server = serverList[index];
-                      return ServerBase(
-                        key: ValueKey(server.name),
-                        id: server.id,
-                        name: server.name,
-                        pic: server.picture,
-                        selected: server.id == state.currentServer.value,
-                        onClicked: selectServer,
-                      );
-                    },
-                  );
-                }
+    return ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+      child: FutureBuilder(
+        future: _serverListLoaded,
+        builder: (context, asyncSnapshot) {
+          if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return ListView.builder(
+              itemCount: serverList.length,
+              itemBuilder: (context, index) {
+                final server = serverList[index];
+                return ServerBase(
+                  key: ValueKey(server.name),
+                  id: server.id,
+                  name: server.name,
+                  pic: server.picture,
+                  selected: server.id == state.currentServer.value,
+                  onClicked: selectServer,
+                );
               },
-            ),
-          ),
-        ),
+            );
+          }
+        },
       ),
     );
   }

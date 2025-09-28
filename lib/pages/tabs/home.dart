@@ -27,7 +27,17 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: Row(
         children: [
-          ServerList(isDemo: widget.isDemo),
+          SizedBox(
+            width: 72.0,
+            child: Container(
+              color: Color.fromRGBO(0, 0, 0, 0.45),
+              child: ServerList(isDemo: widget.isDemo),
+            ),
+          ),
+          SizedBox(
+            width: 240.0,
+            child: Container(color: Color.fromRGBO(0, 0, 0, 0.2)),
+          ),
           Expanded(
             child: Center(
               child: ValueListenableBuilder(

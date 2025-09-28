@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 const Color _discordBlue = Color(0xff5865F2);
 
+const _discordBackground = Color.fromRGBO(66, 68, 75, 0.4);
+
 final lightTheme = ThemeData(
   brightness: Brightness.light,
   primaryColor: _discordBlue,
@@ -19,7 +21,7 @@ final darkTheme = ThemeData(
     secondary: _discordBlue,
     tertiary: Colors.red,
   ),
-  scaffoldBackgroundColor: Colors.grey[900],
+  scaffoldBackgroundColor: _discordBackground,
   elevatedButtonTheme: _elevatedButtonTheme,
   appBarTheme: _appBarTheme,
 );
