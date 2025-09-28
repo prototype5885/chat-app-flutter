@@ -47,6 +47,8 @@ class _ServerBaseState extends State<ServerBase> {
         ? Colors.blue
         : Colors.white.withAlpha(18);
 
+    const animationLength = 150;
+
     return GestureDetector(
       onTap: () {
         widget.onClicked(widget.id);
@@ -59,7 +61,7 @@ class _ServerBaseState extends State<ServerBase> {
           height: 56,
           child: Center(
             child: AnimatedContainer(
-              duration: Duration(milliseconds: 150),
+              duration: Duration(milliseconds: animationLength),
               curve: Curves.easeInOut,
               width: size,
               height: size,
@@ -67,21 +69,28 @@ class _ServerBaseState extends State<ServerBase> {
                 color: backgroundColor,
                 borderRadius: BorderRadius.circular(targetRadius),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(targetRadius),
-                child: widget.pic.isNotEmpty
-                    ? Image.network(
-                        '$backendHttpAddress/cdn/avatars/${widget.pic}',
-                        fit: BoxFit.cover,
-                        cacheWidth: optimizeImageCache(size, context),
-                        cacheHeight: optimizeImageCache(size, context),
-                        width: size,
-                        height: size,
-                        errorBuilder: (context, error, stackTrace) {
-                          return _noPicture();
-                        },
-                      )
-                    : _noPicture(),
+              child: TweenAnimationBuilder<double>(
+                duration: Duration(milliseconds: animationLength),
+                curve: Curves.easeInOut,
+                tween: Tween<double>(begin: targetRadius, end: targetRadius),
+                builder: (context, animatedRadius, child) {
+                  return widget.pic.isNotEmpty
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(animatedRadius),
+                          child: Image.network(
+                            '$backendHttpAddress/cdn/avatars/${widget.pic}',
+                            fit: BoxFit.cover,
+                            cacheWidth: optimizeImageCache(size, context),
+                            cacheHeight: optimizeImageCache(size, context),
+                            width: size,
+                            height: size,
+                            errorBuilder: (context, error, stackTrace) {
+                              return _noPicture();
+                            },
+                          ),
+                        )
+                      : _noPicture();
+                },
               ),
             ),
           ),
