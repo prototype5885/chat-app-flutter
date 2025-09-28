@@ -99,18 +99,27 @@ class _ServerListState extends State<ServerList> {
             behavior: ScrollConfiguration.of(
               context,
             ).copyWith(scrollbars: false),
-            child: ListView.builder(
-              itemCount: serverList.length,
-              itemBuilder: (context, index) {
-                final server = serverList[index];
-                return ServerBase(
-                  key: ValueKey(server.name),
-                  id: server.id,
-                  name: server.name,
-                  pic: server.picture,
-                  selected: server.id == state.currentServer.value,
-                  onClicked: selectServer,
-                );
+            child: FutureBuilder(
+              future: _serverListLoaded,
+              builder: (context, asyncSnapshot) {
+                if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  return ListView.builder(
+                    itemCount: serverList.length,
+                    itemBuilder: (context, index) {
+                      final server = serverList[index];
+                      return ServerBase(
+                        key: ValueKey(server.name),
+                        id: server.id,
+                        name: server.name,
+                        pic: server.picture,
+                        selected: server.id == state.currentServer.value,
+                        onClicked: selectServer,
+                      );
+                    },
+                  );
+                }
               },
             ),
           ),
