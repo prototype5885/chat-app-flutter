@@ -2,7 +2,7 @@ import 'package:chat_app_flutter/language.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../globals.dart';
+import '../dio_client.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

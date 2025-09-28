@@ -4,14 +4,16 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
-
 import 'globals.dart';
+
+final DioClient dioClient = DioClient();
+late final PersistCookieJar cookieJar;
 
 class DioClient {
   final Dio dio = Dio();
 
   Future<void> init() async {
-    dio.options.baseUrl = backendAddress;
+    dio.options.baseUrl = backendHttpAddress;
     dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.receiveTimeout = const Duration(seconds: 10);
 
@@ -24,7 +26,7 @@ class DioClient {
         await cookieDir.create(recursive: true);
       }
 
-      final cookieJar = PersistCookieJar(
+      cookieJar = PersistCookieJar(
         ignoreExpires: true,
         storage: FileStorage(cookiePath),
       );

@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:chat_app_flutter/models.dart';
 import 'package:chat_app_flutter/state.dart' as state;
 
 import 'package:chat_app_flutter/widgets/server_base.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
+import '../dio_client.dart';
 
 class ServerList extends StatefulWidget {
   final bool isDemo;
@@ -14,7 +19,8 @@ class ServerList extends StatefulWidget {
 }
 
 class _ServerListState extends State<ServerList> {
-  late List<ServerModel> serverList;
+  late Future<void> _serverListLoaded;
+  late List<ServerModel> serverList = [];
 
   @override
   void initState() {
@@ -30,7 +36,7 @@ class _ServerListState extends State<ServerList> {
         );
       });
     } else {
-      serverList = [];
+      _serverListLoaded = _fetchServers();
     }
     super.initState();
   }
@@ -38,6 +44,35 @@ class _ServerListState extends State<ServerList> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> _fetchServers() async {
+    try {
+      final response = await dioClient.dio.get('/api/server/fetch');
+      final List<dynamic> rawList = jsonDecode(response.data);
+
+      setState(() {
+        serverList = rawList
+            .map(
+              (jsonMap) =>
+                  ServerModel.fromJson(jsonMap as Map<String, dynamic>),
+            )
+            .toList();
+      });
+    } on DioException catch (e) {
+      debugPrint('$e');
+      setState(() {
+        if (e.type == DioExceptionType.connectionError) {
+          // _loggedInText = lang.serverOffline;
+        } else if (e.type == DioExceptionType.badResponse) {
+          // _loggedInText = lang.notLoggedIn;
+        } else {
+          // _loggedInText = e.type.toString();
+        }
+      });
+    } catch (e) {
+      debugPrint('$e');
+    }
   }
 
   void selectServer(String serverID) {

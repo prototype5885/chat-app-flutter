@@ -5,7 +5,7 @@ import 'package:chat_app_flutter/widgets/avatar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../../globals.dart';
+import '../../dio_client.dart';
 
 class Settings extends StatefulWidget {
   final bool isDemo;

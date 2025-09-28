@@ -71,7 +71,7 @@ class _ServerBaseState extends State<ServerBase> {
                 borderRadius: BorderRadius.circular(targetRadius),
                 child: widget.pic.isNotEmpty
                     ? Image.network(
-                        '$backendAddress/cdn/avatars/${widget.pic}',
+                        '$backendHttpAddress/cdn/avatars/${widget.pic}',
                         fit: BoxFit.cover,
                         cacheWidth: optimizeImageCache(size, context),
                         cacheHeight: optimizeImageCache(size, context),

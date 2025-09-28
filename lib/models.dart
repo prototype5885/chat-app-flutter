@@ -41,4 +41,14 @@ class ServerModel {
     required this.picture,
     required this.banner,
   });
+
+  factory ServerModel.fromJson(Map<String, dynamic> json) {
+    return ServerModel(
+      id: json['id'] ?? '',
+      ownerID: json['ownerID'] ?? '',
+      name: json['name'] ?? '',
+      picture: json['picture'] ?? '',
+      banner: json['banner'] ?? '',
+    );
+  }
 }
