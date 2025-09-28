@@ -32,7 +32,7 @@ class _ChannelListState extends State<ChannelList> {
         return ChannelModel(
           id: serverNumber.toString(),
           serverID: '0',
-          name: serverNumber.toString(),
+          name: "Channel $serverNumber",
         );
       });
       loaded = Future.value();

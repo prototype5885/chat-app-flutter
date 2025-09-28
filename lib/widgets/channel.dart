@@ -54,7 +54,7 @@ class _ChannelState extends State<Channel> {
             borderRadius: BorderRadius.circular(8.0),
           ),
           height: 36,
-          child: Center(child: Text(widget.id)),
+          child: Center(child: Text(widget.name)),
         ),
       ),
     );
