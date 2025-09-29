@@ -1,4 +1,5 @@
 import 'package:chat_app_flutter/widgets/channel_list.dart';
+import 'package:chat_app_flutter/widgets/message_area.dart';
 import 'package:chat_app_flutter/widgets/server_list.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app_flutter/state.dart' as state;
@@ -52,31 +53,14 @@ class _HomeState extends State<Home> {
             ),
           ),
           Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  ValueListenableBuilder(
-                    valueListenable: state.currentServer,
-                    builder: (context, value, child) {
-                      return Text(
-                        "Server: $value",
-                        style: TextStyle(color: Colors.white),
-                      );
-                    },
-                  ),
-                  ValueListenableBuilder(
-                    valueListenable: state.currentChannel,
-                    builder: (context, value, child) {
-                      return Text(
-                        "Channel: $value",
-                        style: TextStyle(color: Colors.white),
-                      );
-                    },
-                  ),
-                ],
-              ),
+            child: ValueListenableBuilder(
+              valueListenable: state.currentChannel,
+              builder: (context, value, child) {
+                return MessageArea(
+                  key: ValueKey(value),
+                  channelID: state.currentChannel.value,
+                );
+              },
             ),
           ),
         ],

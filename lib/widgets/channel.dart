@@ -54,7 +54,13 @@ class _ChannelState extends State<Channel> {
             borderRadius: BorderRadius.circular(8.0),
           ),
           height: 36,
-          child: Center(child: Text(widget.name)),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Text(widget.name),
+            ),
+          ),
         ),
       ),
     );

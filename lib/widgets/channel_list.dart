@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:chat_app_flutter/models.dart';
 import 'package:chat_app_flutter/state.dart' as state;
 import 'package:chat_app_flutter/widgets/channel.dart';
+import 'package:chat_app_flutter/widgets/top.dart';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,12 @@ class _ChannelListState extends State<ChannelList> {
             )
             .toList();
       });
+
+      if (channelList.isNotEmpty) {
+        state.currentChannel.value = channelList.first.id;
+      } else {
+        state.currentChannel.value = "none";
+      }
     } on DioException catch (e) {
       debugPrint('$e');
       setState(() {
@@ -94,33 +101,42 @@ class _ChannelListState extends State<ChannelList> {
 
   @override
   Widget build(BuildContext context) {
-    return ScrollConfiguration(
-      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-      child: FutureBuilder(
-        future: loaded,
-        builder: (context, asyncSnapshot) {
-          if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                itemCount: channelList.length,
-                itemBuilder: (context, index) {
-                  final channel = channelList[index];
-                  return Channel(
-                    key: ValueKey(channel.name),
-                    id: channel.id,
-                    name: channel.name,
-                    selected: channel.id == state.currentChannel.value,
-                    onClicked: selectChannel,
+    return Column(
+      children: [
+        Top(childWidget: Text(widget.serverID)),
+        Expanded(
+          child: ScrollConfiguration(
+            behavior: ScrollConfiguration.of(
+              context,
+            ).copyWith(scrollbars: false),
+            child: FutureBuilder(
+              future: loaded,
+              builder: (context, asyncSnapshot) {
+                if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                      itemCount: channelList.length,
+                      itemBuilder: (context, index) {
+                        final channel = channelList[index];
+                        return Channel(
+                          key: ValueKey(channel.name),
+                          id: channel.id,
+                          name: channel.name,
+                          selected: channel.id == state.currentChannel.value,
+                          onClicked: selectChannel,
+                        );
+                      },
+                    ),
                   );
-                },
-              ),
-            );
-          }
-        },
-      ),
+                }
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
