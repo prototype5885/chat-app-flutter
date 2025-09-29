@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:chat_app_flutter/dio_client.dart';
@@ -11,6 +12,8 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 late final WebSocketChannel ws;
 
 Future<void> connect() async {
+  log("Connecting to websocket on $backendWsAddress");
+
   if (!kIsWeb) {
     List<Cookie> cookies = await cookieJar.loadForRequest(
       Uri.parse(backendHttpAddress),
@@ -32,7 +35,12 @@ Future<void> connect() async {
     ws = WebSocketChannel.connect(Uri.parse(backendWsAddress));
   }
 
-  await ws.ready;
+  try {
+    await ws.ready;
+  } catch (e) {
+    debugPrint("$e");
+    return;
+  }
 
   ws.stream.listen((message) {
     ws.sink.add('received!');
