@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../dio_client.dart';
+import 'chat.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -50,6 +51,12 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _successMessages = lang.loginSuccess;
       });
+
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ChatPage(isDemo: false)),
+      );
     } on DioException catch (e) {
       setState(() {
         if (e.type == DioExceptionType.connectionError) {
