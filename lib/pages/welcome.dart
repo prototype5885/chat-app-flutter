@@ -17,56 +17,45 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  late Future<void> _loading;
-  int _attempt = 0;
-  String _statusText = lang.loading;
+  late Future<void> loading;
+  String statusText = lang.loading;
 
   @override
   void initState() {
     super.initState();
-    _loading = _isLoggedIn();
+    loading = isLoggedIn();
   }
 
-  Future<void> _isLoggedIn() async {
+  Future<void> isLoggedIn() async {
     await dioClient.init();
 
-    const retryDelay = Duration(seconds: 5);
-
-    while (true) {
-      try {
-        log("Checking if is logged in already...");
-        await dioClient.dio.get('/api/auth/isLoggedIn');
-        setState(() {
-          _statusText = lang.loggedIn;
-        });
-
-        if (!mounted) return;
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const ChatPage(isDemo: false),
-          ),
-        );
-        return;
-      } catch (e) {
-        debugPrint('$e');
-        setState(() {
-          if (e is DioException) {
-            if (e.type == DioExceptionType.connectionError) {
-              _statusText = lang.serverOffline;
-            } else if (e.type == DioExceptionType.badResponse) {
-              _statusText = lang.notLoggedIn;
-            } else {
-              _statusText = e.type.toString();
-            }
-          } else {
-            _statusText = "$e";
-          }
-        });
-        await Future.delayed(retryDelay);
-      }
+    try {
+      log("Checking if is logged in already...");
+      await dioClient.dio.get('/api/auth/isLoggedIn');
       setState(() {
-        _attempt++;
+        statusText = lang.loggedIn;
+      });
+
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ChatPage(isDemo: false)),
+      );
+      return;
+    } catch (e) {
+      debugPrint('$e');
+      setState(() {
+        if (e is DioException) {
+          if (e.type == DioExceptionType.connectionError) {
+            statusText = lang.serverOffline;
+          } else if (e.type == DioExceptionType.badResponse) {
+            statusText = lang.notLoggedIn;
+          } else {
+            statusText = e.type.toString();
+          }
+        } else {
+          statusText = "$e";
+        }
       });
     }
   }
@@ -86,7 +75,7 @@ class _WelcomePageState extends State<WelcomePage> {
             child: Padding(
               padding: const EdgeInsets.all(24.0),
               child: FutureBuilder(
-                future: _loading,
+                future: loading,
                 builder: (context, asyncSnapshot) {
                   if (asyncSnapshot.connectionState ==
                       ConnectionState.waiting) {
@@ -95,7 +84,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         spacing: 24,
                         children: [
                           CircularProgressIndicator(),
-                          Text("$_statusText, attempt: $_attempt"),
+                          Text(statusText),
                         ],
                       ),
                     );
@@ -105,9 +94,9 @@ class _WelcomePageState extends State<WelcomePage> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       spacing: 16,
                       children: <Widget>[
-                        const Center(
+                        Center(
                           child: Text(
-                            'Willkommen!',
+                            statusText,
                             style: TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
