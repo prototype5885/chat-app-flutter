@@ -80,6 +80,7 @@ class _ChatPageState extends State<ChatPage> {
                 context,
               ).copyWith(splashFactory: NoSplash.splashFactory),
               child: BottomNavigationBar(
+                selectedItemColor: Theme.of(context).colorScheme.primary,
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                     label: lang.home,

@@ -92,7 +92,7 @@ class _SettingsState extends State<Settings> {
             ),
 
             Text(_displayName, style: TextStyle(fontSize: 18)),
-            ElevatedButton.icon(
+            FilledButton.icon(
               onPressed: () => {},
               icon: const Icon(Icons.edit),
               label: Text(lang.editProfile, style: TextStyle(fontSize: 18)),

@@ -44,7 +44,7 @@ class _ServerBaseState extends State<ServerBase> {
         : size / 2;
 
     final Color backgroundColor = widget.selected || _isHovering
-        ? Colors.blue
+        ? Theme.of(context).colorScheme.primary
         : Colors.white.withAlpha(18);
 
     const animationLength = 150;

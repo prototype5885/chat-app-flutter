@@ -1,6 +1,9 @@
 import 'package:chat_app_flutter/pages/welcome.dart';
-import 'package:chat_app_flutter/themes.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+
+const _darkBackground = Color.fromRGBO(66, 68, 75, 1);
+const FlexScheme _theme = FlexScheme.shadBlue;
 
 void main() {
   // const isRunningWithWasm = bool.fromEnvironment('dart.tool.dart2wasm');
@@ -18,8 +21,11 @@ class ChatApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Chat App',
       themeMode: ThemeMode.dark,
-      theme: lightTheme,
-      darkTheme: darkTheme,
+      theme: FlexThemeData.light(scheme: _theme),
+      darkTheme: FlexThemeData.dark(
+        scheme: _theme,
+        scaffoldBackground: _darkBackground,
+      ),
       home: WelcomePage(),
     );
   }
