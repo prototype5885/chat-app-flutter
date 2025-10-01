@@ -1,19 +1,17 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:chat_app_flutter/macros.dart';
 import 'package:chat_app_flutter/models.dart';
 import 'package:chat_app_flutter/state.dart' as state;
 
 import 'package:chat_app_flutter/widgets/server_base.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../dio_client.dart';
 
 class ServerList extends StatefulWidget {
-  final bool isDemo;
-
-  const ServerList({super.key, required this.isDemo});
+  const ServerList({super.key});
 
   @override
   State<ServerList> createState() => _ServerListState();
@@ -25,7 +23,7 @@ class _ServerListState extends State<ServerList> {
 
   @override
   void initState() {
-    if (widget.isDemo) {
+    if (state.demo.value) {
       serverList = List.generate(50, (index) {
         final serverNumber = index + 1;
         return ServerModel(
@@ -49,44 +47,30 @@ class _ServerListState extends State<ServerList> {
   }
 
   Future<void> fetchServers() async {
-    try {
-      log("Fetching servers...");
-      final response = await dioClient.dio.get('/api/server/fetch');
-      final List<dynamic> rawList = jsonDecode(response.data);
+    log("Fetching servers...");
+    final response = await dioClient.dio.get('/api/server/fetch');
+    final List<dynamic> rawList = jsonDecode(response.data);
 
-      setState(() {
-        serverList = rawList
-            .map(
-              (jsonMap) =>
-                  ServerModel.fromJson(jsonMap as Map<String, dynamic>),
-            )
-            .toList();
-      });
-    } on DioException catch (e) {
-      debugPrint('$e');
-      setState(() {
-        if (e.type == DioExceptionType.connectionError) {
-          // _loggedInText = lang.serverOffline;
-        } else if (e.type == DioExceptionType.badResponse) {
-          // _loggedInText = lang.notLoggedIn;
-        } else {
-          // _loggedInText = e.type.toString();
-        }
-      });
-    } catch (e) {
-      debugPrint('$e');
+    setState(() {
+      serverList = rawList
+          .map(
+            (jsonMap) => ServerModel.fromJson(jsonMap as Map<String, dynamic>),
+          )
+          .toList();
+    });
+
+    if (serverList.isNotEmpty) {
+      selectServer(serverList.first.id);
     }
   }
 
   void selectServer(String serverID) {
-    log("Selected server ID $serverID");
-    if (serverList.isNotEmpty) {
-      ServerModel server = serverList.firstWhere(
-        (server) => server.id == serverID,
-      );
+    final results = serverList.where((server) => server.id == serverID);
+    if (results.isNotEmpty) {
       setState(() {
-        state.currentServer.value = server.id;
+        state.currentServer.value = results.first.id;
       });
+      log("Selected server ID $serverID");
     }
   }
 
@@ -99,6 +83,8 @@ class _ServerListState extends State<ServerList> {
         builder: (context, asyncSnapshot) {
           if (asyncSnapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
+          } else if (asyncSnapshot.hasError) {
+            return handleError(asyncSnapshot.error);
           } else {
             return ListView.builder(
               itemCount: serverList.length,

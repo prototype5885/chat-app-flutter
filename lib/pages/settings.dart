@@ -4,21 +4,20 @@ import 'package:chat_app_flutter/language.dart';
 import 'package:chat_app_flutter/widgets/avatar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:chat_app_flutter/state.dart' as state;
 
-import '../../dio_client.dart';
+import '../dio_client.dart';
 
 class Settings extends StatefulWidget {
-  final bool isDemo;
-
-  const Settings({super.key, required this.isDemo});
+  const Settings({super.key});
 
   @override
   State<Settings> createState() => _SettingsState();
 }
 
 class _SettingsState extends State<Settings> {
-  String _displayName = '';
-  String _profilePic = '';
+  late String displayName = '';
+  late String profilePic = '';
 
   @override
   void initState() {
@@ -32,9 +31,11 @@ class _SettingsState extends State<Settings> {
   }
 
   Future<void> getUserInfo() async {
-    if (widget.isDemo) {
-      _displayName = lang.demoName;
-      _profilePic = '';
+    if (state.demo.value) {
+      setState(() {
+        displayName = lang.demoName;
+        profilePic = '';
+      });
     } else {
       try {
         final response = await dioClient.dio.get(
@@ -46,8 +47,8 @@ class _SettingsState extends State<Settings> {
         // UserModel user = UserModel.fromJson(parsed);
 
         setState(() {
-          _displayName = parsed['displayName'];
-          _profilePic = parsed['picture'];
+          displayName = parsed['displayName'];
+          profilePic = parsed['picture'];
         });
       } on DioException catch (e) {
         debugPrint('$e');
@@ -82,16 +83,12 @@ class _SettingsState extends State<Settings> {
                   color: Colors.black,
                 ),
                 child: Center(
-                  child: Avatar(
-                    size: 128,
-                    pic: _profilePic,
-                    name: _displayName,
-                  ),
+                  child: Avatar(size: 128, pic: profilePic, name: displayName),
                 ),
               ),
             ),
 
-            Text(_displayName, style: TextStyle(fontSize: 18)),
+            Text(displayName, style: TextStyle(fontSize: 18)),
             FilledButton.icon(
               onPressed: () => {},
               icon: const Icon(Icons.edit),

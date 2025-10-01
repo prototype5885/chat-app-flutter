@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:chat_app_flutter/macros.dart';
 import 'package:chat_app_flutter/models.dart';
 import 'package:chat_app_flutter/state.dart' as state;
 import 'package:chat_app_flutter/widgets/channel.dart';
 import 'package:chat_app_flutter/widgets/message_area.dart';
 import 'package:chat_app_flutter/widgets/top.dart';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
@@ -15,10 +15,9 @@ import 'package:flutter/material.dart';
 import '../dio_client.dart';
 
 class ChannelList extends StatefulWidget {
-  final bool isDemo;
   final String serverID;
 
-  const ChannelList({super.key, required this.isDemo, required this.serverID});
+  const ChannelList({super.key, required this.serverID});
 
   @override
   State<ChannelList> createState() => _ChannelListState();
@@ -30,7 +29,7 @@ class _ChannelListState extends State<ChannelList> {
 
   @override
   void initState() {
-    if (widget.isDemo) {
+    if (state.demo.value) {
       channelList = List.generate(50, (index) {
         final serverNumber = index + 1;
         return ChannelModel(
@@ -52,55 +51,34 @@ class _ChannelListState extends State<ChannelList> {
   }
 
   Future<void> fetchChannels() async {
-    try {
-      log("Fetching channels for server ID ${widget.serverID}...");
-      final response = await dioClient.dio.get(
-        '/api/channel/fetch',
-        queryParameters: {"serverID": widget.serverID},
-      );
-      final List<dynamic> rawList = jsonDecode(response.data);
+    log("Fetching channels for server ID ${widget.serverID}...");
+    final response = await dioClient.dio.get(
+      '/api/channel/fetch',
+      queryParameters: {"serverID": widget.serverID},
+    );
+    final List<dynamic> rawList = jsonDecode(response.data);
 
-      setState(() {
-        channelList = rawList
-            .map(
-              (jsonMap) =>
-                  ChannelModel.fromJson(jsonMap as Map<String, dynamic>),
-            )
-            .toList();
-      });
+    setState(() {
+      channelList = rawList
+          .map(
+            (jsonMap) => ChannelModel.fromJson(jsonMap as Map<String, dynamic>),
+          )
+          .toList();
+    });
 
-      if (channelList.isNotEmpty) {
-        state.currentChannel.value = channelList.first.id;
-      } else {
-        state.currentChannel.value = "none";
-      }
-    } on DioException catch (e) {
-      debugPrint('$e');
-      setState(() {
-        if (e.type == DioExceptionType.connectionError) {
-          // _loggedInText = lang.serverOffline;
-        } else if (e.type == DioExceptionType.badResponse) {
-          // _loggedInText = lang.notLoggedIn;
-        } else {
-          // _loggedInText = e.type.toString();
-        }
-      });
-    } catch (e) {
-      debugPrint('$e');
+    if (channelList.isNotEmpty) {
+      selectChannel(channelList.first.id);
     }
   }
 
   void selectChannel(String channelID) {
-    log("Selected channel ID $channelID");
-    if (channelList.isNotEmpty) {
-      ChannelModel channel = channelList.firstWhere(
-        (server) => server.id == channelID,
-      );
+    final results = channelList.where((channel) => channel.id == channelID);
+    if (results.isNotEmpty) {
       setState(() {
-        state.currentChannel.value = channel.id;
+        state.currentChannel.value = results.first.id;
       });
+      log("Selected channel ID $channelID");
 
-      // this runs only on mobile
       if (state.mobile.value) {
         Navigator.of(context).push(
           CupertinoPageRoute(
@@ -129,6 +107,8 @@ class _ChannelListState extends State<ChannelList> {
               builder: (context, asyncSnapshot) {
                 if (asyncSnapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
+                } else if (asyncSnapshot.hasError) {
+                  return handleError(asyncSnapshot.error);
                 } else {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),

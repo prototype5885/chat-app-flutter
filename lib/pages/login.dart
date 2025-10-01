@@ -1,11 +1,11 @@
 import 'dart:developer';
 
 import 'package:chat_app_flutter/language.dart';
+import 'package:chat_app_flutter/macros.dart' as macros;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../dio_client.dart';
-import 'chat.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -53,10 +53,7 @@ class _LoginPageState extends State<LoginPage> {
       });
 
       if (!mounted) return;
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ChatPage(isDemo: false)),
-      );
+      macros.openChat(context, false);
     } on DioException catch (e) {
       setState(() {
         if (e.type == DioExceptionType.connectionError) {

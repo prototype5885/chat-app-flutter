@@ -1,33 +1,34 @@
 import 'dart:developer';
-
-import 'package:chat_app_flutter/language.dart';
-import 'package:chat_app_flutter/pages/tabs/home.dart';
-import 'package:dio/dio.dart';
+import 'package:chat_app_flutter/widgets/channel_list.dart';
+import 'package:chat_app_flutter/widgets/message_area.dart';
+import 'package:chat_app_flutter/widgets/server_list.dart';
 import 'package:flutter/material.dart';
-import '../dio_client.dart';
-import '../websocket.dart' as ws;
-import 'tabs/settings.dart';
 import 'package:chat_app_flutter/state.dart' as state;
 
-class ChatPage extends StatefulWidget {
-  final bool isDemo;
+import '../dio_client.dart';
+import '../websocket.dart' as ws;
 
-  const ChatPage({super.key, required this.isDemo});
+class Chat extends StatefulWidget {
+  const Chat({super.key});
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<Chat> createState() => _ChatState();
 }
 
-class _ChatPageState extends State<ChatPage> {
-  late Future<void> _loaded;
-  int _selectedIndex = 0;
+class _ChatState extends State<Chat> with AutomaticKeepAliveClientMixin {
+  late Future<void> loaded;
 
   @override
   void initState() {
-    if (!widget.isDemo) {
-      _loaded = _createSession();
+    if (!state.demo.value) {
+      loaded = (() async {
+        log("Fetching session ID...");
+        await dioClient.dio.get('/api/auth/newSession');
+
+        await ws.connect();
+      })();
     } else {
-      _loaded = Future.value();
+      loaded = Future.value();
     }
 
     super.initState();
@@ -35,76 +36,68 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void dispose() {
-    ws.disconnect();
-    super.dispose();
-  }
-
-  Future<void> _createSession() async {
-    try {
-      log("Fetching session ID...");
-      await dioClient.dio.get('/api/auth/newSession');
-    } on DioException catch (e) {
-      debugPrint('$e');
-      return;
-    } catch (e) {
-      debugPrint('$e');
-      return;
+    if (!state.demo.value) {
+      ws.disconnect();
     }
-
-    await ws.connect();
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> widgetOptions = <Widget>[
-      Home(isDemo: widget.isDemo),
-      Text(lang.notifications),
-      Settings(isDemo: widget.isDemo),
-    ];
-
+    super.build(context);
     return FutureBuilder(
-      future: _loaded,
+      future: loaded,
       builder: (context, asyncSnapshot) {
         if (asyncSnapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
+          // } else if (asyncSnapshot.hasError) {
         } else {
           return Scaffold(
-            body: Center(child: widgetOptions.elementAt(_selectedIndex)),
-            bottomNavigationBar: state.mobile.value
-                ? Theme(
-                    data: Theme.of(
-                      context,
-                    ).copyWith(splashFactory: NoSplash.splashFactory),
-                    child: BottomNavigationBar(
-                      selectedItemColor: Theme.of(context).colorScheme.primary,
-                      items: <BottomNavigationBarItem>[
-                        BottomNavigationBarItem(
-                          label: lang.home,
-                          icon: Icon(Icons.home),
+            body: Row(
+              children: [
+                SizedBox(
+                  width: 72.0,
+                  child: Container(
+                    color: Color.fromRGBO(0, 0, 0, 0.45),
+                    child: ServerList(),
+                  ),
+                ),
+                state.mobile.value
+                    ? Expanded(child: _channelList())
+                    : SizedBox(width: 240, child: _channelList()),
+                !state.mobile.value
+                    ? Expanded(
+                        child: ValueListenableBuilder(
+                          valueListenable: state.currentChannel,
+                          builder: (context, value, child) {
+                            return MessageArea(
+                              key: ValueKey(value),
+                              channelID: state.currentChannel.value,
+                            );
+                          },
                         ),
-                        BottomNavigationBarItem(
-                          label: lang.notifications,
-                          icon: Icon(Icons.notifications),
-                        ),
-                        BottomNavigationBarItem(
-                          label: lang.you,
-                          icon: Icon(Icons.circle),
-                        ),
-                      ],
-                      currentIndex: _selectedIndex,
-                      onTap: _onItemTapped,
-                    ),
-                  )
-                : null,
+                      )
+                    : SizedBox.shrink(),
+              ],
+            ),
           );
         }
       },
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  Widget _channelList() {
+    return Container(
+      color: Color.fromRGBO(0, 0, 0, 0.2),
+      child: ValueListenableBuilder(
+        valueListenable: state.currentServer,
+        builder: (context, value, child) {
+          return ChannelList(key: ValueKey(value), serverID: value);
+        },
+      ),
     );
   }
 }

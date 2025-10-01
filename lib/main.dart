@@ -1,4 +1,4 @@
-import 'package:chat_app_flutter/pages/welcome.dart';
+import 'package:chat_app_flutter/pages/start.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +26,7 @@ class ChatApp extends StatelessWidget {
         scheme: _theme,
         scaffoldBackground: _darkBackground,
       ),
-      home: WelcomePage(),
+      home: Start(),
     );
   }
 }
