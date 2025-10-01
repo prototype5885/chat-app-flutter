@@ -5,6 +5,7 @@ import 'package:chat_app_flutter/pages/login.dart';
 import 'package:chat_app_flutter/pages/register.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:chat_app_flutter/state.dart' as state;
 
 import '../dio_client.dart';
 import 'chat.dart';
@@ -23,6 +24,13 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        state.mobile.value = MediaQuery.of(context).size.width < 600;
+      });
+    });
+
     loading = isLoggedIn();
   }
 

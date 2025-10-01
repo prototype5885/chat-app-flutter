@@ -1,6 +1,7 @@
 import 'package:chat_app_flutter/widgets/message_input.dart';
 import 'package:chat_app_flutter/widgets/top.dart';
 import 'package:flutter/material.dart';
+import 'package:chat_app_flutter/state.dart' as state;
 
 class MessageArea extends StatelessWidget {
   final String channelID;
@@ -12,7 +13,7 @@ class MessageArea extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Top(childWidget: Text(channelID)),
+        ?!state.mobile.value ? Top(childWidget: Text(channelID)) : null,
         Expanded(child: Center(child: Text("chat messages"))),
         MessageInput(channelID: channelID),
         Text("typing..."),

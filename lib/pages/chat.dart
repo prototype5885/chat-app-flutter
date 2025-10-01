@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../dio_client.dart';
 import '../websocket.dart' as ws;
 import 'tabs/settings.dart';
+import 'package:chat_app_flutter/state.dart' as state;
 
 class ChatPage extends StatefulWidget {
   final bool isDemo;
@@ -75,30 +76,32 @@ class _ChatPageState extends State<ChatPage> {
         } else {
           return Scaffold(
             body: Center(child: widgetOptions.elementAt(_selectedIndex)),
-            bottomNavigationBar: Theme(
-              data: Theme.of(
-                context,
-              ).copyWith(splashFactory: NoSplash.splashFactory),
-              child: BottomNavigationBar(
-                selectedItemColor: Theme.of(context).colorScheme.primary,
-                items: <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    label: lang.home,
-                    icon: Icon(Icons.home),
-                  ),
-                  BottomNavigationBarItem(
-                    label: lang.notifications,
-                    icon: Icon(Icons.notifications),
-                  ),
-                  BottomNavigationBarItem(
-                    label: lang.you,
-                    icon: Icon(Icons.circle),
-                  ),
-                ],
-                currentIndex: _selectedIndex,
-                onTap: _onItemTapped,
-              ),
-            ),
+            bottomNavigationBar: state.mobile.value
+                ? Theme(
+                    data: Theme.of(
+                      context,
+                    ).copyWith(splashFactory: NoSplash.splashFactory),
+                    child: BottomNavigationBar(
+                      selectedItemColor: Theme.of(context).colorScheme.primary,
+                      items: <BottomNavigationBarItem>[
+                        BottomNavigationBarItem(
+                          label: lang.home,
+                          icon: Icon(Icons.home),
+                        ),
+                        BottomNavigationBarItem(
+                          label: lang.notifications,
+                          icon: Icon(Icons.notifications),
+                        ),
+                        BottomNavigationBarItem(
+                          label: lang.you,
+                          icon: Icon(Icons.circle),
+                        ),
+                      ],
+                      currentIndex: _selectedIndex,
+                      onTap: _onItemTapped,
+                    ),
+                  )
+                : null,
           );
         }
       },

@@ -4,9 +4,12 @@ import 'dart:developer';
 import 'package:chat_app_flutter/models.dart';
 import 'package:chat_app_flutter/state.dart' as state;
 import 'package:chat_app_flutter/widgets/channel.dart';
+import 'package:chat_app_flutter/widgets/message_area.dart';
 import 'package:chat_app_flutter/widgets/top.dart';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 import '../dio_client.dart';
@@ -96,6 +99,18 @@ class _ChannelListState extends State<ChannelList> {
       setState(() {
         state.currentChannel.value = channel.id;
       });
+
+      // this runs only on mobile
+      if (state.mobile.value) {
+        Navigator.of(context).push(
+          CupertinoPageRoute(
+            builder: (context) => Scaffold(
+              appBar: AppBar(title: Text(channelID)),
+              body: MessageArea(channelID: channelID),
+            ),
+          ),
+        );
+      }
     }
   }
 

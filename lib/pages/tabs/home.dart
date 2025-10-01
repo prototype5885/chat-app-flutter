@@ -36,34 +36,39 @@ class _HomeState extends State<Home> {
               child: ServerList(isDemo: widget.isDemo),
             ),
           ),
-          SizedBox(
-            width: 240.0,
-            child: Container(
-              color: Color.fromRGBO(0, 0, 0, 0.2),
-              child: ValueListenableBuilder(
-                valueListenable: state.currentServer,
-                builder: (context, value, child) {
-                  return ChannelList(
-                    key: ValueKey(value),
-                    isDemo: widget.isDemo,
-                    serverID: value,
-                  );
-                },
-              ),
-            ),
-          ),
-          Expanded(
-            child: ValueListenableBuilder(
-              valueListenable: state.currentChannel,
-              builder: (context, value, child) {
-                return MessageArea(
-                  key: ValueKey(value),
-                  channelID: state.currentChannel.value,
-                );
-              },
-            ),
-          ),
+          state.mobile.value
+              ? Expanded(child: _channelList())
+              : SizedBox(width: 240, child: _channelList()),
+          !state.mobile.value
+              ? Expanded(
+                  child: ValueListenableBuilder(
+                    valueListenable: state.currentChannel,
+                    builder: (context, value, child) {
+                      return MessageArea(
+                        key: ValueKey(value),
+                        channelID: state.currentChannel.value,
+                      );
+                    },
+                  ),
+                )
+              : SizedBox.shrink(),
         ],
+      ),
+    );
+  }
+
+  Widget _channelList() {
+    return Container(
+      color: Color.fromRGBO(0, 0, 0, 0.2),
+      child: ValueListenableBuilder(
+        valueListenable: state.currentServer,
+        builder: (context, value, child) {
+          return ChannelList(
+            key: ValueKey(value),
+            isDemo: widget.isDemo,
+            serverID: value,
+          );
+        },
       ),
     );
   }
