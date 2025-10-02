@@ -8,6 +8,7 @@ import 'package:chat_app_flutter/state.dart' as state;
 
 import '../dio_client.dart';
 import '../macros.dart' as macros;
+import '../widgets/delayed_loading_indicator.dart';
 
 class Start extends StatefulWidget {
   const Start({super.key});
@@ -57,7 +58,7 @@ class _StartState extends State<Start> {
               future: loading,
               builder: (context, asyncSnapshot) {
                 if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: DelayedLoadingIndicator());
                 } else if (asyncSnapshot.hasError) {
                   final error = asyncSnapshot.error;
                   String displayStatusText;

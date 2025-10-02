@@ -13,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../dio_client.dart';
+import 'delayed_loading_indicator.dart';
 
 class ChannelList extends StatefulWidget {
   final String serverID;
@@ -109,7 +110,7 @@ class _ChannelListState extends State<ChannelList> {
               future: loaded,
               builder: (context, asyncSnapshot) {
                 if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: DelayedLoadingIndicator());
                 } else if (asyncSnapshot.hasError) {
                   return handleError(asyncSnapshot.error);
                 } else {

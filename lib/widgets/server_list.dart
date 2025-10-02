@@ -9,6 +9,7 @@ import 'package:chat_app_flutter/widgets/server_base.dart';
 import 'package:flutter/material.dart';
 
 import '../dio_client.dart';
+import 'delayed_loading_indicator.dart';
 
 class ServerList extends StatefulWidget {
   const ServerList({super.key});
@@ -82,7 +83,7 @@ class _ServerListState extends State<ServerList> {
         future: serverListLoaded,
         builder: (context, asyncSnapshot) {
           if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: DelayedLoadingIndicator());
           } else if (asyncSnapshot.hasError) {
             return handleError(asyncSnapshot.error);
           } else {

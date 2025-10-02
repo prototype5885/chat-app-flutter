@@ -7,6 +7,7 @@ import 'package:chat_app_flutter/state.dart' as state;
 
 import '../dio_client.dart';
 import '../websocket.dart' as ws;
+import '../widgets/delayed_loading_indicator.dart';
 
 class Chat extends StatefulWidget {
   const Chat({super.key});
@@ -49,7 +50,7 @@ class _ChatState extends State<Chat> with AutomaticKeepAliveClientMixin {
       future: loaded,
       builder: (context, asyncSnapshot) {
         if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: DelayedLoadingIndicator());
           // } else if (asyncSnapshot.hasError) {
         } else {
           return Scaffold(

@@ -10,6 +10,7 @@ import 'package:chat_app_flutter/state.dart' as state;
 
 import '../dio_client.dart';
 import '../macros.dart';
+import 'delayed_loading_indicator.dart';
 
 class MessageArea extends StatefulWidget {
   final String channelID;
@@ -76,7 +77,7 @@ class _MessageAreaState extends State<MessageArea> {
             future: loaded,
             builder: (context, asyncSnapshot) {
               if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: DelayedLoadingIndicator());
               } else if (asyncSnapshot.hasError) {
                 return handleError(asyncSnapshot.error);
               } else {
