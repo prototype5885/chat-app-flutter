@@ -22,7 +22,7 @@ class MessageArea extends StatefulWidget {
 }
 
 class _MessageAreaState extends State<MessageArea> {
-  late Future<void> loaded;
+  late Future<void> messageListLoaded;
   late List<MessageModel> messageList = [];
 
   @override
@@ -38,9 +38,9 @@ class _MessageAreaState extends State<MessageArea> {
           user: UserModel(displayName: 'User name $messageNumber', picture: ''),
         );
       });
-      loaded = Future.value();
+      messageListLoaded = Future.value();
     } else {
-      loaded = fetchMessages();
+      messageListLoaded = fetchMessages();
     }
     super.initState();
   }
@@ -74,27 +74,29 @@ class _MessageAreaState extends State<MessageArea> {
         ?!state.mobile.value ? Top(childWidget: Text(widget.channelID)) : null,
         Expanded(
           child: FutureBuilder(
-            future: loaded,
+            future: messageListLoaded,
             builder: (context, asyncSnapshot) {
               if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: DelayedLoadingIndicator());
-              } else if (asyncSnapshot.hasError) {
-                return handleError(asyncSnapshot.error);
-              } else {
-                return ListView.builder(
-                  itemCount: messageList.length,
-                  itemBuilder: (context, index) {
-                    final msg = messageList[index];
-                    return Message(
-                      id: msg.id,
-                      userID: msg.userID,
-                      name: msg.user.displayName,
-                      pic: msg.user.picture,
-                      msg: msg.message,
-                    );
-                  },
-                );
+                return DelayedLoadingIndicator();
               }
+
+              if (asyncSnapshot.hasError) {
+                handleError(asyncSnapshot.error);
+              }
+
+              return ListView.builder(
+                itemCount: messageList.length,
+                itemBuilder: (context, index) {
+                  final msg = messageList[index];
+                  return Message(
+                    id: msg.id,
+                    userID: msg.userID,
+                    name: msg.user.displayName,
+                    pic: msg.user.picture,
+                    msg: msg.message,
+                  );
+                },
+              );
             },
           ),
         ),

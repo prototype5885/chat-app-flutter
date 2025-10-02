@@ -34,7 +34,7 @@ class _DelayedLoadingIndicatorState extends State<DelayedLoadingIndicator> {
   @override
   Widget build(BuildContext context) {
     if (show) {
-      return const CircularProgressIndicator();
+      return Center(child: const CircularProgressIndicator());
     } else {
       return const SizedBox.shrink();
     }

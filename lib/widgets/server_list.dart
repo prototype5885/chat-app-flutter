@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:chat_app_flutter/macros.dart';
 import 'package:chat_app_flutter/models.dart';
 import 'package:chat_app_flutter/state.dart' as state;
+import 'package:chat_app_flutter/widgets/channel_list.dart';
 
 import 'package:chat_app_flutter/widgets/server_base.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class ServerList extends StatefulWidget {
 }
 
 class _ServerListState extends State<ServerList> {
+  late String currentServerID;
   late Future<void> serverListLoaded;
   late List<ServerModel> serverList = [];
 
@@ -69,7 +71,7 @@ class _ServerListState extends State<ServerList> {
     final results = serverList.where((server) => server.id == serverID);
     if (results.isNotEmpty) {
       setState(() {
-        state.currentServer.value = results.first.id;
+        currentServerID = results.first.id;
       });
       log("Selected server ID $serverID");
     }
@@ -77,33 +79,48 @@ class _ServerListState extends State<ServerList> {
 
   @override
   Widget build(BuildContext context) {
-    return ScrollConfiguration(
-      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-      child: FutureBuilder(
-        future: serverListLoaded,
-        builder: (context, asyncSnapshot) {
-          if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: DelayedLoadingIndicator());
-          } else if (asyncSnapshot.hasError) {
-            return handleError(asyncSnapshot.error);
-          } else {
-            return ListView.builder(
-              itemCount: serverList.length,
-              itemBuilder: (context, index) {
-                final server = serverList[index];
-                return ServerBase(
-                  key: ValueKey(server.name),
-                  id: server.id,
-                  name: server.name,
-                  pic: server.picture,
-                  selected: server.id == state.currentServer.value,
-                  onClicked: selectServer,
-                );
-              },
-            );
-          }
-        },
-      ),
+    return FutureBuilder(
+      future: serverListLoaded,
+      builder: (context, asyncSnapshot) {
+        if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: DelayedLoadingIndicator());
+        }
+        if (asyncSnapshot.hasError) {
+          return handleError(asyncSnapshot.error);
+        }
+        return Row(
+          children: [
+            Container(
+              width: 72,
+              height: double.infinity,
+              color: Color.fromRGBO(0, 0, 0, 0.45),
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(
+                  context,
+                ).copyWith(scrollbars: false),
+                child: ListView.builder(
+                  itemCount: serverList.length,
+                  itemBuilder: (context, index) {
+                    final server = serverList[index];
+                    return ServerBase(
+                      key: ValueKey(server.name),
+                      id: server.id,
+                      name: server.name,
+                      pic: server.picture,
+                      selected: server.id == currentServerID,
+                      onClicked: selectServer,
+                    );
+                  },
+                ),
+              ),
+            ),
+            ChannelList(
+              key: ValueKey(currentServerID),
+              currentServerID: currentServerID,
+            ),
+          ],
+        );
+      },
     );
   }
 }

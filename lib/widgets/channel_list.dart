@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:chat_app_flutter/macros.dart';
 import 'package:chat_app_flutter/models.dart';
 import 'package:chat_app_flutter/state.dart' as state;
 import 'package:chat_app_flutter/widgets/channel.dart';
+import 'package:chat_app_flutter/widgets/delayed_loading_indicator.dart';
 import 'package:chat_app_flutter/widgets/message_area.dart';
 import 'package:chat_app_flutter/widgets/top.dart';
 
@@ -13,19 +13,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../dio_client.dart';
-import 'delayed_loading_indicator.dart';
+import '../macros.dart';
 
 class ChannelList extends StatefulWidget {
-  final String serverID;
+  final String currentServerID;
 
-  const ChannelList({super.key, required this.serverID});
+  const ChannelList({super.key, required this.currentServerID});
 
   @override
   State<ChannelList> createState() => _ChannelListState();
 }
 
 class _ChannelListState extends State<ChannelList> {
-  late Future<void> loaded;
+  String currentChannelID = "";
+
+  late Future<void> channelListLoaded;
   late List<ChannelModel> channelList = [];
 
   @override
@@ -39,9 +41,10 @@ class _ChannelListState extends State<ChannelList> {
           name: "Channel $serverNumber",
         );
       });
-      loaded = Future.value();
+      channelListLoaded = Future.value();
     } else {
-      loaded = fetchChannels();
+      channelListLoaded = fetchChannels();
+      // fetchChannels();
     }
     super.initState();
   }
@@ -52,13 +55,10 @@ class _ChannelListState extends State<ChannelList> {
   }
 
   Future<void> fetchChannels() async {
-    if (widget.serverID == "") {
-      return;
-    }
-    log("Fetching channels for server ID ${widget.serverID}...");
+    log("Fetching channels for server ID ${widget.currentServerID}...");
     final response = await dioClient.dio.get(
       '/api/channel/fetch',
-      queryParameters: {"serverID": widget.serverID},
+      queryParameters: {"serverID": widget.currentServerID},
     );
     final List<dynamic> rawList = jsonDecode(response.data);
 
@@ -79,7 +79,7 @@ class _ChannelListState extends State<ChannelList> {
     final results = channelList.where((channel) => channel.id == channelID);
     if (results.isNotEmpty) {
       setState(() {
-        state.currentChannel.value = results.first.id;
+        currentChannelID = results.first.id;
       });
       log("Selected channel ID $channelID");
 
@@ -98,23 +98,56 @@ class _ChannelListState extends State<ChannelList> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Top(childWidget: Text(widget.serverID)),
-        Expanded(
-          child: ScrollConfiguration(
-            behavior: ScrollConfiguration.of(
-              context,
-            ).copyWith(scrollbars: false),
+    return Expanded(
+      child: Row(
+        children: [
+          state.mobile.value
+              ? Expanded(child: _channelList())
+              : SizedBox(width: 240, child: _channelList()),
+          !state.mobile.value
+              ? Expanded(
+                  // width: 300,
+                  child: MessageArea(
+                    key: ValueKey(currentChannelID),
+                    channelID: currentChannelID,
+                  ),
+                )
+              : SizedBox.shrink(),
+          !state.mobile.value
+              ? Container(
+                  width: 240,
+                  color: Color.fromRGBO(0, 0, 0, 0.2),
+                  child: Column(children: [Top(childWidget: Text("members"))]),
+                )
+              : SizedBox.shrink(),
+        ],
+      ),
+    );
+  }
+
+  Widget _channelList() {
+    return Container(
+      color: Color.fromRGBO(0, 0, 0, 0.2),
+      child: Column(
+        children: [
+          Top(childWidget: Text(widget.currentServerID)),
+          Expanded(
             child: FutureBuilder(
-              future: loaded,
+              future: channelListLoaded,
               builder: (context, asyncSnapshot) {
                 if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: DelayedLoadingIndicator());
-                } else if (asyncSnapshot.hasError) {
-                  return handleError(asyncSnapshot.error);
-                } else {
-                  return Padding(
+                  return DelayedLoadingIndicator();
+                }
+
+                if (asyncSnapshot.hasError) {
+                  handleError(asyncSnapshot.error);
+                }
+
+                return ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(
+                    context,
+                  ).copyWith(scrollbars: false),
+                  child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListView.builder(
                       itemCount: channelList.length,
@@ -124,18 +157,18 @@ class _ChannelListState extends State<ChannelList> {
                           key: ValueKey(channel.name),
                           id: channel.id,
                           name: channel.name,
-                          selected: channel.id == state.currentChannel.value,
+                          selected: channel.id == currentChannelID,
                           onClicked: selectChannel,
                         );
                       },
                     ),
-                  );
-                }
+                  ),
+                );
               },
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
