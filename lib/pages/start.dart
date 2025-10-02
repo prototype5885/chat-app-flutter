@@ -57,7 +57,7 @@ class _StartState extends State<Start> {
               future: loading,
               builder: (context, asyncSnapshot) {
                 if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (asyncSnapshot.hasError) {
                   final error = asyncSnapshot.error;
                   String displayStatusText;

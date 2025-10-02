@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:chat_app_flutter/state.dart' as state;
 
 import '../dio_client.dart';
+import '../macros.dart';
 
 class MessageArea extends StatefulWidget {
   final String channelID;
@@ -44,6 +45,10 @@ class _MessageAreaState extends State<MessageArea> {
   }
 
   Future<void> fetchMessages() async {
+    if (widget.channelID == "") {
+      return;
+    }
+
     log("Fetching messages for channel ID ${widget.channelID}...");
     final response = await dioClient.dio.get(
       '/api/message/fetch',
@@ -67,17 +72,28 @@ class _MessageAreaState extends State<MessageArea> {
       children: [
         ?!state.mobile.value ? Top(childWidget: Text(widget.channelID)) : null,
         Expanded(
-          child: ListView.builder(
-            itemCount: messageList.length,
-            itemBuilder: (context, index) {
-              final msg = messageList[index];
-              return Message(
-                id: msg.id,
-                userID: msg.userID,
-                name: msg.user.displayName,
-                pic: msg.user.picture,
-                msg: msg.message,
-              );
+          child: FutureBuilder(
+            future: loaded,
+            builder: (context, asyncSnapshot) {
+              if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (asyncSnapshot.hasError) {
+                return handleError(asyncSnapshot.error);
+              } else {
+                return ListView.builder(
+                  itemCount: messageList.length,
+                  itemBuilder: (context, index) {
+                    final msg = messageList[index];
+                    return Message(
+                      id: msg.id,
+                      userID: msg.userID,
+                      name: msg.user.displayName,
+                      pic: msg.user.picture,
+                      msg: msg.message,
+                    );
+                  },
+                );
+              }
             },
           ),
         ),

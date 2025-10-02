@@ -51,6 +51,9 @@ class _ChannelListState extends State<ChannelList> {
   }
 
   Future<void> fetchChannels() async {
+    if (widget.serverID == "") {
+      return;
+    }
     log("Fetching channels for server ID ${widget.serverID}...");
     final response = await dioClient.dio.get(
       '/api/channel/fetch',
