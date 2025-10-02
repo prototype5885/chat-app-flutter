@@ -85,6 +85,8 @@ class _MessageAreaState extends State<MessageArea> {
               }
 
               return ListView.builder(
+                reverse: true,
+                padding: const EdgeInsets.only(bottom: 24),
                 itemCount: messageList.length,
                 itemBuilder: (context, index) {
                   final msg = messageList[index];
