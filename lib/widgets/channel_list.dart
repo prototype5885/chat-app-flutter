@@ -66,7 +66,7 @@ class _ChannelListState extends State<ChannelList> {
           .toList();
     });
 
-    if (channelList.isNotEmpty) {
+    if (channelList.isNotEmpty && !state.mobile.value) {
       selectChannel(channelList.first.id);
     }
   }

@@ -1,32 +1,3 @@
-// class UserModel {
-//   final String id;
-//   final String displayName;
-//   final String picture;
-//
-//   UserModel({
-//     required this.id,
-//     required this.displayName,
-//     required this.picture,
-//   });
-//
-//   factory UserModel.fromJson(Map<String, dynamic> json) {
-//     return UserModel(
-//       id: json['id'] ?? '0',
-//       displayName: json['displayName'] ?? 'Noname',
-//       picture: json['picture'] ?? '',
-//     );
-//   }
-//
-//   Map<String, dynamic> toJson() {
-//     return {'id': id, 'displayName': displayName, 'picture': picture};
-//   }
-//
-//   @override
-//   String toString() {
-//     return 'UserModel(id: $id, displayName: $displayName, picture: $picture)';
-//   }
-// }
-
 class ServerModel {
   final String id;
   final String ownerID;
@@ -65,6 +36,57 @@ class ChannelModel {
       id: json['id'] ?? '',
       serverID: json['serverID'] ?? '',
       name: json['name'] ?? '',
+    );
+  }
+}
+
+class UserModel {
+  final String id;
+  final String displayName;
+  final String picture;
+
+  UserModel({this.id = '', this.displayName = '', this.picture = ''});
+
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['id'] ?? '0',
+      displayName: json['displayName'] ?? 'Noname',
+      picture: json['picture'] ?? '',
+    );
+  }
+}
+
+class MessageModel {
+  final String id;
+  final String channelID;
+  final String userID;
+  final String message;
+  final List<String> attachments;
+  final bool edited;
+
+  final UserModel user;
+
+  MessageModel({
+    required this.id,
+    required this.channelID,
+    required this.userID,
+    required this.message,
+    this.attachments = const [],
+    this.edited = false,
+    required this.user,
+  });
+
+  factory MessageModel.fromJson(Map<String, dynamic> json) {
+    return MessageModel(
+      id: json['id'] ?? '',
+      channelID: json['channelID'] ?? '',
+      userID: json['userID'] ?? '',
+      message: json['message'] ?? '',
+      attachments: json['attachments'] is String
+          ? [json['attachments'] as String]
+          : List<String>.from(json['attachments'] as List? ?? const []),
+      edited: json['edited'] ?? false,
+      user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
     );
   }
 }
