@@ -81,7 +81,7 @@ class _MessageAreaState extends State<MessageArea> {
               }
 
               if (asyncSnapshot.hasError) {
-                handleError(asyncSnapshot.error);
+                return handleError(asyncSnapshot.error);
               }
 
               return ListView.builder(

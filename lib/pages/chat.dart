@@ -52,7 +52,7 @@ class _ChatState extends State<Chat> with AutomaticKeepAliveClientMixin {
           return DelayedLoadingIndicator();
         }
         if (asyncSnapshot.hasError) {
-          handleError(asyncSnapshot.error);
+          return handleError(asyncSnapshot.error);
         }
 
         return Scaffold(body: ServerList());

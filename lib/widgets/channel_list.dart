@@ -140,7 +140,7 @@ class _ChannelListState extends State<ChannelList> {
                 }
 
                 if (asyncSnapshot.hasError) {
-                  handleError(asyncSnapshot.error);
+                  return handleError(asyncSnapshot.error);
                 }
 
                 return ScrollConfiguration(
