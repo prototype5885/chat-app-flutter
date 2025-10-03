@@ -2,7 +2,6 @@ import 'package:chat_app_flutter/pages/start.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
-const _darkBackground = Color.fromRGBO(66, 68, 75, 1);
 const FlexScheme _theme = FlexScheme.shadBlue;
 
 void main() {
@@ -22,10 +21,7 @@ class ChatApp extends StatelessWidget {
       title: 'Chat App',
       themeMode: ThemeMode.dark,
       theme: FlexThemeData.light(scheme: _theme),
-      darkTheme: FlexThemeData.dark(
-        scheme: _theme,
-        scaffoldBackground: _darkBackground,
-      ),
+      darkTheme: FlexThemeData.dark(scheme: _theme),
       home: Start(),
     );
   }

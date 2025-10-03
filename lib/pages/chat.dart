@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:chat_app_flutter/themes.dart' as themes;
 import 'package:chat_app_flutter/widgets/server_list.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app_flutter/state.dart' as state;
@@ -45,22 +46,29 @@ class _ChatState extends State<Chat> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Container(
-      color: Color.fromRGBO(0, 0, 0, 0.45),
-      child: SafeArea(
-        child: FutureBuilder(
-          future: sessionLoaded,
-          builder: (context, asyncSnapshot) {
-            if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-              return DelayedLoadingIndicator();
-            }
-            if (asyncSnapshot.hasError) {
-              return handleError(asyncSnapshot.error);
-            }
-        
-            return Scaffold(body: ServerList());
-          },
-        ),
+    return Scaffold(
+      body: ValueListenableBuilder(
+        valueListenable: themes.current,
+        builder: (context, value, child) {
+          return Container(
+            decoration: value,
+            child: SafeArea(
+              child: FutureBuilder(
+                future: sessionLoaded,
+                builder: (context, asyncSnapshot) {
+                  if (asyncSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return DelayedLoadingIndicator();
+                  }
+                  if (asyncSnapshot.hasError) {
+                    return handleError(asyncSnapshot.error);
+                  }
+                  return ServerList();
+                },
+              ),
+            ),
+          );
+        },
       ),
     );
   }
