@@ -70,10 +70,10 @@ class _StartState extends State<Start> {
                       displayStatusText = lang.notLoggedIn;
                       return LoginRegister();
                     } else {
-                      displayStatusText = "Error: ${error.type}";
+                      displayStatusText = "$error";
                     }
                   } else {
-                    displayStatusText = "Error: $error";
+                    displayStatusText = "$error";
                   }
 
                   return Text(
