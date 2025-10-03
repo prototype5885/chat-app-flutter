@@ -45,18 +45,23 @@ class _ChatState extends State<Chat> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return FutureBuilder(
-      future: sessionLoaded,
-      builder: (context, asyncSnapshot) {
-        if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-          return DelayedLoadingIndicator();
-        }
-        if (asyncSnapshot.hasError) {
-          return handleError(asyncSnapshot.error);
-        }
-
-        return Scaffold(body: ServerList());
-      },
+    return Container(
+      color: Color.fromRGBO(0, 0, 0, 0.45),
+      child: SafeArea(
+        child: FutureBuilder(
+          future: sessionLoaded,
+          builder: (context, asyncSnapshot) {
+            if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+              return DelayedLoadingIndicator();
+            }
+            if (asyncSnapshot.hasError) {
+              return handleError(asyncSnapshot.error);
+            }
+        
+            return Scaffold(body: ServerList());
+          },
+        ),
+      ),
     );
   }
 
