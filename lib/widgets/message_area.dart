@@ -7,6 +7,7 @@ import 'package:chat_app_flutter/widgets/message_input.dart';
 import 'package:chat_app_flutter/widgets/top.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app_flutter/state.dart' as state;
+import 'package:chat_app_flutter/websocket.dart' as ws;
 
 import '../dio_client.dart';
 import '../macros.dart';
@@ -45,6 +46,12 @@ class _MessageAreaState extends State<MessageArea> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    ws.events.off(type: "MessageCreated");
+    super.dispose();
+  }
+
   Future<void> fetchMessages() async {
     if (widget.channelID == "") {
       return;
@@ -56,13 +63,28 @@ class _MessageAreaState extends State<MessageArea> {
       queryParameters: {"channelID": widget.channelID},
     );
     final List<dynamic> rawList = jsonDecode(response.data);
+    for (var item in rawList) {
+      addMessage(MessageModel.fromJson(item));
+    }
 
+    ws.events.on(
+      "MessageCreated",
+      (String data) => addMessage(
+        MessageModel.fromJson(jsonDecode(data) as Map<String, dynamic>),
+      ),
+    );
+  }
+
+  void addMessage(MessageModel message) {
     setState(() {
-      messageList = rawList
-          .map(
-            (jsonMap) => MessageModel.fromJson(jsonMap as Map<String, dynamic>),
-          )
-          .toList();
+      int insertIndex = messageList.length;
+      for (int i = 0; i < messageList.length; i++) {
+        if (messageList[i].id.compareTo(message.id) < 0) {
+          insertIndex = i;
+          break;
+        }
+      }
+      messageList.insert(insertIndex, message);
     });
   }
 

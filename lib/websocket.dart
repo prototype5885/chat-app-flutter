@@ -8,8 +8,10 @@ import 'package:flutter/foundation.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:events_emitter/events_emitter.dart';
 
 late final WebSocketChannel ws;
+final events = EventEmitter();
 
 Future<void> connect() async {
   log("Connecting to websocket on $backendWsAddress");
@@ -42,8 +44,12 @@ Future<void> connect() async {
     return;
   }
 
-  ws.stream.listen((message) {
-    ws.sink.add('received!');
+  ws.stream.listen((data) {
+    final parts = (data as String).split(RegExp(r'\r?\n'));
+    final type = parts.first;
+    final jsonString = parts.skip(1).join('\n');
+
+    events.emit(type, jsonString);
   });
 }
 
