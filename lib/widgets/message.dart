@@ -10,6 +10,7 @@ class Message extends StatefulWidget {
   final String name;
   final String pic;
   final String msg;
+  final bool sameUser;
 
   const Message({
     super.key,
@@ -18,6 +19,7 @@ class Message extends StatefulWidget {
     required this.name,
     required this.pic,
     required this.msg,
+    this.sameUser = false,
   });
 
   @override
@@ -27,6 +29,7 @@ class Message extends StatefulWidget {
 class _MessageState extends State<Message> {
   bool isHoveringName = false;
   bool isHoveringMessage = false;
+  late double padding = widget.sameUser ? 0.0 : 4.0;
 
   void pressed() {
     log("Avatar pressed for ID: ${widget.id}");
@@ -35,7 +38,7 @@ class _MessageState extends State<Message> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      padding: EdgeInsets.only(top: padding, bottom: padding),
       child: MouseRegion(
         onEnter: (event) => setState(() => isHoveringMessage = true),
         onExit: (event) => setState(() => isHoveringMessage = false),
@@ -44,63 +47,68 @@ class _MessageState extends State<Message> {
               ? Color.fromRGBO(255, 255, 255, 0.05)
               : Colors.transparent,
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
-              vertical: 0.0,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: padding),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Avatar(
-                  size: 40,
-                  pic: widget.pic,
-                  name: widget.name,
-                  pressed: pressed,
-                ),
+                if (widget.sameUser)
+                  SizedBox(width: 40, height: widget.sameUser ? 24 : 40)
+                else
+                  Avatar(
+                    size: 40,
+                    pic: widget.pic,
+                    name: widget.name,
+                    pressed: pressed,
+                  ),
+
                 const SizedBox(width: 12.0),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              log('User name pressed for ID: ${widget.userID}');
-                            },
-                            child: MouseRegion(
-                              onEnter: (event) =>
-                                  setState(() => isHoveringName = true),
-                              onExit: (event) =>
-                                  setState(() => isHoveringName = false),
-                              cursor: SystemMouseCursors.click,
-                              child: Text(
-                                widget.name,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  decoration: isHoveringName
-                                      ? TextDecoration.underline
-                                      : TextDecoration.none,
+                      if (widget.sameUser)
+                        SizedBox.shrink()
+                      else
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                log(
+                                  'User name pressed for ID: ${widget.userID}',
+                                );
+                              },
+                              child: MouseRegion(
+                                onEnter: (event) =>
+                                    setState(() => isHoveringName = true),
+                                onExit: (event) =>
+                                    setState(() => isHoveringName = false),
+                                cursor: SystemMouseCursors.click,
+                                child: Text(
+                                  widget.name,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    decoration: isHoveringName
+                                        ? TextDecoration.underline
+                                        : TextDecoration.none,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text(
-                              macros.extractDate(
-                                widget.id,
-                                macros.SnowflakeDateFormat.long,
-                              ),
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.white.withAlpha(128),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                macros.extractDate(
+                                  widget.id,
+                                  macros.SnowflakeDateFormat.long,
+                                ),
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.white.withAlpha(128),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 2.0),
+                          ],
+                        ),
                       SelectableText(
                         widget.msg,
                         style: const TextStyle(fontSize: 14),

@@ -75,17 +75,32 @@ class _MessageAreaState extends State<MessageArea> {
     );
   }
 
-  void addMessage(MessageModel message) {
-    setState(() {
-      int insertIndex = messageList.length;
-      for (int i = 0; i < messageList.length; i++) {
-        if (messageList[i].id.compareTo(message.id) < 0) {
-          insertIndex = i;
-          break;
-        }
+  void addMessage(MessageModel newMsg) {
+    // insert in proper place depending on time
+    int insertIndex = messageList.length;
+    for (int i = 0; i < messageList.length; i++) {
+      if (BigInt.parse(messageList[i].id) < BigInt.parse(newMsg.id)) {
+        insertIndex = i;
+        break;
       }
-      messageList.insert(insertIndex, message);
+    }
+    setState(() {
+      messageList.insert(insertIndex, newMsg);
+      while (messageList.length > 50) {
+        messageList.removeLast();
+      }
     });
+
+    // format messages depending on if previous sender is same as new
+    // setState(() {
+    //   for (int i = 0; i < messageList.length; i++) {
+    //     if (i - 1 >= 0) {
+    //       if (messageList[i].userID == messageList[i - 1].userID) {
+    //         messageList[i - 1] = messageList[i - 1].copyWith(sameUser: true);
+    //       }
+    //     }
+    //   }
+    // });
   }
 
   @override
@@ -118,6 +133,7 @@ class _MessageAreaState extends State<MessageArea> {
                     name: msg.user.displayName,
                     pic: msg.user.picture,
                     msg: msg.message,
+                    sameUser: msg.sameUser,
                   );
                 },
               );

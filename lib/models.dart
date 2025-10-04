@@ -63,6 +63,7 @@ class MessageModel {
   final String message;
   final List<String> attachments;
   final bool edited;
+  final bool sameUser;
 
   final UserModel user;
 
@@ -74,6 +75,7 @@ class MessageModel {
     this.attachments = const [],
     this.edited = false,
     required this.user,
+    this.sameUser = false,
   });
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
@@ -87,6 +89,28 @@ class MessageModel {
           : List<String>.from(json['attachments'] as List? ?? const []),
       edited: json['edited'] ?? false,
       user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
+    );
+  }
+
+  MessageModel copyWith({
+    String? id,
+    String? channelID,
+    String? userID,
+    String? message,
+    List<String>? attachments,
+    bool? edited,
+    bool? sameUser,
+    UserModel? user,
+  }) {
+    return MessageModel(
+      id: id ?? this.id,
+      channelID: channelID ?? this.channelID,
+      userID: userID ?? this.userID,
+      message: message ?? this.message,
+      attachments: attachments ?? this.attachments,
+      edited: edited ?? this.edited,
+      sameUser: sameUser ?? this.sameUser,
+      user: user ?? this.user,
     );
   }
 }
