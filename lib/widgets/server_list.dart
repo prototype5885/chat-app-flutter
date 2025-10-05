@@ -20,7 +20,7 @@ class ServerList extends StatefulWidget {
 }
 
 class _ServerListState extends State<ServerList> {
-  late String currentServerID;
+  late String currentServerID = "";
   late Future<void> serverListLoaded;
   late List<ServerModel> serverList = [];
 
