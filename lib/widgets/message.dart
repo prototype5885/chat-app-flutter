@@ -1,8 +1,9 @@
 import 'dart:developer';
 
-import 'package:chat_app_flutter/macros.dart' as macros;
 import 'package:chat_app_flutter/widgets/avatar.dart';
 import 'package:flutter/material.dart';
+
+import '../snowflake.dart' as snowflake;
 
 class Message extends StatefulWidget {
   final String id;
@@ -97,9 +98,9 @@ class _MessageState extends State<Message> {
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: Text(
-                                macros.extractDate(
+                                snowflake.extractDate(
                                   widget.id,
-                                  macros.SnowflakeDateFormat.long,
+                                  snowflake.SnowflakeDateFormat.long,
                                 ),
                                 style: TextStyle(
                                   fontSize: 11,
