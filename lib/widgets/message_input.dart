@@ -42,11 +42,16 @@ class _MessageInputState extends State<MessageInput> {
       return;
     }
 
-    await dioClient.dio.post(
+    var resp = await dioClient.dio.post(
       '/api/message/create',
       data: {'message': message, 'channelID': widget.channelID},
     );
-    controller.clear();
+
+    if (resp.statusCode == 200) {
+      setState(() {
+        controller.clear();
+      });
+    }
   }
 
   @override
@@ -59,7 +64,9 @@ class _MessageInputState extends State<MessageInput> {
           onKeyEvent: (KeyEvent event) {
             if (event is KeyDownEvent) {
               if (event.logicalKey == LogicalKeyboardKey.enter) {
-                if (!HardwareKeyboard.instance.isShiftPressed) {
+                if (HardwareKeyboard.instance.isShiftPressed) {
+                  controller.text += '\n';
+                } else {
                   sendMessage();
                 }
               }
@@ -67,11 +74,7 @@ class _MessageInputState extends State<MessageInput> {
           },
           child: TextField(
             controller: controller,
-            onChanged: (String message) {
-              if (message.trim().isEmpty) {
-                controller.clear();
-              }
-            },
+            textInputAction: TextInputAction.none,
             autofocus: true,
             autocorrect: true,
             cursorColor: Colors.white,
