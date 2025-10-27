@@ -30,7 +30,7 @@ class Avatar extends StatelessWidget {
               child: ClipOval(
                 child: pic.isNotEmpty
                     ? Image.network(
-                        '$backendHttpAddress/cdn/avatars/$pic',
+                        backend.replace(path: "/cdn/avatars/$pic").toString(),
                         fit: BoxFit.cover,
                         cacheWidth: optimizeImageCache(size, context),
                         cacheHeight: optimizeImageCache(size, context),

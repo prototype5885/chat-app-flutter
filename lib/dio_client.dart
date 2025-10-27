@@ -13,7 +13,7 @@ class DioClient {
   final Dio dio = Dio();
 
   Future<void> init() async {
-    dio.options.baseUrl = backendHttpAddress;
+    dio.options.baseUrl = backend.toString();
     dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.receiveTimeout = const Duration(seconds: 10);
 

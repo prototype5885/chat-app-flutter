@@ -14,12 +14,15 @@ late final WebSocketChannel ws;
 final events = EventEmitter();
 
 Future<void> connect() async {
+  final backendWsAddress = backend.replace(
+    scheme: backend.isScheme("http") ? "ws" : "wss",
+    path: "/ws",
+  );
+
   log("Connecting to websocket on $backendWsAddress");
 
   if (!kIsWeb) {
-    List<Cookie> cookies = await cookieJar.loadForRequest(
-      Uri.parse(backendHttpAddress),
-    );
+    List<Cookie> cookies = await cookieJar.loadForRequest(backend);
 
     List<Cookie> filteredCookies = cookies.where((cookie) {
       return cookie.name == 'JWT' || cookie.name == 'session';
@@ -34,7 +37,7 @@ Future<void> connect() async {
       headers: {'Cookie': cookieHeader},
     );
   } else {
-    ws = WebSocketChannel.connect(Uri.parse(backendWsAddress));
+    ws = WebSocketChannel.connect(backendWsAddress);
   }
 
   try {

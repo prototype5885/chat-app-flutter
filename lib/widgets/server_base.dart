@@ -78,7 +78,9 @@ class _ServerBaseState extends State<ServerBase> {
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(animatedRadius),
                           child: Image.network(
-                            '$backendHttpAddress/cdn/avatars/${widget.pic}',
+                            backend
+                                .replace(path: "/cdn/avatars/${widget.pic}")
+                                .toString(),
                             fit: BoxFit.cover,
                             cacheWidth: optimizeImageCache(size, context),
                             cacheHeight: optimizeImageCache(size, context),
