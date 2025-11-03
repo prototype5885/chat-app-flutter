@@ -25,10 +25,23 @@ class MessageArea extends StatefulWidget {
 class _MessageAreaState extends State<MessageArea> {
   late Future<void> messageListLoaded;
   late List<MessageModel> messageList = [];
+  final ScrollController scrollController = ScrollController();
+  bool reachedTop = false;
+  bool requestInProgress = false;
 
   @override
   void initState() {
-    if (state.demo.value) {
+    if (!state.demo.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ws.events.on(
+          "MessageCreated",
+          (String data) => addMessage(
+            MessageModel.fromJson(jsonDecode(data) as Map<String, dynamic>),
+          ),
+        );
+      });
+      messageListLoaded = fetchMessages("");
+    } else {
       messageList = List.generate(50, (index) {
         final messageNumber = index + 1;
         return MessageModel(
@@ -40,39 +53,69 @@ class _MessageAreaState extends State<MessageArea> {
         );
       });
       messageListLoaded = Future.value();
-    } else {
-      messageListLoaded = fetchMessages();
     }
+    scrollController.addListener(scrolled);
     super.initState();
   }
 
   @override
   void dispose() {
-    ws.events.off(type: "MessageCreated");
+    if (!state.demo.value) {
+      ws.events.off(type: "MessageCreated");
+    }
+
+    scrollController.removeListener(scrolled);
     super.dispose();
   }
 
-  Future<void> fetchMessages() async {
-    if (widget.channelID == "") {
+  Future<void> fetchMessages(String messageID) async {
+    if (reachedTop || requestInProgress) {
       return;
+    }
+
+    requestInProgress = true;
+
+    if (widget.channelID.isEmpty) {
+      log("Channel ID is empty, cannot request messages");
+      return;
+    }
+
+    var queryParameters = {"channelID": widget.channelID};
+
+    if (messageID.isNotEmpty) {
+      queryParameters.addAll({"messageID": messageID});
     }
 
     log("Fetching messages for channel ID ${widget.channelID}...");
     final response = await dioClient.dio.get(
       '/api/message/fetch',
-      queryParameters: {"channelID": widget.channelID},
+      queryParameters: queryParameters,
     );
+
     final List<dynamic> rawList = jsonDecode(response.data);
+
+    if (rawList.isEmpty) {
+      log("No more messages to request");
+      reachedTop = true;
+    }
+
     for (var item in rawList) {
       addMessage(MessageModel.fromJson(item));
     }
 
-    ws.events.on(
-      "MessageCreated",
-      (String data) => addMessage(
-        MessageModel.fromJson(jsonDecode(data) as Map<String, dynamic>),
-      ),
-    );
+    requestInProgress = false;
+  }
+
+  void scrolled() async {
+    final double distance =
+        scrollController.position.maxScrollExtent -
+        scrollController.position.pixels;
+
+    if (distance >= 251.0) {
+      return;
+    }
+
+    fetchMessages(messageList.last.id);
   }
 
   void addMessage(MessageModel newMsg) {
@@ -86,9 +129,9 @@ class _MessageAreaState extends State<MessageArea> {
     }
     setState(() {
       messageList.insert(insertIndex, newMsg);
-      while (messageList.length > 50) {
-        messageList.removeLast();
-      }
+      // while (messageList.length > 50) {
+      //   messageList.removeLast();
+      // }
     });
 
     // format messages depending on if previous sender is same as new
@@ -122,6 +165,7 @@ class _MessageAreaState extends State<MessageArea> {
               }
 
               return ListView.builder(
+                controller: scrollController,
                 reverse: true,
                 padding: const EdgeInsets.only(bottom: 24),
                 itemCount: messageList.length,

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -39,6 +41,11 @@ class _MessageInputState extends State<MessageInput> {
         controller.clear();
       });
 
+      return;
+    }
+
+    if (widget.channelID.isEmpty) {
+      log("Channel ID is empty, cannot send message");
       return;
     }
 
