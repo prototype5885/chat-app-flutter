@@ -1,0 +1,22 @@
+name: chat_app_flutter
+description: "Chat App made in flutter."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  cached_network_image: 3.4.1
+  cookie_jar: 4.0.9
+  dio: 5.9.2
+  dio_cookie_manager: 3.4.0
+  flutter:
+    sdk: flutter
+  path_provider: 2.1.5
+
+dev_dependencies:
+  flutter_lints: 6.0.0
+
+flutter:
+  uses-material-design: true
