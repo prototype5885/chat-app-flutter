@@ -1,5 +1,4 @@
 import 'package:chat_app_flutter/services/dio_client.dart';
-import 'package:chat_app_flutter/services/globals.dart';
 import 'package:chat_app_flutter/widgets/server_list.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +11,7 @@ class Chat extends StatefulWidget {
 }
 
 class ChatState extends State<Chat> {
+  late final String userId;
   bool _isLoading = true;
 
   @override
