@@ -33,14 +33,14 @@ Future<void> setupDioClient() async {
     );
 
     dio.interceptors.add(CookieManager(cookieJar));
-  }
 
-  List<Cookie> cookies = await cookieJar.loadForRequest(backend);
+    List<Cookie> cookies = await cookieJar.loadForRequest(backend);
 
-  for (var cookie in cookies) {
-    if (cookie.name == 'token') {
-      tokenCookie = cookie.value;
-      break;
+    for (var cookie in cookies) {
+      if (cookie.name == 'token') {
+        tokenCookie = cookie.value;
+        break;
+      }
     }
   }
 }
