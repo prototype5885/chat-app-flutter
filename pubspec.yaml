@@ -1,19 +1,19 @@
 name: chat_app_flutter
 description: "Chat App made in flutter."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0+1
 
 environment:
-  sdk: ^3.11.5
+  sdk: ^3.12.2
 
 dependencies:
   cached_network_image: 3.4.1
   cookie_jar: 4.0.9
-  dio: 5.9.2
+  dio: 5.10.0
   dio_cookie_manager: 3.4.0
   flutter:
     sdk: flutter
-  path_provider: 2.1.5
+  path_provider: 2.1.6
 
 dev_dependencies:
   flutter_lints: 6.0.0
