@@ -11,7 +11,7 @@ class Chat extends StatefulWidget {
 }
 
 class ChatState extends State<Chat> {
-  late final String userId;
+  late final int userId;
   bool _isLoading = true;
 
   @override
@@ -29,7 +29,7 @@ class ChatState extends State<Chat> {
     try {
       final response = await dio.get('/api/v1/user_id');
       setState(() {
-        userId = response.data.toString();
+        userId = int.parse(response.data);
         _isLoading = false;
       });
     } on DioException catch (e) {

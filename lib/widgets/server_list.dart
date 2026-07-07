@@ -13,7 +13,7 @@ class ServerList extends StatefulWidget {
 }
 
 class _ServerListState extends State<ServerList> {
-  late String currentServerID = "";
+  late int currentServerID = 0;
   late Future<void> serverListLoaded;
   late List<ServerSchema> serverList = [];
 
@@ -60,7 +60,7 @@ class _ServerListState extends State<ServerList> {
     }
   }
 
-  void selectServer(String serverID) {
+  void selectServer(int serverID) {
     final results = serverList.where((server) => server.id == serverID);
     if (results.isNotEmpty) {
       setState(() {

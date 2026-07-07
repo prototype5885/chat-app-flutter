@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ServerBase extends StatefulWidget {
-  final String id;
+  final int id;
   final String name;
   final String? pic;
   final bool selected;
-  final Function(String) onClicked;
+  final Function(int) onClicked;
 
   const ServerBase({
     super.key,

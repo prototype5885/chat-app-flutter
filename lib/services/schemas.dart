@@ -1,5 +1,5 @@
 class UserSchema {
-  final String id;
+  final int id;
   final String? username;
   final String displayName;
   final String? picture;
@@ -38,7 +38,7 @@ class UserEditRequest {
 }
 
 class UserEditResponse {
-  final String id;
+  final int id;
   final String? displayName;
   final String? picture;
   final String? customStatus;
@@ -61,7 +61,7 @@ class UserEditResponse {
 }
 
 class UserOnline {
-  final String id;
+  final int id;
   final bool online;
 
   UserOnline({required this.id, required this.online});
@@ -72,8 +72,8 @@ class UserOnline {
 }
 
 class ServerSchema {
-  final String id;
-  final String ownerId;
+  final int id;
+  final int ownerId;
   final String name;
   final String? picture;
   final String? banner;
@@ -121,8 +121,8 @@ class ServerEditRequest {
 }
 
 class ChannelSchema {
-  final String id;
-  final String serverId;
+  final int id;
+  final int serverId;
   final String name;
 
   ChannelSchema({required this.id, required this.serverId, required this.name});
@@ -177,7 +177,7 @@ class MessageEditRequest {
 }
 
 class MessageEditResponse {
-  final String id;
+  final int id;
   final String message;
   final String? attachments;
   final String? edited;
@@ -200,9 +200,9 @@ class MessageEditResponse {
 }
 
 class MessageResponse {
-  final String id;
-  final String senderId;
-  final String channelId;
+  final int id;
+  final int senderId;
+  final int channelId;
   final String message;
   final String? attachments;
   final String? edited;
@@ -235,7 +235,7 @@ class MessageResponse {
 }
 
 class TypingSchema {
-  final String userId;
+  final int userId;
   final String? displayName;
 
   TypingSchema({required this.userId, this.displayName});
