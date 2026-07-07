@@ -87,7 +87,7 @@ class _ServerBaseState extends State<ServerBase> {
                                   queryParameters: {'size': '96'},
                                 )
                                 .toString(),
-                            httpHeaders: {'Cookie': 'token=$tokenCookie;'},
+                            httpHeaders: getTokenCookieHeader(),
                             fit: BoxFit.cover,
                             width: size,
                             height: size,

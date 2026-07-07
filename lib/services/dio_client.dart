@@ -9,7 +9,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 late final Dio dio;
 late final PersistCookieJar cookieJar;
-String tokenCookie = "";
+String? cachedToken;
 
 Future<void> setupDioClient() async {
   dio = Dio();
@@ -38,7 +38,7 @@ Future<void> setupDioClient() async {
 
     for (var cookie in cookies) {
       if (cookie.name == 'token') {
-        tokenCookie = cookie.value;
+        cachedToken = cookie.value;
         break;
       }
     }
@@ -55,4 +55,8 @@ Future<String?> getCookieValue(String name) async {
   }
 
   return null;
+}
+
+Map<String, String> getTokenCookieHeader() {
+  return {'Cookie': 'token=$cachedToken!;'};
 }
