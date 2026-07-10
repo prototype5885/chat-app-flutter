@@ -1,4 +1,5 @@
 import 'package:chat_app_flutter/services/dio_client.dart';
+import 'package:chat_app_flutter/widgets_stateless/login_register.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -19,21 +20,9 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> checkIsLoggedIn() async {
-    try {
-      await dio.get('/api/v1/test_auth');
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/chat');
-      }
-    } on DioException catch (error) {
-      if (error.response?.statusCode == 401) {
-        if (mounted) {
-          Navigator.pushReplacementNamed(context, '/auth');
-        }
-      } else {
-        rethrow;
-      }
-    } catch (e) {
-      rethrow;
+    await dio.get('/api/v1/test_auth');
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, '/chat');
     }
   }
 
@@ -46,26 +35,34 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: FutureBuilder(
-          future: _authFuture,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Column(
+      body: FutureBuilder(
+        future: _authFuture,
+        builder: (context, asyncSnapshot) {
+          if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: Text('Checking if logged in...'));
+          } else if (asyncSnapshot.hasError) {
+            final error = asyncSnapshot.error;
+
+            // show login registration buttons if no token was found
+            if (error is DioException && error.response?.statusCode == 401) {
+              return const LoginRegister();
+            }
+
+            // show if unexpected error,
+            // which should only be that server isn't running
+            return Center(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Error: ${snapshot.error.toString()}'),
+                  Text('Error: ${asyncSnapshot.error.toString()}'),
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _retry,
-                    child: const Text('Connect'),
-                  ),
+                  ElevatedButton(onPressed: _retry, child: const Text('Retry')),
                 ],
-              );
-            }
-            return const SizedBox();
-          },
-        ),
+              ),
+            );
+          }
+          return const SizedBox();
+        },
       ),
     );
   }
