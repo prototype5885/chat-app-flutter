@@ -17,6 +17,11 @@ Future<void> setupDioClient() async {
   dio.options.connectTimeout = const Duration(seconds: 10);
   dio.options.receiveTimeout = const Duration(seconds: 10);
 
+  // allow accepting/sending cookies through cors
+  if (cors && kIsWeb) {
+    dio.options.extra['withCredentials'] = true;
+  }
+
   // save cookies into a file if not running on web browser
   if (!kIsWeb) {
     final docDir = await getApplicationDocumentsDirectory();
