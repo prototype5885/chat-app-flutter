@@ -1,6 +1,5 @@
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/widgets/server_list.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class Chat extends StatefulWidget {
@@ -11,13 +10,13 @@ class Chat extends StatefulWidget {
 }
 
 class ChatState extends State<Chat> {
+  late Future<void> userIdReceived;
   late final int userId;
-  bool _isLoading = true;
 
   @override
   void initState() {
+    userIdReceived = _fetchUserID();
     super.initState();
-    _fetchUserID();
   }
 
   @override
@@ -26,26 +25,28 @@ class ChatState extends State<Chat> {
   }
 
   Future<void> _fetchUserID() async {
-    try {
-      final response = await dio.get('/api/v1/user_id');
-      setState(() {
-        userId = int.parse(response.data);
-        _isLoading = false;
-      });
-    } on DioException catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    final response = await dio.get('/api/v1/user_id');
+    setState(() {
+      userId = int.parse(response.data);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     // wait until user ID is received
-    if (_isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    } else {
-      return const Scaffold(body: SafeArea(child: ServerList()));
-    }
+    return FutureBuilder(
+      future: userIdReceived,
+      builder: (context, asyncSnapshot) {
+        if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: Text('Getting user ID...')),
+          );
+        } else if (asyncSnapshot.hasError) {
+          return Text(asyncSnapshot.error.toString());
+        } else {
+          return const Scaffold(body: SafeArea(child: ServerList()));
+        }
+      },
+    );
   }
 }
