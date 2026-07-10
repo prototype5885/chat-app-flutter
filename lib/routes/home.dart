@@ -22,7 +22,11 @@ class _HomeState extends State<Home> {
   Future<void> checkIsLoggedIn() async {
     await dio.get('/api/v1/test_auth');
     if (mounted) {
-      Navigator.pushReplacementNamed(context, '/chat');
+      Navigator.pushReplacementNamed(
+        context,
+        '/chat',
+        arguments: {'demo': false},
+      );
     }
   }
 
@@ -63,6 +67,16 @@ class _HomeState extends State<Home> {
           }
           return const SizedBox();
         },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.pushReplacementNamed(
+            context,
+            '/chat',
+            arguments: {'demo': true},
+          );
+        },
+        label: const Text('Demo'),
       ),
     );
   }

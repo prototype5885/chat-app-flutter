@@ -34,7 +34,11 @@ class LoginState extends State<Login> {
       );
 
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/chat');
+        Navigator.pushReplacementNamed(
+          context,
+          '/chat',
+          arguments: {'demo': false},
+        );
       }
     } on DioException catch (e) {
       setState(() {

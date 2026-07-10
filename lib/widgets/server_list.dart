@@ -3,10 +3,12 @@ import 'dart:developer';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/widgets/server_base.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class ServerList extends StatefulWidget {
-  const ServerList({super.key});
+  const ServerList({super.key, required this.isDemo});
+  final bool isDemo;
 
   @override
   State<ServerList> createState() => _ServerListState();
@@ -19,23 +21,7 @@ class _ServerListState extends State<ServerList> {
 
   @override
   void initState() {
-    // if (state.demo.value) {
-    //   serverList = List.generate(50, (index) {
-    //     final serverNumber = index + 1;
-    //     return ServerSchema(
-    //       id: serverNumber.toString(),
-    //       ownerId: '0',
-    //       name: serverNumber.toString(),
-    //       picture: '',
-    //       banner: '',
-    //       roles: '',
-    //     );
-    //   });
-    //   serverListLoaded = Future.value();
-    // } else {
     serverListLoaded = fetchServers();
-    // }
-    // fetchServers();
     super.initState();
   }
 
@@ -45,15 +31,25 @@ class _ServerListState extends State<ServerList> {
   }
 
   Future<void> fetchServers() async {
-    final response = await dio.get('/api/v1/servers');
-
-    setState(() {
-      serverList = (response.data as List<dynamic>)
-          .map(
-            (jsonMap) => ServerSchema.fromJson(jsonMap as Map<String, dynamic>),
-          )
-          .toList();
-    });
+    if (!widget.isDemo) {
+      final response = await dio.get('/api/v1/servers');
+      setState(() {
+        serverList = (response.data as List<dynamic>)
+            .map(
+              (jsonMap) =>
+                  ServerSchema.fromJson(jsonMap as Map<String, dynamic>),
+            )
+            .toList();
+      });
+    } else {
+      setState(() {
+        final alphabet = List.generate(26, (i) => String.fromCharCode(65 + i));
+        serverList = List.generate(26, (index) {
+          final letter = alphabet[index % 26];
+          return ServerSchema(id: index, ownerId: 0, name: letter);
+        });
+      });
+    }
 
     if (serverList.isNotEmpty) {
       selectServer(serverList.first.id);
@@ -81,7 +77,10 @@ class _ServerListState extends State<ServerList> {
           return const Center(child: CircularProgressIndicator());
         }
         if (asyncSnapshot.hasError) {
-          // return handleError(asyncSnapshot.error);
+          final error = asyncSnapshot.error;
+          if (error is DioException && error.response?.statusCode == 401) {
+            return Text(error.response!.statusCode.toString());
+          }
         }
         return Row(
           children: [

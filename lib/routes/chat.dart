@@ -10,12 +10,22 @@ class Chat extends StatefulWidget {
 }
 
 class ChatState extends State<Chat> {
-  late Future<void> userIdReceived;
+  late Future<void> _userIdReceived;
   late final int userId;
+  late final bool isDemo;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    isDemo = args['demo']!;
+    _userIdReceived = _fetchUserID();
+  }
 
   @override
   void initState() {
-    userIdReceived = _fetchUserID();
     super.initState();
   }
 
@@ -25,28 +35,36 @@ class ChatState extends State<Chat> {
   }
 
   Future<void> _fetchUserID() async {
-    final response = await dio.get('/api/v1/user_id');
-    setState(() {
-      userId = int.parse(response.data);
-    });
+    if (!isDemo) {
+      final response = await dio.get('/api/v1/user_id');
+      setState(() {
+        userId = int.parse(response.data);
+      });
+    } else {
+      setState(() {
+        userId = 0;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     // wait until user ID is received
-    return FutureBuilder(
-      future: userIdReceived,
-      builder: (context, asyncSnapshot) {
-        if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: Text('Getting user ID...')),
-          );
-        } else if (asyncSnapshot.hasError) {
-          return Text(asyncSnapshot.error.toString());
-        } else {
-          return const Scaffold(body: SafeArea(child: ServerList()));
-        }
-      },
+    return SafeArea(
+      child: Scaffold(
+        body: FutureBuilder(
+          future: _userIdReceived,
+          builder: (context, asyncSnapshot) {
+            if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: Text('Getting user ID...'));
+            } else if (asyncSnapshot.hasError) {
+              return Center(child: Text(asyncSnapshot.error.toString()));
+            } else {
+              return ServerList(isDemo: isDemo);
+            }
+          },
+        ),
+      ),
     );
   }
 }
