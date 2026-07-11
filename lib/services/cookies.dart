@@ -23,9 +23,9 @@ Future<void> setupCookieJar() async {
       ignoreExpires: true,
       storage: FileStorage(dir),
     );
-  }
 
-  cachedToken = await getTokenCookie();
+    cachedToken = await getTokenCookie();
+  }
 }
 
 Future<String?> getTokenCookie() async {
