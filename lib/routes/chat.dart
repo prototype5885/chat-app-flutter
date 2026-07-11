@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:chat_app_flutter/services/dio_client.dart';
+import 'package:chat_app_flutter/services/session.dart';
 import 'package:chat_app_flutter/widgets/server_list.dart';
 import 'package:flutter/material.dart';
 

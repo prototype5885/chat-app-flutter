@@ -1,6 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-final backend = Uri(scheme: 'http', host: 'localhost', port: 1848);
+Uri get backend {
+  if (kIsWeb) {
+    return Uri.base;
+  }
+  return Uri(scheme: 'http', host: 'localhost', port: 1848);
+}
+
 const cors = true;
 
 const defaultBorder = BorderSide(

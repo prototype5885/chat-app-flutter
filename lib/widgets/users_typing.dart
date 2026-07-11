@@ -1,4 +1,4 @@
-import 'package:chat_app_flutter/services/dio_client.dart';
+import 'package:chat_app_flutter/services/session.dart';
 import 'package:chat_app_flutter/widgets_stateless/typing_dots.dart';
 import 'package:flutter/material.dart';
 

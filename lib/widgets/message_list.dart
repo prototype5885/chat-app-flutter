@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
+import 'package:chat_app_flutter/services/session.dart';
 import 'package:chat_app_flutter/widgets/message.dart';
 import 'package:chat_app_flutter/widgets/message_input.dart';
 import 'package:chat_app_flutter/widgets/users_typing.dart';
