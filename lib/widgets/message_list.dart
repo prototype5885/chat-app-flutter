@@ -30,6 +30,7 @@ class MessageList extends StatefulWidget {
 class _MessageListState extends State<MessageList> {
   late Future<void> _messageListLoaded;
   List<MessageResponse> _messageList = [];
+  final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -85,6 +86,24 @@ class _MessageListState extends State<MessageList> {
     }
   }
 
+  void scrollToEnd() {
+    if (!mounted) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
+  // void scrollToEndInstant() {
+  //   if (!mounted) return;
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     scrollController.jumpTo(scrollController.position.maxScrollExtent);
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -100,9 +119,17 @@ class _MessageListState extends State<MessageList> {
                   final error = asyncSnapshot.error;
                   return Text(error.toString());
                 }
+
+                if (asyncSnapshot.connectionState == ConnectionState.done) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    scrollToEnd();
+                  });
+                }
+
                 return Stack(
                   children: [
                     ListView.builder(
+                      controller: scrollController,
                       padding: const EdgeInsets.only(bottom: 20),
                       itemCount: _messageList.length,
                       itemBuilder: (context, index) {
