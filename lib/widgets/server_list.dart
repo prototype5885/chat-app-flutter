@@ -1,23 +1,32 @@
 import 'dart:developer';
 
 import 'package:chat_app_flutter/services/dio_client.dart';
+import 'package:chat_app_flutter/services/globals.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
+import 'package:chat_app_flutter/widgets/channel_list.dart';
 import 'package:chat_app_flutter/widgets/server_base.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class ServerList extends StatefulWidget {
-  const ServerList({super.key, required this.isDemo});
+  const ServerList({
+    super.key,
+    required this.isDemo,
+    required this.userId,
+    required this.sessionId,
+  });
   final bool isDemo;
+  final int userId;
+  final int sessionId;
 
   @override
   State<ServerList> createState() => _ServerListState();
 }
 
 class _ServerListState extends State<ServerList> {
-  late int currentServerID = 0;
   late Future<void> serverListLoaded;
   late List<ServerSchema> serverList = [];
+  ServerSchema? currentServer;
 
   @override
   void initState() {
@@ -57,12 +66,14 @@ class _ServerListState extends State<ServerList> {
   }
 
   void selectServer(int serverID) {
-    final results = serverList.where((server) => server.id == serverID);
-    if (results.isNotEmpty) {
-      setState(() {
-        currentServerID = results.first.id;
-      });
-      log("Selected server ID $serverID");
+    for (int i = 0; i < serverList.length; i++) {
+      if (serverList[i].id == serverID) {
+        setState(() {
+          currentServer = serverList[i];
+        });
+        log("Selected server ID $serverID");
+        return;
+      }
     }
   }
 
@@ -87,7 +98,10 @@ class _ServerListState extends State<ServerList> {
             Container(
               width: 72,
               height: double.infinity,
-              color: colorScheme.surfaceContainerLowest,
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerLowest,
+                border: const Border(right: defaultBorder),
+              ),
               child: ScrollConfiguration(
                 behavior: ScrollConfiguration.of(
                   context,
@@ -101,17 +115,21 @@ class _ServerListState extends State<ServerList> {
                       id: server.id,
                       name: server.name,
                       pic: server.picture,
-                      selected: server.id == currentServerID,
+                      selected: server.id == currentServer?.id,
                       onClicked: selectServer,
                     );
                   },
                 ),
               ),
             ),
-            // ChannelList(
-            //   key: ValueKey(currentServerID),
-            //   currentServerID: currentServerID,
-            // ),
+            currentServer != null
+                ? ChannelList(
+                    key: ValueKey(currentServer),
+                    isDemo: widget.isDemo,
+                    server: currentServer!,
+                    sessionId: widget.sessionId,
+                  )
+                : const Center(child: Text('No server selected')),
           ],
         );
       },
