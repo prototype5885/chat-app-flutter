@@ -67,7 +67,11 @@ Future<String?> getCookieValue(String name) async {
 }
 
 Map<String, String> getTokenCookieHeader() {
-  return {'Cookie': 'token=$cachedToken!;'};
+  if (cachedToken != null) {
+    return {'Cookie': 'token=$cachedToken;'};
+  } else {
+    return {};
+  }
 }
 
 Future<void> connectSSE() async {
