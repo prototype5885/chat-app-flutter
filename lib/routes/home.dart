@@ -1,5 +1,4 @@
 import 'package:chat_app_flutter/services/dio_client.dart';
-import 'package:chat_app_flutter/widgets_stateless/login_register.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +48,7 @@ class _HomeState extends State<Home> {
 
             // show login registration buttons if no token was found
             if (error is DioException && error.response?.statusCode == 401) {
-              return const LoginRegister();
+              return _loginRegisterWidget();
             }
 
             // show if unexpected error,
@@ -77,6 +76,48 @@ class _HomeState extends State<Home> {
           );
         },
         label: const Text('Demo'),
+      ),
+    );
+  }
+
+  Widget _loginRegisterWidget() {
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 500),
+        child: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 16.0,
+            children: [
+              const Text(
+                'Hallo',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: 49,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/registration');
+                  },
+                  child: const Text('Registration'),
+                ),
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: 49,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/login');
+                  },
+                  child: const Text('Login'),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
