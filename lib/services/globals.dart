@@ -2,10 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 Uri get backend {
-  if (kIsWeb) {
-    return Uri.base;
-  }
-  return Uri(scheme: 'http', host: 'localhost', port: 1848);
+  return kIsWeb
+      ? Uri.parse(Uri.base.origin)
+      : Uri(scheme: 'http', host: 'localhost', port: 1848);
 }
 
 const cors = true;
