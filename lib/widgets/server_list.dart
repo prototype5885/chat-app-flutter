@@ -128,6 +128,7 @@ class _ServerListState extends State<ServerList> {
                     isDemo: widget.isDemo,
                     server: currentServer!,
                     sessionId: widget.sessionId,
+                    userId: widget.userId,
                   )
                 : const Center(child: Text('No server selected')),
           ],

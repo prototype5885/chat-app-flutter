@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/widgets/channel.dart';
+import 'package:chat_app_flutter/widgets/message_list.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -14,10 +15,12 @@ class ChannelList extends StatefulWidget {
     required this.isDemo,
     required this.server,
     required this.sessionId,
+    required this.userId,
   });
   final bool isDemo;
   final ServerSchema server;
   final int sessionId;
+  final int userId;
 
   @override
   State<ChannelList> createState() => _ChannelListState();
@@ -96,6 +99,15 @@ class _ChannelListState extends State<ChannelList> {
             color: colorScheme.surfaceContainerLowest,
             child: _channelListWidget(),
           ),
+          currentChannel != null
+              ? MessageList(
+                  key: ValueKey(currentChannel),
+                  isDemo: widget.isDemo,
+                  channel: currentChannel!,
+                  sessionId: widget.sessionId,
+                  userId: widget.userId,
+                )
+              : const Center(child: Text('No channel selected')),
         ],
       ),
     );

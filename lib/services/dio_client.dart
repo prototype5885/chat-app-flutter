@@ -11,6 +11,23 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 final events = EventEmitter();
 
+class SseEvent {
+  static const String userId = "user_id";
+  static const String sessionId = "session_id";
+  static const String selfUserInfo = "self_user_info";
+  static const String userInfo = "user_info";
+  static const String serverInfo = "server_info";
+  static const String deleteServer = "delete_server";
+  static const String createChannel = "create_channel";
+  static const String modifyChannel = "modify_channel";
+  static const String deleteChannel = "delete_channel";
+  static const String createMessage = "create_message";
+  static const String editMessage = "edit_message";
+  static const String deleteMessage = "delete_message";
+  static const String typing = "typing";
+  static const String userOnline = "user_online";
+}
+
 late final Dio dio;
 late final PersistCookieJar cookieJar;
 String? cachedToken;

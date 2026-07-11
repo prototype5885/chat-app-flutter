@@ -176,6 +176,17 @@ class MessageEditRequest {
   }
 }
 
+class Attachment {
+  final String name;
+  final String file;
+
+  Attachment({required this.name, required this.file});
+
+  factory Attachment.fromJson(Map<String, dynamic> json) {
+    return Attachment(name: json['name'], file: json['file']);
+  }
+}
+
 class MessageEditResponse {
   final int id;
   final String message;
@@ -204,8 +215,8 @@ class MessageResponse {
   final int senderId;
   final int channelId;
   final String message;
-  final String? attachments;
-  final String? edited;
+  final List<Attachment>? attachments;
+  final int? edited;
   final String displayName;
   final String? picture;
 
@@ -221,12 +232,20 @@ class MessageResponse {
   });
 
   factory MessageResponse.fromJson(Map<String, dynamic> json) {
+    List<Attachment>? parsedAttachments;
+
+    if (json['attachments'] != null && json['attachments'] is List) {
+      parsedAttachments = (json['attachments'] as List)
+          .map((item) => Attachment.fromJson(item as Map<String, dynamic>))
+          .toList();
+    }
+
     return MessageResponse(
       id: json['id'],
       senderId: json['sender_id'],
       channelId: json['channel_id'],
       message: json['message'],
-      attachments: json['attachments'],
+      attachments: parsedAttachments,
       edited: json['edited'],
       displayName: json['display_name'],
       picture: json['picture'],
