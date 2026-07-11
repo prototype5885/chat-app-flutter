@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:chat_app_flutter/services/cookies.dart';
 import 'package:chat_app_flutter/services/globals.dart';
 import 'package:events_emitter/emitters/event_emitter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 final events = EventEmitter();
@@ -30,7 +31,7 @@ Future<void> connectSSE() async {
   final request = http.Request('GET', Uri.parse('$backend/api/v1/session'));
   request.headers['Accept'] = 'text/event-stream';
   request.headers['Cache-Control'] = 'no-cache';
-  request.headers.addAll(getTokenCookieHeader());
+  if (!kIsWeb) request.headers.addAll(getTokenCookieHeader());
 
   final response = await client.send(request);
 

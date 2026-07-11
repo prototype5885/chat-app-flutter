@@ -1,5 +1,6 @@
 import 'package:chat_app_flutter/services/cookies.dart';
 import 'package:chat_app_flutter/services/globals.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -87,7 +88,9 @@ class _ServerBaseState extends State<ServerBase> {
                                   queryParameters: {'size': '96'},
                                 )
                                 .toString(),
-                            httpHeaders: getTokenCookieHeader(),
+                            httpHeaders: !kIsWeb
+                                ? getTokenCookieHeader()
+                                : null,
                             fit: BoxFit.cover,
                             width: size,
                             height: size,
