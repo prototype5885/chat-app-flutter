@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:chat_app_flutter/services/date.dart';
 import 'package:chat_app_flutter/services/globals.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/widgets_stateless/avatar.dart';
@@ -82,16 +83,16 @@ class _MessageState extends State<Message> {
                                 ),
                               ),
                             ),
-                            // Padding(
-                            // padding: const EdgeInsets.only(left: 8.0),
-                            // child: Text(
-                            //   date.getLongDate(widget.msg.id),
-                            //   style: TextStyle(
-                            //     fontSize: 11,
-                            //     color: Colors.white.withAlpha(128),
-                            //   ),
-                            // ),
-                            // ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                getLongDate(widget.msg.id),
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       SelectableText(
