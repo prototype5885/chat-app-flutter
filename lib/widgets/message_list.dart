@@ -33,6 +33,7 @@ class _MessageListState extends State<MessageList> {
   late Future<void> _messageListLoaded;
   List<MessageResponse> _messageList = [];
   final ScrollController scrollController = ScrollController();
+  bool hasScrolledInitially = false;
 
   @override
   void initState() {
@@ -44,6 +45,7 @@ class _MessageListState extends State<MessageList> {
           );
           _messageList.add(message);
         });
+        scrollToEnd();
       });
     });
 
@@ -100,12 +102,15 @@ class _MessageListState extends State<MessageList> {
     });
   }
 
-  // void scrollToEndInstant() {
-  //   if (!mounted) return;
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     scrollController.jumpTo(scrollController.position.maxScrollExtent);
-  //   });
-  // }
+  void scrollToEndInstant() {
+    if (!mounted) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      setState(() {
+        hasScrolledInitially = true;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,32 +127,37 @@ class _MessageListState extends State<MessageList> {
                 return Text(error.toString());
               }
 
-              if (asyncSnapshot.connectionState == ConnectionState.done) {
+              if (asyncSnapshot.connectionState == ConnectionState.done &&
+                  !hasScrolledInitially) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  scrollToEnd();
+                  scrollToEndInstant();
                 });
               }
 
-              return Stack(
-                children: [
-                  ListView.builder(
-                    controller: scrollController,
-                    padding: const EdgeInsets.only(bottom: 20),
-                    itemCount: _messageList.length,
-                    itemBuilder: (context, index) {
-                      return Message(msg: _messageList[index]);
-                    },
-                  ),
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: UsersTyping(
-                      userId: widget.userId,
-                      isAtBottom: false,
+              return Visibility(
+                visible: hasScrolledInitially,
+                maintainState: true,
+                child: Stack(
+                  children: [
+                    ListView.builder(
+                      controller: scrollController,
+                      padding: const EdgeInsets.only(bottom: 20),
+                      itemCount: _messageList.length,
+                      itemBuilder: (context, index) {
+                        return Message(msg: _messageList[index]);
+                      },
                     ),
-                  ),
-                ],
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: UsersTyping(
+                        userId: widget.userId,
+                        isAtBottom: false,
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
           ),

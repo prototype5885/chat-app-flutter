@@ -132,18 +132,16 @@ class _ChannelListState extends State<ChannelList> {
                 ),
 
           // if on mobile then don't display messages
-          if (!state.mobile)
-            currentChannel != null
-                ? Expanded(
-                    child: MessageList(
-                      key: ValueKey(currentChannel),
-                      isDemo: widget.isDemo,
-                      channel: currentChannel!,
-                      sessionId: widget.sessionId,
-                      userId: widget.userId,
-                    ),
-                  )
-                : const Center(child: Text('No channel selected')),
+          if (!state.mobile && currentChannel != null)
+            Expanded(
+              child: MessageList(
+                key: ValueKey(currentChannel),
+                isDemo: widget.isDemo,
+                channel: currentChannel!,
+                sessionId: widget.sessionId,
+                userId: widget.userId,
+              ),
+            ),
         ],
       ),
     );
