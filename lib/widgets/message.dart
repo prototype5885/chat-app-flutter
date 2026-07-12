@@ -4,6 +4,7 @@ import 'package:chat_app_flutter/services/date.dart';
 import 'package:chat_app_flutter/services/globals.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/widgets_stateless/avatar.dart';
+import 'package:chat_app_flutter/widgets_stateless/message_attachments.dart';
 import 'package:flutter/material.dart';
 
 class Message extends StatefulWidget {
@@ -99,6 +100,14 @@ class _MessageState extends State<Message> {
                         widget.msg.message,
                         style: const TextStyle(fontSize: 14),
                       ),
+
+                      if (widget.msg.attachments != null)
+                        Padding(
+                          padding: const EdgeInsetsGeometry.only(top: 8),
+                          child: Attachments(
+                            attachments: widget.msg.attachments!,
+                          ),
+                        ),
                     ],
                   ),
                 ),
