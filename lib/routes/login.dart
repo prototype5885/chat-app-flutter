@@ -1,3 +1,4 @@
+import 'package:chat_app_flutter/routes/chat.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -34,10 +35,9 @@ class LoginState extends State<Login> {
       );
 
       if (mounted) {
-        Navigator.pushReplacementNamed(
+        Navigator.pushReplacement(
           context,
-          '/chat',
-          arguments: {'demo': false},
+          MaterialPageRoute(builder: (context) => const Chat(isDemo: false)),
         );
       }
     } on DioException catch (e) {

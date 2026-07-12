@@ -1,4 +1,6 @@
 import 'package:chat_app_flutter/routes/chat.dart';
+import 'package:chat_app_flutter/routes/login.dart';
+import 'package:chat_app_flutter/routes/registration.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +23,14 @@ class _HomeState extends State<Home> {
 
   Future<void> checkIsLoggedIn() async {
     await dio.get('/api/v1/test_auth');
+
+    if (mounted) {
+      // display chat if everything was correct
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Chat(isDemo: false)),
+      );
+    }
   }
 
   void _retry() {
@@ -63,16 +73,18 @@ class _HomeState extends State<Home> {
               );
             }
 
-            // display chat if everything was correct
-            return const Chat(isDemo: false);
+            return const Center(child: Text('You are not supposed to be here'));
           },
         ),
-        // floatingActionButton: FloatingActionButton.extended(
-        //   onPressed: () {
-        //     displayDemoChat = true;
-        //   },
-        //   label: const Text('Demo'),
-        // ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const Chat(isDemo: true)),
+            );
+          },
+          label: const Text('Demo'),
+        ),
       ),
     );
   }
@@ -97,7 +109,12 @@ class _HomeState extends State<Home> {
                 height: 49,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/registration');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Registration(),
+                      ),
+                    );
                   },
                   child: const Text('Registration'),
                 ),
@@ -107,7 +124,10 @@ class _HomeState extends State<Home> {
                 height: 49,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/login');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Login()),
+                    );
                   },
                   child: const Text('Login'),
                 ),
