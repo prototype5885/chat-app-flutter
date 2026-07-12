@@ -7,7 +7,8 @@ import 'package:chat_app_flutter/widgets/server_list.dart';
 import 'package:flutter/material.dart';
 
 class Chat extends StatefulWidget {
-  const Chat({super.key});
+  const Chat({super.key, required this.isDemo});
+  final bool isDemo;
 
   @override
   ChatState createState() => ChatState();
@@ -16,31 +17,21 @@ class Chat extends StatefulWidget {
 class ChatState extends State<Chat> {
   int userId = 0;
   int sessionId = 0;
-  late final bool isDemo;
 
   String sseErrorMsg = "";
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-    isDemo = args['demo']!;
-
-    if (!isDemo) {
+  void initState() {
+    if (!widget.isDemo) {
       _startSession();
     } else {
       userId = 1;
       sessionId = 1;
     }
-  }
 
-  @override
-  void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       state.mobile = MediaQuery.of(context).size.width < 600;
-      if (!isDemo) {
+      if (!widget.isDemo) {
         events.on('user_id', (String msg) {
           setState(() {
             userId = int.parse(msg);
@@ -101,7 +92,11 @@ class ChatState extends State<Chat> {
                   ],
                 ),
               )
-            : ServerList(isDemo: isDemo, userId: userId, sessionId: sessionId),
+            : ServerList(
+                isDemo: widget.isDemo,
+                userId: userId,
+                sessionId: sessionId,
+              ),
       ),
     );
   }

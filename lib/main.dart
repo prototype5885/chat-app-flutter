@@ -1,7 +1,6 @@
 import 'package:chat_app_flutter/routes/home.dart';
 import 'package:chat_app_flutter/routes/login.dart';
 import 'package:chat_app_flutter/routes/registration.dart';
-import 'package:chat_app_flutter/routes/chat.dart';
 import 'package:chat_app_flutter/services/cookies.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +44,6 @@ class MainApp extends StatelessWidget {
         '/': (context) => const Home(),
         '/login': (context) => const Login(),
         '/registration': (context) => const Registration(),
-        '/chat': (context) => const Chat(),
       },
     );
   }
