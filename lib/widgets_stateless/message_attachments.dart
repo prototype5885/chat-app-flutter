@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app_flutter/services/cookies.dart';
 import 'package:chat_app_flutter/services/globals.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
+import 'package:chat_app_flutter/widgets_stateless/video_player.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -19,9 +20,16 @@ class Attachments extends StatelessWidget {
     'wbmp',
   };
 
+  static const videoExtensions = {'mp4'};
+
   bool isImage(String name) {
     final ext = name.split('.').last.toLowerCase();
     return imageExtensions.contains(ext);
+  }
+
+  bool isVideo(String name) {
+    final ext = name.split('.').last.toLowerCase();
+    return videoExtensions.contains(ext);
   }
 
   @override
@@ -32,27 +40,35 @@ class Attachments extends StatelessWidget {
       children: attachments.map((a) {
         final url = backend.replace(path: "/attachments/${a.file}").toString();
 
-        if (isImage(a.name)) {
-          return CachedNetworkImage(
-            cacheKey: a.file,
-            imageUrl: url,
-            httpHeaders: !kIsWeb ? getTokenCookieHeader() : null,
-            progressIndicatorBuilder: (context, url, downloadProgress) =>
-                SizedBox(
-                  height: 256,
-                  width: 256,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      value: downloadProgress.progress,
+        if (isImage(a.file)) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: CachedNetworkImage(
+              cacheKey: a.file,
+              imageUrl: url,
+              httpHeaders: !kIsWeb ? getTokenCookieHeader() : null,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  SizedBox(
+                    height: 256,
+                    width: 256,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        value: downloadProgress.progress,
+                      ),
                     ),
                   ),
-                ),
 
-            height: 256,
-            fit: BoxFit.fill,
-            errorWidget: (context, url, error) {
-              return _FileTile(a.name, url);
-            },
+              height: 256,
+              fit: BoxFit.fill,
+              errorWidget: (context, url, error) {
+                return _FileTile(a.name, url);
+              },
+            ),
+          );
+        } else if (isVideo(a.file)) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: AttachmentVideoPlayer(url: url),
           );
         } else {
           return _FileTile(a.name, url);

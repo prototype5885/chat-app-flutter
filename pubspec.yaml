@@ -17,6 +17,8 @@ dependencies:
   http: 1.6.0
   intl: 0.20.3
   path_provider: 2.1.6
+  video_player: 2.12.0
+  video_player_win: 3.2.2
 
 dev_dependencies:
   flutter_lints: 6.0.0
