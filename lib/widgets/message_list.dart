@@ -115,7 +115,6 @@ class _MessageListState extends State<MessageList> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (!state.mobile) Top(childWidget: Text(widget.channel.name)),
         Expanded(
