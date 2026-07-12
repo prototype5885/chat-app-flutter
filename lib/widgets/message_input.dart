@@ -121,9 +121,22 @@ class _MessageInputState extends State<MessageInput> {
                 vertical: 21,
               ),
 
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.send),
-                onPressed: sendMessage,
+              prefixIcon: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                child: IconButton(
+                  icon: const Icon(Icons.add),
+                  mouseCursor: SystemMouseCursors.click,
+                  onPressed: () {},
+                ),
+              ),
+
+              suffixIcon: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                child: IconButton(
+                  icon: const Icon(Icons.send),
+                  mouseCursor: SystemMouseCursors.click,
+                  onPressed: sendMessage,
+                ),
               ),
 
               filled: true,
