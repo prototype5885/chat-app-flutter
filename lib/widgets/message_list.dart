@@ -153,7 +153,6 @@ class _MessageListState extends State<MessageList> {
           ),
         ),
         MessageInput(channel: widget.channel),
-        const SizedBox(height: 10),
       ],
     );
   }

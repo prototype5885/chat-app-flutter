@@ -18,23 +18,34 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const useMaterial3 = true;
+    const seedColor = Colors.blue;
+
+    final lightTheme = ThemeData(
+      useMaterial3: useMaterial3,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: seedColor,
+        brightness: Brightness.light,
+      ),
+    );
+
+    final darkTheme = ThemeData(
+      useMaterial3: useMaterial3,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: seedColor,
+        surface: const Color.fromRGBO(51, 51, 57, 1),
+        surfaceContainerLowest: const Color.fromRGBO(44, 45, 49, 1),
+        primaryContainer: const Color.fromRGBO(89, 103, 239, 1),
+        surfaceContainer: const Color.fromRGBO(58, 58, 64, 1),
+        brightness: Brightness.dark,
+      ),
+    );
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Chat App',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          brightness: Brightness.light,
-        ),
-      ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          brightness: Brightness.dark,
-        ),
-      ),
+      theme: lightTheme,
+      darkTheme: darkTheme,
       themeMode: ThemeMode.dark,
       home: const Home(),
     );

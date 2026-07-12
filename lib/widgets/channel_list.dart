@@ -152,7 +152,7 @@ class _ChannelListState extends State<ChannelList> {
   Widget _channelListWidget() {
     return Column(
       children: [
-        Top(childWidget: Text(widget.server.name)),
+        Top(childWidget: Center(child: Text(widget.server.name))),
         Expanded(
           child: FutureBuilder(
             future: _channelListLoaded,

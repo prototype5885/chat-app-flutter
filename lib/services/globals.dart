@@ -9,10 +9,16 @@ Uri get backend {
 
 const cors = true;
 
-const defaultBorder = BorderSide(
+BorderSide defaultBorder(ColorScheme colorScheme) {
+  if (colorScheme.brightness == Brightness.dark) {
+    return const BorderSide(
   color: Color.fromRGBO(255, 255, 255, 0.05),
   width: 1,
 );
+  } else {
+    return const BorderSide(color: Color.fromRGBO(0, 0, 0, 0.2), width: 1);
+  }
+}
 
 Color getHoverColor(bool dark) {
   if (dark) {

@@ -79,10 +79,10 @@ class _MessageInputState extends State<MessageInput> {
 
   @override
   Widget build(BuildContext context) {
-    // bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
       child: Focus(
         child: KeyboardListener(
           focusNode: focusNode,
@@ -113,42 +113,47 @@ class _MessageInputState extends State<MessageInput> {
               border: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
               ),
-              // filled: true,
-              // fillColor: Color.fromRGBO(255, 255, 255, 0.05),
-              // hoverColor: Colors.transparent,
               hintText: "Message #${widget.channel.name}",
+              hintStyle: const TextStyle(color: Colors.grey, fontSize: 14.0),
 
-              // hintStyle: const TextStyle(
-              //   // color: Color.fromRGBO(255, 255, 255, 0.5),
-              //   fontSize: 14.0,
-              // ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 21,
+              ),
+
               suffixIcon: IconButton(
                 icon: const Icon(Icons.send),
                 onPressed: sendMessage,
               ),
-              // enabledBorder: OutlineInputBorder(
-              //   borderRadius: const BorderRadius.all(
-              //     Radius.circular(borderRadius),
-              //   ),
-              //   borderSide: BorderSide(
-              //     color: isDark
-              //         ? const Color.fromRGBO(255, 255, 255, 0.05)
-              //         : const Color.fromRGBO(0, 0, 0, 0.15),
-              //     width: 1,
-              //   ),
-              // ),
 
-              // focusedBorder: OutlineInputBorder(
-              //   borderRadius: const BorderRadius.all(
-              //     Radius.circular(borderRadius),
-              //   ),
-              //   borderSide: BorderSide(
-              //     color: isDark
-              //         ? const Color.fromRGBO(255, 255, 255, 0.1)
-              //         : const Color.fromRGBO(0, 0, 0, 0.5),
-              //     width: 1,
-              //   ),
-              // ),
+              filled: true,
+              fillColor: colorScheme.surfaceContainer,
+
+              enabledBorder: OutlineInputBorder(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(borderRadius),
+                ),
+                borderSide: BorderSide(
+                  color: colorScheme.brightness == Brightness.dark
+                      ? const Color.fromRGBO(255, 255, 255, 0.03)
+                      : const Color.fromRGBO(0, 0, 0, 0.15),
+                  width: 1,
+                ),
+              ),
+
+              focusedBorder: OutlineInputBorder(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(borderRadius),
+                ),
+                borderSide: BorderSide(
+                  color: colorScheme.brightness == Brightness.dark
+                      ? const Color.fromRGBO(255, 255, 255, 0.1)
+                      : const Color.fromRGBO(0, 0, 0, 0.5),
+                  width: 1,
+                ),
+              ),
+
+              hoverColor: Colors.transparent,
             ),
           ),
         ),

@@ -7,10 +7,15 @@ class Top extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
+      alignment: Alignment.centerLeft,
       height: 48,
-      decoration: const BoxDecoration(border: Border(bottom: defaultBorder)),
-      child: Center(child: childWidget),
+      decoration: BoxDecoration(
+        border: Border(bottom: defaultBorder(colorScheme)),
+      ),
+      child: childWidget,
     );
   }
 }

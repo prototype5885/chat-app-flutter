@@ -100,7 +100,7 @@ class _ServerListState extends State<ServerList> {
               height: double.infinity,
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainerLowest,
-                border: const Border(right: defaultBorder),
+                border: Border(right: defaultBorder(colorScheme)),
               ),
               child: ScrollConfiguration(
                 behavior: ScrollConfiguration.of(
