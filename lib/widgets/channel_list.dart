@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
+import 'package:chat_app_flutter/services/states.dart' as state;
 import 'package:chat_app_flutter/widgets/channel.dart';
 import 'package:chat_app_flutter/widgets/message_list.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets_stateless/top.dart';
@@ -70,7 +72,7 @@ class _ChannelListState extends State<ChannelList> {
       });
     }
 
-    if (_channelList.isNotEmpty) {
+    if (!state.mobile && _channelList.isNotEmpty) {
       selectChannel(_channelList.first.id);
     }
   }
@@ -82,8 +84,28 @@ class _ChannelListState extends State<ChannelList> {
           currentChannel = _channelList[i];
         });
         log("Selected channel ID $channelId");
-        return;
+        break;
       }
+    }
+
+    // if mobile then show the chat on the screen
+    if (state.mobile && currentChannel != null) {
+      Navigator.of(context).push(
+        CupertinoPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(title: Text(currentChannel!.name)),
+            body: SafeArea(
+              child: MessageList(
+                key: ValueKey(currentChannel!.id),
+                isDemo: widget.isDemo,
+                channel: currentChannel!,
+                sessionId: widget.sessionId,
+                userId: widget.userId,
+              ),
+            ),
+          ),
+        ),
+      );
     }
   }
 
@@ -94,20 +116,34 @@ class _ChannelListState extends State<ChannelList> {
     return Expanded(
       child: Row(
         children: [
-          Container(
-            width: 240,
-            color: colorScheme.surfaceContainerLowest,
-            child: _channelListWidget(),
-          ),
-          currentChannel != null
-              ? MessageList(
-                  key: ValueKey(currentChannel),
-                  isDemo: widget.isDemo,
-                  channel: currentChannel!,
-                  sessionId: widget.sessionId,
-                  userId: widget.userId,
+          // if on mobile make channels take up remaining of screen
+          // as messages won't be displayed right from it
+          state.mobile
+              ? Expanded(
+                  child: Container(
+                    color: colorScheme.surfaceContainerLowest,
+                    child: _channelListWidget(),
+                  ),
                 )
-              : const Center(child: Text('No channel selected')),
+              : Container(
+                  width: 240,
+                  color: colorScheme.surfaceContainerLowest,
+                  child: _channelListWidget(),
+                ),
+
+          // if on mobile then don't display messages
+          if (!state.mobile)
+            currentChannel != null
+                ? Expanded(
+                    child: MessageList(
+                      key: ValueKey(currentChannel),
+                      isDemo: widget.isDemo,
+                      channel: currentChannel!,
+                      sessionId: widget.sessionId,
+                      userId: widget.userId,
+                    ),
+                  )
+                : const Center(child: Text('No channel selected')),
         ],
       ),
     );

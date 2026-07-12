@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/session.dart';
+import 'package:chat_app_flutter/services/states.dart' as state;
 import 'package:chat_app_flutter/widgets/message.dart';
 import 'package:chat_app_flutter/widgets/message_input.dart';
 import 'package:chat_app_flutter/widgets/users_typing.dart';
@@ -53,6 +55,7 @@ class _MessageListState extends State<MessageList> {
   void dispose() {
     events.off(type: SseEvent.createMessage);
     super.dispose();
+    log('Disposed message_list of channel ID ${widget.channel.id}');
   }
 
   Future<void> _fetchMessages() async {
@@ -106,54 +109,52 @@ class _MessageListState extends State<MessageList> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Top(childWidget: Text(widget.channel.name.toString())),
-          Expanded(
-            child: FutureBuilder(
-              future: _messageListLoaded,
-              builder: (context, asyncSnapshot) {
-                if (asyncSnapshot.hasError) {
-                  final error = asyncSnapshot.error;
-                  return Text(error.toString());
-                }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (!state.mobile) Top(childWidget: Text(widget.channel.name)),
+        Expanded(
+          child: FutureBuilder(
+            future: _messageListLoaded,
+            builder: (context, asyncSnapshot) {
+              if (asyncSnapshot.hasError) {
+                final error = asyncSnapshot.error;
+                return Text(error.toString());
+              }
 
-                if (asyncSnapshot.connectionState == ConnectionState.done) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    scrollToEnd();
-                  });
-                }
+              if (asyncSnapshot.connectionState == ConnectionState.done) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  scrollToEnd();
+                });
+              }
 
-                return Stack(
-                  children: [
-                    ListView.builder(
-                      controller: scrollController,
-                      padding: const EdgeInsets.only(bottom: 20),
-                      itemCount: _messageList.length,
-                      itemBuilder: (context, index) {
-                        return Message(msg: _messageList[index]);
-                      },
+              return Stack(
+                children: [
+                  ListView.builder(
+                    controller: scrollController,
+                    padding: const EdgeInsets.only(bottom: 20),
+                    itemCount: _messageList.length,
+                    itemBuilder: (context, index) {
+                      return Message(msg: _messageList[index]);
+                    },
+                  ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: UsersTyping(
+                      userId: widget.userId,
+                      isAtBottom: false,
                     ),
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: UsersTyping(
-                        userId: widget.userId,
-                        isAtBottom: false,
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
+                  ),
+                ],
+              );
+            },
           ),
-          MessageInput(channel: widget.channel),
-          const SizedBox(height: 10),
-        ],
-      ),
+        ),
+        MessageInput(channel: widget.channel),
+        const SizedBox(height: 10),
+      ],
     );
   }
 }

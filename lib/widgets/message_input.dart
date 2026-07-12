@@ -1,5 +1,6 @@
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
+import 'package:chat_app_flutter/services/states.dart' as state;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -102,7 +103,7 @@ class _MessageInputState extends State<MessageInput> {
               await typingValueChanged(value);
             },
             textInputAction: TextInputAction.none,
-            autofocus: true,
+            autofocus: state.mobile ? false : true,
             autocorrect: true,
             cursorColor: Colors.white,
             cursorWidth: 1,

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:chat_app_flutter/services/session.dart';
+import 'package:chat_app_flutter/services/states.dart' as state;
 import 'package:chat_app_flutter/widgets/server_list.dart';
 import 'package:flutter/material.dart';
 
@@ -38,6 +39,7 @@ class ChatState extends State<Chat> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      state.mobile = MediaQuery.of(context).size.width < 600;
       if (!isDemo) {
         events.on('user_id', (String msg) {
           setState(() {
