@@ -20,13 +20,16 @@ class Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Center(
       child: GestureDetector(
         onTap: pressed,
         child: MouseRegion(
           cursor: SystemMouseCursors.click,
           child: ClipOval(
-            child: SizedBox(
+            child: Container(
+              color: colorScheme.surfaceContainerLowest,
               width: size,
               height: size,
               child: ClipOval(

@@ -34,6 +34,8 @@ class Attachments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Wrap(
       spacing: 4,
       runSpacing: 4,
@@ -48,7 +50,8 @@ class Attachments extends StatelessWidget {
               imageUrl: url,
               httpHeaders: !kIsWeb ? getTokenCookieHeader() : null,
               progressIndicatorBuilder: (context, url, downloadProgress) =>
-                  SizedBox(
+                  Container(
+                    color: colorScheme.surfaceContainerLowest,
                     height: 256,
                     width: 256,
                     child: Center(
