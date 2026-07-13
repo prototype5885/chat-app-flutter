@@ -8,6 +8,8 @@ import 'package:chat_app_flutter/widgets/server_base.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+const int _directMessagesServerId = 100;
+
 class ServerList extends StatefulWidget {
   const ServerList({
     super.key,
@@ -26,7 +28,7 @@ class ServerList extends StatefulWidget {
 class _ServerListState extends State<ServerList> {
   late Future<void> serverListLoaded;
   late List<ServerSchema> serverList = [];
-  ServerSchema? currentServer;
+  int? currentServerId;
 
   @override
   void initState() {
@@ -65,15 +67,49 @@ class _ServerListState extends State<ServerList> {
     }
   }
 
-  void selectServer(int serverID) {
+  ServerSchema getCurrentServerById(int serverId) {
     for (int i = 0; i < serverList.length; i++) {
-      if (serverList[i].id == serverID) {
+      if (serverList[i].id == serverId) {
+        return serverList[i];
+      }
+    }
+    throw 'Failed to find server in getCurrentServer for server ID $serverId';
+  }
+
+  void selectServer(int serverId) {
+    setState(() {
+      currentServerId = serverId;
+    });
+  }
+
+  void deleteServer(int serverId) {
+    log('Deleting server ID $serverId from local server list');
+    for (int i = 0; i < serverList.length; i++) {
+      if (serverList[i].id == serverId) {
         setState(() {
-          currentServer = serverList[i];
+          serverList.remove(serverList[i]);
+          currentServerId = _directMessagesServerId;
         });
-        log("Selected server ID $serverID");
         return;
       }
+    }
+  }
+
+  Future<void> createServerRequest() async {
+    log('Requesting to create server');
+    try {
+      final result = await dio.post(
+        '/api/v1/server',
+        data: {'name': 'Server'},
+        options: Options(contentType: Headers.jsonContentType),
+      );
+
+      final server = ServerSchema.fromJson(result.data);
+      setState(() {
+        serverList.add(server);
+      });
+    } on Exception catch (e) {
+      // TODO
     }
   }
 
@@ -106,34 +142,75 @@ class _ServerListState extends State<ServerList> {
                 behavior: ScrollConfiguration.of(
                   context,
                 ).copyWith(scrollbars: false),
-                child: ListView.builder(
-                  itemCount: serverList.length,
-                  itemBuilder: (context, index) {
-                    final server = serverList[index];
-                    return ServerBase(
-                      key: ValueKey(server.name),
-                      id: server.id,
-                      name: server.name,
-                      pic: server.picture,
-                      selected: server.id == currentServer?.id,
-                      onClicked: selectServer,
-                    );
-                  },
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ServerBase(
+                        id: _directMessagesServerId,
+                        name: 'DM',
+                        pic: null,
+                        selected: _directMessagesServerId == currentServerId,
+                        onClicked: selectServer,
+                      ),
+                      if (serverList.isNotEmpty) _serverDivider(),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: serverList.length,
+                        itemBuilder: (context, index) {
+                          final server = serverList[index];
+                          return ServerBase(
+                            key: ValueKey(server.name),
+                            id: server.id,
+                            name: server.name,
+                            pic: server.picture,
+                            selected: server.id == currentServerId,
+                            onClicked: selectServer,
+                          );
+                        },
+                      ),
+                      _serverDivider(),
+                      ServerBase(
+                        id: -1,
+                        name: '+',
+                        pic: null,
+                        selected: false,
+                        onClicked: (_) async => createServerRequest(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-            currentServer != null
-                ? ChannelList(
-                    key: ValueKey(currentServer),
-                    isDemo: widget.isDemo,
-                    server: currentServer!,
-                    sessionId: widget.sessionId,
-                    userId: widget.userId,
-                  )
-                : const Center(child: Text('No server selected')),
+            _channelFriendList(),
           ],
         );
       },
+    );
+  }
+
+  Widget _channelFriendList() {
+    if (currentServerId == null) {
+      return const Text('No server selected');
+    }
+
+    if (currentServerId == _directMessagesServerId) {
+      return const Text('dm');
+    }
+
+    return ChannelList(
+      key: ValueKey(currentServerId),
+      isDemo: widget.isDemo,
+      server: getCurrentServerById(currentServerId!),
+      sessionId: widget.sessionId,
+      userId: widget.userId,
+    );
+  }
+
+  Widget _serverDivider() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      child: Divider(),
     );
   }
 }
