@@ -99,22 +99,6 @@ class _ServerBaseState extends State<ServerBase> {
                               return _noPicture(textColor);
                             },
                           ),
-                          // Image.network(
-                          //   backend
-                          //       .replace(
-                          //         path: "/avatars/${widget.pic}",
-                          //         queryParameters: {'size': '96'},
-                          //       )
-                          //       .toString(),
-                          //   fit: BoxFit.cover,
-                          //   // cacheWidth: optimizeImageCache(size, context),
-                          //   // cacheHeight: optimizeImageCache(size, context),
-                          //   width: size,
-                          //   height: size,
-                          //   errorBuilder: (context, error, stackTrace) {
-                          //     return _noPicture(textColor);
-                          //   },
-                          // ),
                         )
                       : _noPicture(textColor);
                 },
@@ -136,8 +120,8 @@ class _ServerBaseState extends State<ServerBase> {
         widget.name[0].toUpperCase(),
         style: TextStyle(
           color: textColor,
-          fontWeight: FontWeight.bold,
-          fontSize: size / 3.5,
+          fontWeight: FontWeight.w500,
+          fontSize: size / 2.75,
         ),
       ),
     );
