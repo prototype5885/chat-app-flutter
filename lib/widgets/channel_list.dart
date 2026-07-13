@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
-import 'package:chat_app_flutter/widgets/channel.dart';
+import 'package:chat_app_flutter/widgets_stateless/channel.dart';
 import 'package:chat_app_flutter/widgets/message_list.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -120,15 +120,14 @@ class _ChannelListState extends State<ChannelList> {
           // as messages won't be displayed right from it
           state.mobile
               ? Expanded(
-                  child: Container(
+                  child: Material(
                     color: colorScheme.surfaceContainerLowest,
                     child: _channelListWidget(),
                   ),
                 )
-              : Container(
-                  width: 240,
+              : Material(
                   color: colorScheme.surfaceContainerLowest,
-                  child: _channelListWidget(),
+                  child: SizedBox(width: 240, child: _channelListWidget()),
                 ),
 
           // if on mobile then don't display messages
