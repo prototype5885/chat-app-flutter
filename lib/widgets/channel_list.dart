@@ -5,9 +5,12 @@ import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
 import 'package:chat_app_flutter/widgets_stateless/channel.dart';
 import 'package:chat_app_flutter/widgets/message_list.dart';
+import 'package:chat_app_flutter/widgets_stateless/context_menu.dart';
+import 'package:chat_app_flutter/widgets_stateless/context_menu_button.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../widgets_stateless/top.dart';
 
@@ -169,12 +172,17 @@ class _ChannelListState extends State<ChannelList> {
                     itemCount: _channelList.length,
                     itemBuilder: (context, index) {
                       final channel = _channelList[index];
-                      return Channel(
-                        key: ValueKey(channel.id),
-                        id: channel.id,
-                        name: channel.name,
-                        selected: channel.id == currentChannel?.id,
-                        onClicked: selectChannel,
+                      return CtxMenu(
+                        buttons: _contextMenuButtons(channel),
+                        builder: (context, controller, child) {
+                          return Channel(
+                            key: ValueKey(channel.id),
+                            id: channel.id,
+                            name: channel.name,
+                            selected: channel.id == currentChannel?.id,
+                            onClicked: selectChannel,
+                          );
+                        },
                       );
                     },
                   ),
@@ -185,5 +193,39 @@ class _ChannelListState extends State<ChannelList> {
         ),
       ],
     );
+  }
+
+  List<Widget> _contextMenuButtons(ChannelSchema c) {
+    final owner = widget.server.ownerId == widget.userId;
+
+    return [
+      if (owner)
+        CtxMenuButton(
+          label: 'Edit Channel',
+          leadingIcon: const Icon(Icons.edit_outlined, size: 18),
+          onPressed: () {
+            log("Edit channel ID ${c.id}");
+          },
+        ),
+      if (owner) ctxMenuDivier(),
+      if (owner)
+        CtxMenuButton(
+          label: 'Delete Channel',
+          leadingIcon: const Icon(Icons.delete_outline, size: 18),
+          onPressed: () {
+            log("Delete channel ID ${c.id}");
+          },
+          type: CtxMenuButtonVariant.red,
+        ),
+      if (owner) ctxMenuDivier(),
+      CtxMenuButton(
+        label: 'Copy Channel ID',
+        leadingIcon: const Icon(Icons.copy_outlined, size: 18),
+        onPressed: () async {
+          log("Copy ID of channel ID ${c.id}");
+          await Clipboard.setData(ClipboardData(text: c.id.toString()));
+        },
+      ),
+    ];
   }
 }

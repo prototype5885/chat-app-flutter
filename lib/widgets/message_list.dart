@@ -5,12 +5,15 @@ import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/session.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
+import 'package:chat_app_flutter/widgets_stateless/context_menu.dart';
+import 'package:chat_app_flutter/widgets_stateless/context_menu_button.dart';
 import 'package:chat_app_flutter/widgets_stateless/message.dart';
 import 'package:chat_app_flutter/widgets/message_input.dart';
 import 'package:chat_app_flutter/widgets/users_typing.dart';
 import 'package:chat_app_flutter/widgets_stateless/top.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MessageList extends StatefulWidget {
   const MessageList({
@@ -111,8 +114,12 @@ class _MessageListState extends State<MessageList> {
                     padding: const EdgeInsets.only(bottom: 20),
                     itemCount: _messageList.length,
                     itemBuilder: (context, index) {
-                      return Message(
-                        msg: _messageList[_messageList.length - 1 - index],
+                      final msg = _messageList[_messageList.length - 1 - index];
+                      return CtxMenu(
+                        buttons: _contextMenuButtons(msg),
+                        builder: (context, controller, child) {
+                          return Message(msg: msg);
+                        },
                       );
                     },
                   ),
@@ -133,5 +140,55 @@ class _MessageListState extends State<MessageList> {
         MessageInput(channel: widget.channel),
       ],
     );
+  }
+
+  List<Widget> _contextMenuButtons(MessageResponse msg) {
+    final owner = msg.senderId == widget.userId;
+
+    return [
+      if (owner)
+        CtxMenuButton(
+          label: 'Edit Message',
+          leadingIcon: const Icon(Icons.edit_outlined, size: 18),
+          onPressed: () {
+            log("Edit message ID ${msg.id}");
+          },
+        ),
+      if (owner) ctxMenuDivier(),
+      CtxMenuButton(
+        label: 'Copy Text',
+        leadingIcon: const Icon(Icons.copy_outlined, size: 18),
+        onPressed: () async {
+          log("Copy message ID ${msg.id}");
+          await Clipboard.setData(ClipboardData(text: msg.message));
+        },
+      ),
+      CtxMenuButton(
+        label: 'Reply',
+        leadingIcon: const Icon(Icons.reply, size: 18),
+        onPressed: () async {
+          log("Reply to message ID ${msg.id}");
+        },
+      ),
+      if (owner) ctxMenuDivier(),
+      if (owner)
+        CtxMenuButton(
+          label: 'Delete Message',
+          leadingIcon: const Icon(Icons.delete_outline, size: 18),
+          onPressed: () async {
+            log("Delete message ID ${msg.id}");
+          },
+          type: CtxMenuButtonVariant.red,
+        ),
+      ctxMenuDivier(),
+      CtxMenuButton(
+        label: 'Copy Message ID',
+        leadingIcon: const Icon(Icons.copy_outlined, size: 18),
+        onPressed: () async {
+          log("Copy ID of message ID ${msg.id}");
+          await Clipboard.setData(ClipboardData(text: msg.id.toString()));
+        },
+      ),
+    ];
   }
 }
