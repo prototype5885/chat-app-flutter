@@ -5,8 +5,11 @@ import 'package:chat_app_flutter/services/globals.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/widgets/channel_list.dart';
 import 'package:chat_app_flutter/widgets/server_base.dart';
+import 'package:chat_app_flutter/widgets_stateless/context_menu.dart';
+import 'package:chat_app_flutter/widgets_stateless/context_menu_button.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 const int _directMessagesServerId = 100;
 
@@ -161,13 +164,18 @@ class _ServerListState extends State<ServerList> {
                           itemCount: serverList.length,
                           itemBuilder: (context, index) {
                             final server = serverList[index];
-                            return ServerBase(
-                              key: ValueKey(server.name),
-                              id: server.id,
-                              name: server.name,
-                              pic: server.picture,
-                              selected: server.id == currentServerId,
-                              onClicked: selectServer,
+                            return CtxMenu(
+                              buttons: _contextMenuButtons(server),
+                              builder: (context, controller, child) {
+                                return ServerBase(
+                                  key: ValueKey(server.name),
+                                  id: server.id,
+                                  name: server.name,
+                                  pic: server.picture,
+                                  selected: server.id == currentServerId,
+                                  onClicked: selectServer,
+                                );
+                              },
                             );
                           },
                         ),
@@ -215,5 +223,39 @@ class _ServerListState extends State<ServerList> {
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: Divider(),
     );
+  }
+
+  List<Widget> _contextMenuButtons(ServerSchema s) {
+    final owner = s.ownerId == widget.userId;
+
+    return [
+      if (owner)
+        CtxMenuButton(
+          label: 'Edit Server',
+          leadingIcon: const Icon(Icons.edit_outlined, size: 18),
+          onPressed: () {
+            log("Edit server ID ${s.id}");
+          },
+        ),
+      if (owner) ctxMenuDivier(),
+      if (owner)
+        CtxMenuButton(
+          label: 'Delete Server',
+          leadingIcon: const Icon(Icons.delete_outline, size: 18),
+          onPressed: () {
+            log("Delete server ID ${s.id}");
+          },
+          type: CtxMenuButtonVariant.red,
+        ),
+      if (owner) ctxMenuDivier(),
+      CtxMenuButton(
+        label: 'Copy Server ID',
+        leadingIcon: const Icon(Icons.copy_outlined, size: 18),
+        onPressed: () async {
+          log("Copy ID of Server ID ${s.id}");
+          await Clipboard.setData(ClipboardData(text: s.id.toString()));
+        },
+      ),
+    ];
   }
 }
