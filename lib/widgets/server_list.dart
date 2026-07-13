@@ -143,41 +143,44 @@ class _ServerListState extends State<ServerList> {
                   context,
                 ).copyWith(scrollbars: false),
                 child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ServerBase(
-                        id: _directMessagesServerId,
-                        name: 'DM',
-                        pic: null,
-                        selected: _directMessagesServerId == currentServerId,
-                        onClicked: selectServer,
-                      ),
-                      if (serverList.isNotEmpty) _serverDivider(),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: serverList.length,
-                        itemBuilder: (context, index) {
-                          final server = serverList[index];
-                          return ServerBase(
-                            key: ValueKey(server.name),
-                            id: server.id,
-                            name: server.name,
-                            pic: server.picture,
-                            selected: server.id == currentServerId,
-                            onClicked: selectServer,
-                          );
-                        },
-                      ),
-                      _serverDivider(),
-                      ServerBase(
-                        id: -1,
-                        name: '+',
-                        pic: null,
-                        selected: false,
-                        onClicked: (_) async => createServerRequest(),
-                      ),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Column(
+                      children: [
+                        ServerBase(
+                          id: _directMessagesServerId,
+                          name: 'DM',
+                          pic: null,
+                          selected: _directMessagesServerId == currentServerId,
+                          onClicked: selectServer,
+                        ),
+                        if (serverList.isNotEmpty) _serverDivider(),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: serverList.length,
+                          itemBuilder: (context, index) {
+                            final server = serverList[index];
+                            return ServerBase(
+                              key: ValueKey(server.name),
+                              id: server.id,
+                              name: server.name,
+                              pic: server.picture,
+                              selected: server.id == currentServerId,
+                              onClicked: selectServer,
+                            );
+                          },
+                        ),
+                        _serverDivider(),
+                        ServerBase(
+                          id: -1,
+                          name: '+',
+                          pic: null,
+                          selected: false,
+                          onClicked: (_) async => createServerRequest(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
