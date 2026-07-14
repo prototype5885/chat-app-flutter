@@ -62,7 +62,7 @@ class Attachments extends StatelessWidget {
                   ),
 
               height: 256,
-              fit: BoxFit.fill,
+              fit: BoxFit.cover,
               errorWidget: (context, url, error) {
                 return _FileTile(a.name, url);
               },
