@@ -153,7 +153,6 @@ class _ServerListState extends State<ServerList> {
                         ServerBase(
                           id: _directMessagesServerId,
                           name: 'DM',
-                          pic: null,
                           selected: _directMessagesServerId == currentServerId,
                           onClicked: selectServer,
                         ),
@@ -183,7 +182,6 @@ class _ServerListState extends State<ServerList> {
                         ServerBase(
                           id: -1,
                           name: '+',
-                          pic: null,
                           selected: false,
                           onClicked: (_) async => createServerRequest(),
                         ),
