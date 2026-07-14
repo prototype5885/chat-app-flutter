@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:chat_app_flutter/services/date.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/session.dart';
@@ -14,6 +15,19 @@ import 'package:chat_app_flutter/widgets_stateless/top.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+sealed class ChatRow {}
+
+class MessageRow extends ChatRow {
+  final MessageResponse msg;
+  final bool small;
+  MessageRow(this.msg, {required this.small});
+}
+
+class DateDividerRow extends ChatRow {
+  final int id;
+  DateDividerRow(this.id);
+}
 
 class MessageList extends StatefulWidget {
   const MessageList({
@@ -36,17 +50,16 @@ class _MessageListState extends State<MessageList> {
   late Future<void> _messageListLoaded;
   List<MessageResponse> _messageList = [];
   final ScrollController scrollController = ScrollController();
+  List<ChatRow> _rows = [];
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       events.on(SseEvent.createMessage, (String data) {
-        setState(() {
-          final message = MessageResponse.fromJson(
-            jsonDecode(data) as Map<String, dynamic>,
-          );
-          _messageList.add(message);
-        });
+        final message = MessageResponse.fromJson(
+          jsonDecode(data) as Map<String, dynamic>,
+        );
+        _addMessage(message);
       });
     });
 
@@ -61,34 +74,68 @@ class _MessageListState extends State<MessageList> {
     log('Disposed message_list of channel ID ${widget.channel.id}');
   }
 
+  void _setMessages(List<MessageResponse> newList) {
+    setState(() {
+      _messageList = newList;
+      _rows = _buildRows(_messageList);
+    });
+  }
+
+  void _addMessage(MessageResponse message) {
+    _setMessages([..._messageList, message]);
+  }
+
+  List<ChatRow> _buildRows(List<MessageResponse> messages) {
+    final rows = <ChatRow>[];
+
+    for (int i = 0; i < messages.length; i++) {
+      final msg = messages[i];
+      final prev = i > 0 ? messages[i - 1] : null;
+
+      final isNewDay = prev == null || !isSameDay(prev.id, msg.id);
+      if (isNewDay) {
+        rows.add(DateDividerRow(msg.id));
+      }
+
+      final sameUser = prev != null && prev.senderId == msg.senderId;
+
+      final olderThanFiveMins = prev != null
+          ? isOlderThanFiveMins(prev.id, msg.id)
+          : false;
+
+      rows.add(
+        MessageRow(msg, small: sameUser && !isNewDay && !olderThanFiveMins),
+      );
+    }
+
+    return rows;
+  }
+
   Future<void> _fetchMessages() async {
     if (!widget.isDemo) {
       final response = await dio.get(
         '/api/v1/channel/${widget.channel.id}/messages',
         options: Options(headers: {'Session-ID': widget.sessionId}),
       );
-      setState(() {
-        _messageList = (response.data as List<dynamic>).reversed
-            .map(
-              (jsonMap) =>
-                  MessageResponse.fromJson(jsonMap as Map<String, dynamic>),
-            )
-            .toList();
-      });
+      final messages = (response.data as List<dynamic>).reversed
+          .map(
+            (jsonMap) =>
+                MessageResponse.fromJson(jsonMap as Map<String, dynamic>),
+          )
+          .toList();
+      _setMessages(messages);
     } else {
-      setState(() {
-        for (int i = 0; i < 32; i++) {
-          _messageList.add(
-            MessageResponse(
-              id: 0,
-              senderId: 0,
-              channelId: widget.channel.id,
-              message: 'Message $i',
-              displayName: 'Sample user',
-            ),
-          );
-        }
-      });
+      final demoMessages = <MessageResponse>[
+        for (int i = 0; i < 32; i++)
+          MessageResponse(
+            id: 0,
+            senderId: 0,
+            channelId: widget.channel.id,
+            message: 'Message $i',
+            displayName: 'Sample user',
+          ),
+      ];
+      _setMessages(demoMessages);
     }
   }
 
@@ -112,15 +159,18 @@ class _MessageListState extends State<MessageList> {
                     reverse: true,
                     controller: scrollController,
                     padding: const EdgeInsets.only(bottom: 20),
-                    itemCount: _messageList.length,
+                    itemCount: _rows.length,
                     itemBuilder: (context, index) {
-                      final msg = _messageList[_messageList.length - 1 - index];
-                      return CtxMenu(
-                        buttons: _contextMenuButtons(msg),
-                        builder: (context, controller, child) {
-                          return Message(msg: msg);
-                        },
-                      );
+                      final row = _rows[_rows.length - 1 - index];
+                      return switch (row) {
+                        DateDividerRow(:final id) => _buildDayDivider(id),
+                        MessageRow(:final msg, :final small) => CtxMenu(
+                          buttons: _contextMenuButtons(msg),
+                          builder: (context, controller, child) {
+                            return Message(msg: msg, small: small);
+                          },
+                        ),
+                      };
                     },
                   ),
                   Positioned(
@@ -139,6 +189,22 @@ class _MessageListState extends State<MessageList> {
         ),
         MessageInput(channel: widget.channel),
       ],
+    );
+  }
+
+  Widget _buildDayDivider(int id) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      child: Row(
+        children: [
+          const Expanded(child: Divider()),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(getDate(id), style: const TextStyle(fontSize: 11)),
+          ),
+          const Expanded(child: Divider()),
+        ],
+      ),
     );
   }
 
