@@ -155,6 +155,10 @@ class _ServerListState extends State<ServerList> {
                           name: 'DM',
                           selected: _directMessagesServerId == currentServerId,
                           onClicked: selectServer,
+                          centeredChild: const Icon(
+                            Icons.mail_outline,
+                            size: 28,
+                          ),
                         ),
                         if (serverList.isNotEmpty) _serverDivider(),
                         ListView.builder(
@@ -184,6 +188,7 @@ class _ServerListState extends State<ServerList> {
                           name: '+',
                           selected: false,
                           onClicked: (_) async => createServerRequest(),
+                          centeredChild: const Icon(Icons.add),
                         ),
                       ],
                     ),

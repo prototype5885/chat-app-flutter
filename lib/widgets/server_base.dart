@@ -7,7 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 class ServerBase extends StatefulWidget {
   final int id;
   final String name;
-  final Widget? icon;
+  final Widget? centeredChild;
   final String? pic;
   final bool selected;
   final Function(int) onClicked;
@@ -16,7 +16,7 @@ class ServerBase extends StatefulWidget {
     super.key,
     required this.id,
     required this.name,
-    this.icon,
+    this.centeredChild,
     this.pic,
     required this.selected,
     required this.onClicked,
@@ -78,7 +78,11 @@ class _ServerBaseState extends State<ServerBase> {
                               ? colorScheme.primaryContainer
                               : colorScheme.surfaceContainer,
                         ),
-                        child: widget.pic != null ? _picture() : _noPicture(),
+                        child: widget.centeredChild != null
+                            ? Center(child: widget.centeredChild)
+                            : widget.pic != null
+                            ? _picture()
+                            : _noPicture(),
                       ),
                     );
                   },
