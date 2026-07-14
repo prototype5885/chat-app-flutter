@@ -4,6 +4,7 @@ import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/globals.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/widgets/channel_list.dart';
+import 'package:chat_app_flutter/widgets/member_list.dart';
 import 'package:chat_app_flutter/widgets/server_base.dart';
 import 'package:chat_app_flutter/widgets_stateless/context_menu.dart';
 import 'package:chat_app_flutter/widgets_stateless/context_menu_button.dart';
@@ -197,6 +198,8 @@ class _ServerListState extends State<ServerList> {
               ),
             ),
             _channelFriendList(),
+            const VerticalDivider(width: 1),
+            const MemberList(),
           ],
         );
       },
