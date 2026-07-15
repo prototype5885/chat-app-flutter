@@ -1,3 +1,4 @@
+import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/routes/chat.dart';
 import 'package:chat_app_flutter/routes/login.dart';
 import 'package:chat_app_flutter/routes/registration.dart';
@@ -41,13 +42,15 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return SafeArea(
       child: Scaffold(
         body: FutureBuilder(
           future: _authFuture,
           builder: (context, asyncSnapshot) {
             if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: Text('Checking if logged in...'));
+              return Center(child: Text(loc.checkingIfLoggedIn));
             } else if (asyncSnapshot.hasError) {
               final error = asyncSnapshot.error;
 
@@ -62,7 +65,7 @@ class _HomeState extends State<Home> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Error: ${asyncSnapshot.error.toString()}'),
+                    Text('${loc.error}: ${asyncSnapshot.error.toString()}'),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _retry,
@@ -73,7 +76,7 @@ class _HomeState extends State<Home> {
               );
             }
 
-            return const Center(child: Text('You are not supposed to be here'));
+            return Center(child: Text(loc.youAreNotSupposedToBeHere));
           },
         ),
         floatingActionButton: FloatingActionButton.extended(
@@ -83,13 +86,15 @@ class _HomeState extends State<Home> {
               MaterialPageRoute(builder: (context) => const Chat(isDemo: true)),
             );
           },
-          label: const Text('Demo'),
+          label: Text(loc.demo),
         ),
       ),
     );
   }
 
   Widget _loginRegisterWidget() {
+    final loc = AppLocalizations.of(context)!;
+
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 500),
@@ -116,7 +121,7 @@ class _HomeState extends State<Home> {
                       ),
                     );
                   },
-                  child: const Text('Registration'),
+                  child: Text(loc.registration),
                 ),
               ),
               SizedBox(
@@ -129,7 +134,7 @@ class _HomeState extends State<Home> {
                       MaterialPageRoute(builder: (context) => const Login()),
                     );
                   },
-                  child: const Text('Login'),
+                  child: Text(loc.login),
                 ),
               ),
             ],

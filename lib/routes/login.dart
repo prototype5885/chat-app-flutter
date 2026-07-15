@@ -1,3 +1,4 @@
+import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/routes/chat.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:dio/dio.dart';
@@ -49,8 +50,10 @@ class LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(title: Text(loc.login)),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 500),
@@ -60,24 +63,27 @@ class LoginState extends State<Login> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'Login',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+                Text(
+                  loc.login,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 26,
+                  ),
                 ),
                 const SizedBox(height: 26),
                 TextField(
                   controller: _usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: loc.username,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: loc.password,
+                    border: const OutlineInputBorder(),
                   ),
                   obscureText: true,
                 ),
@@ -89,12 +95,12 @@ class LoginState extends State<Login> {
                     onPressed: () {
                       _login();
                     },
-                    child: const Text('Login'),
+                    child: Text(loc.login),
                   ),
                 ),
                 const SizedBox(height: 26),
-                const Center(
-                  child: Text('Forgot Password?', textAlign: TextAlign.center),
+                Center(
+                  child: Text(loc.forgotPassword, textAlign: TextAlign.center),
                 ),
                 Text(_errorMessage),
               ],

@@ -1,3 +1,4 @@
+import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/session.dart';
 import 'package:chat_app_flutter/widgets_stateless/typing_dots.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +70,7 @@ class UsersTypingState extends State<UsersTyping>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final loc = AppLocalizations.of(context)!;
 
     return usersTyping.isNotEmpty
         ? Container(
@@ -98,8 +100,8 @@ class UsersTypingState extends State<UsersTyping>
                     const SizedBox(width: 12),
                     Text(usersTyping.values.join(', ')),
                     usersTyping.length > 1
-                        ? const Text(' are typing...')
-                        : const Text(' is typing...'),
+                        ? Text(loc.areTyping)
+                        : Text(loc.isTyping),
                   ],
                 ),
               ),

@@ -1,3 +1,4 @@
+import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
@@ -80,6 +81,7 @@ class _MessageInputState extends State<MessageInput> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final loc = AppLocalizations.of(context)!;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
@@ -113,7 +115,7 @@ class _MessageInputState extends State<MessageInput> {
               border: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
               ),
-              hintText: "Message #${widget.channel.name}",
+              hintText: loc.message('@${widget.channel.name}'),
               hintStyle: const TextStyle(color: Colors.grey, fontSize: 14.0),
 
               contentPadding: const EdgeInsets.symmetric(

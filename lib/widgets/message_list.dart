@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/date.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
@@ -200,7 +201,10 @@ class _MessageListState extends State<MessageList> {
           const Expanded(child: Divider()),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(getDate(id), style: const TextStyle(fontSize: 11)),
+            child: Text(
+              getDayDate(context, id),
+              style: const TextStyle(fontSize: 11),
+            ),
           ),
           const Expanded(child: Divider()),
         ],
@@ -210,11 +214,12 @@ class _MessageListState extends State<MessageList> {
 
   List<Widget> _contextMenuButtons(MessageResponse msg) {
     final owner = msg.senderId == widget.userId;
+    final loc = AppLocalizations.of(context)!;
 
     return [
       if (owner)
         CtxMenuButton(
-          label: 'Edit Message',
+          label: loc.edit,
           leadingIcon: const Icon(Icons.edit_outlined, size: 18),
           onPressed: () {
             log("Edit message ID ${msg.id}");
@@ -222,7 +227,7 @@ class _MessageListState extends State<MessageList> {
         ),
       if (owner) ctxMenuDivier(),
       CtxMenuButton(
-        label: 'Copy Text',
+        label: loc.copy,
         leadingIcon: const Icon(Icons.copy_outlined, size: 18),
         onPressed: () async {
           log("Copy message ID ${msg.id}");
@@ -230,7 +235,7 @@ class _MessageListState extends State<MessageList> {
         },
       ),
       CtxMenuButton(
-        label: 'Reply',
+        label: loc.reply,
         leadingIcon: const Icon(Icons.reply, size: 18),
         onPressed: () async {
           log("Reply to message ID ${msg.id}");
@@ -239,7 +244,7 @@ class _MessageListState extends State<MessageList> {
       if (owner) ctxMenuDivier(),
       if (owner)
         CtxMenuButton(
-          label: 'Delete Message',
+          label: loc.delete,
           leadingIcon: const Icon(Icons.delete_outline, size: 18),
           onPressed: () async {
             log("Delete message ID ${msg.id}");
@@ -248,7 +253,7 @@ class _MessageListState extends State<MessageList> {
         ),
       ctxMenuDivier(),
       CtxMenuButton(
-        label: 'Copy Message ID',
+        label: loc.copyId,
         leadingIcon: const Icon(Icons.copy_outlined, size: 18),
         onPressed: () async {
           log("Copy ID of message ID ${msg.id}");

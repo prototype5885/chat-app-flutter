@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/session.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
 import 'package:chat_app_flutter/widgets/server_list.dart';
@@ -77,6 +78,8 @@ class ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return SafeArea(
       child: Scaffold(
         body: (userId == 0 && sessionId == 0)
@@ -86,7 +89,7 @@ class ChatState extends State<Chat> {
                   children: [
                     const CircularProgressIndicator(),
                     const SizedBox(height: 16),
-                    const Text('Trying to connect to SSE stream...'),
+                    Text(loc.requestingSession),
                     const SizedBox(height: 16),
                     Text(sseErrorMsg),
                   ],

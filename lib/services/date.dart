@@ -1,3 +1,5 @@
+import 'package:chat_app_flutter/l10n/app_localizations.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 int extractTimestamp(int id) {
@@ -6,7 +8,7 @@ int extractTimestamp(int id) {
   return (id >> timeshift) + epoch;
 }
 
-String getDate(int id) {
+String getDate(BuildContext context, int id) {
   final timestamp = extractTimestamp(id);
   final dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp).toLocal();
 
@@ -17,11 +19,30 @@ String getDate(int id) {
   final diff = today.difference(day).inDays;
 
   if (diff == 0) {
-    return 'Today at ${DateFormat.jm().format(dateTime)}';
+    return AppLocalizations.of(context)!.todayAt(dateTime);
   } else if (diff == 1) {
-    return 'Yesterday at ${DateFormat.jm().format(dateTime)}';
+    return AppLocalizations.of(context)!.yesterdayAt(dateTime);
   } else {
     return DateFormat.yMd().add_jm().format(dateTime);
+  }
+}
+
+String getDayDate(BuildContext context, int id) {
+  final timestamp = extractTimestamp(id);
+  final dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp).toLocal();
+
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final day = DateTime(dateTime.year, dateTime.month, dateTime.day);
+
+  final diff = today.difference(day).inDays;
+
+  if (diff == 0) {
+    return AppLocalizations.of(context)!.today;
+  } else if (diff == 1) {
+    return AppLocalizations.of(context)!.yesterday;
+  } else {
+    return DateFormat.yMd().format(dateTime);
   }
 }
 

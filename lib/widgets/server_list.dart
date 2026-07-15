@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/globals.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
@@ -233,11 +234,12 @@ class _ServerListState extends State<ServerList> {
 
   List<Widget> _contextMenuButtons(ServerSchema s) {
     final owner = s.ownerId == widget.userId;
+    final loc = AppLocalizations.of(context)!;
 
     return [
       if (owner)
         CtxMenuButton(
-          label: 'Edit Server',
+          label: loc.edit,
           leadingIcon: const Icon(Icons.edit_outlined, size: 18),
           onPressed: () {
             log("Edit server ID ${s.id}");
@@ -246,7 +248,7 @@ class _ServerListState extends State<ServerList> {
       if (owner) ctxMenuDivier(),
       if (owner)
         CtxMenuButton(
-          label: 'Delete Server',
+          label: loc.delete,
           leadingIcon: const Icon(Icons.delete_outline, size: 18),
           onPressed: () {
             log("Delete server ID ${s.id}");
@@ -255,7 +257,7 @@ class _ServerListState extends State<ServerList> {
         ),
       if (owner) ctxMenuDivier(),
       CtxMenuButton(
-        label: 'Copy Server ID',
+        label: loc.copyId,
         leadingIcon: const Icon(Icons.copy_outlined, size: 18),
         onPressed: () async {
           log("Copy ID of Server ID ${s.id}");

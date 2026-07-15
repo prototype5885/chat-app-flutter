@@ -3,6 +3,8 @@ import 'package:chat_app_flutter/services/cookies.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 
 void main() async {
   CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
@@ -47,6 +49,14 @@ class MainApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.dark,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('en'), Locale('hu')],
+      locale: const Locale('en'),
       home: const Home(),
     );
   }

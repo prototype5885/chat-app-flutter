@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
@@ -197,11 +198,12 @@ class _ChannelListState extends State<ChannelList> {
 
   List<Widget> _contextMenuButtons(ChannelSchema c) {
     final owner = widget.server.ownerId == widget.userId;
+    final loc = AppLocalizations.of(context)!;
 
     return [
       if (owner)
         CtxMenuButton(
-          label: 'Edit Channel',
+          label: loc.edit,
           leadingIcon: const Icon(Icons.edit_outlined, size: 18),
           onPressed: () {
             log("Edit channel ID ${c.id}");
@@ -210,7 +212,7 @@ class _ChannelListState extends State<ChannelList> {
       if (owner) ctxMenuDivier(),
       if (owner)
         CtxMenuButton(
-          label: 'Delete Channel',
+          label: loc.delete,
           leadingIcon: const Icon(Icons.delete_outline, size: 18),
           onPressed: () {
             log("Delete channel ID ${c.id}");
@@ -219,7 +221,7 @@ class _ChannelListState extends State<ChannelList> {
         ),
       if (owner) ctxMenuDivier(),
       CtxMenuButton(
-        label: 'Copy Channel ID',
+        label: loc.copyId,
         leadingIcon: const Icon(Icons.copy_outlined, size: 18),
         onPressed: () async {
           log("Copy ID of channel ID ${c.id}");

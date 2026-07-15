@@ -1,0 +1,48 @@
+{
+  "message": "Üzenet {name}",
+  "@message": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "today": "Ma",
+  "todayAt": "{date}",
+  "@todayAt": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "jm"
+      }
+    }
+  },
+  "yesterday": "Tegnap",
+  "yesterdayAt": "Tegnap {date}",
+  "@yesterdayAt": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "jm"
+      }
+    }
+  },
+  "error": "Hiba",
+  "youAreNotSupposedToBeHere": "Nem szabadna itt lenned",
+  "checkingIfLoggedIn": "Bejelentkezési állapot ellenőrzése...",
+  "registration": "Regisztráció",
+  "login": "Bejelentkezés",
+  "username": "Felhasználónév",
+  "password": "Jelszó",
+  "forgotPassword": "Elfelejtette a jelszavát?",
+  "register": "Regisztrálás",
+  "demo": "Próba",
+  "requestingSession": "Munkamenet kérése...",
+  "edit": "Szerkesztés",
+  "copy": "Másolás",
+  "reply": "Válasz",
+  "delete": "Törlés",
+  "copyId": "Azonosító Másolása",
+  "isTyping": " gépel...",
+  "areTyping": " gépel..."
+}

@@ -1,3 +1,4 @@
+import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class Registration extends StatefulWidget {
@@ -20,8 +21,10 @@ class RegistrationState extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Registration')),
+      appBar: AppBar(title: Text(loc.registration)),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 500),
@@ -31,24 +34,27 @@ class RegistrationState extends State<Registration> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'Registration',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+                Text(
+                  loc.registration,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 26,
+                  ),
                 ),
                 const SizedBox(height: 26),
                 TextField(
                   controller: _usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: loc.username,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: loc.password,
+                    border: const OutlineInputBorder(),
                   ),
                   obscureText: true,
                 ),
@@ -58,9 +64,9 @@ class RegistrationState extends State<Registration> {
                   height: 49,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Handle login
+                      // Handle registration
                     },
-                    child: const Text('Register'),
+                    child: Text(loc.register),
                   ),
                 ),
               ],

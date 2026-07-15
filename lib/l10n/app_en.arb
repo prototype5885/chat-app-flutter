@@ -1,0 +1,48 @@
+{
+  "message": "Message {name}",
+  "@message": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "today": "Today",
+  "todayAt": "{date}",
+  "@todayAt": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "jm"
+      }
+    }
+  },
+  "yesterday": "Yesterday",
+  "yesterdayAt": "Yesterday at {date}",
+  "@yesterdayAt": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "jm"
+      }
+    }
+  },
+  "error": "Error",
+  "youAreNotSupposedToBeHere": "You are not supposed to be here",
+  "checkingIfLoggedIn": "Checking if logged in...",
+  "registration": "Registration",
+  "login": "Login",
+  "username": "Username",
+  "password": "Password",
+  "forgotPassword": "Forgot Password?",
+  "register": "Register",
+  "demo": "Demo",
+  "requestingSession": "Requesting session...",
+  "edit": "Edit",
+  "copy": "Copy",
+  "reply": "Reply",
+  "delete": "Delete",
+  "copyId": "Copy ID",
+  "isTyping": " is typing...",
+  "areTyping": " are typing..."
+}

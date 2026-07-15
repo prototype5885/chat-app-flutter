@@ -59,7 +59,7 @@ class Message extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (!small) _nameWithDate(),
+                        if (!small) _nameWithDate(context),
                         ..._chatMessage(),
                       ],
                     ),
@@ -73,7 +73,7 @@ class Message extends StatelessWidget {
     );
   }
 
-  Widget _nameWithDate() {
+  Widget _nameWithDate(BuildContext context) {
     return Row(
       children: [
         ClickableText(
@@ -85,7 +85,7 @@ class Message extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: Text(
-            getDate(msg.id),
+            getDate(context, msg.id),
             style: const TextStyle(
               fontSize: 11,
               color: Colors.grey,
