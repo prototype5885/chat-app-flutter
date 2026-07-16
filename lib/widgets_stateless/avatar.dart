@@ -1,7 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chat_app_flutter/services/cookies.dart';
 import 'package:chat_app_flutter/services/globals.dart';
-import 'package:flutter/foundation.dart';
+import 'package:chat_app_flutter/widgets/network_image.dart';
 import 'package:flutter/material.dart';
 
 class Avatar extends StatelessWidget {
@@ -34,7 +32,7 @@ class Avatar extends StatelessWidget {
               height: size,
               child: ClipOval(
                 child: pic != null
-                    ? CachedNetworkImage(
+                    ? ImageWrapper(
                         imageUrl: backend
                             .replace(
                               path: "/avatars/$pic",
@@ -42,7 +40,6 @@ class Avatar extends StatelessWidget {
                             )
                             .toString(),
 
-                        httpHeaders: !kIsWeb ? getTokenCookieHeader() : null,
                         fit: BoxFit.cover,
                         width: size,
                         height: size,

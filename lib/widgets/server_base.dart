@@ -1,8 +1,6 @@
-import 'package:chat_app_flutter/services/cookies.dart';
 import 'package:chat_app_flutter/services/globals.dart';
-import 'package:flutter/foundation.dart';
+import 'package:chat_app_flutter/widgets/network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class ServerBase extends StatefulWidget {
   final int id;
@@ -82,7 +80,7 @@ class _ServerBaseState extends State<ServerBase> {
                             ? Center(child: widget.centeredChild)
                             : widget.pic != null
                             ? _picture()
-                            : _noPicture(),
+                            : _noPicture(false),
                       ),
                     );
                   },
@@ -96,30 +94,31 @@ class _ServerBaseState extends State<ServerBase> {
   }
 
   Widget _picture() {
-    return CachedNetworkImage(
+    return ImageWrapper(
       imageUrl: backend
           .replace(
             path: "/avatars/${widget.pic}",
             queryParameters: {'size': '96'},
           )
           .toString(),
-      httpHeaders: !kIsWeb ? getTokenCookieHeader() : null,
       fit: BoxFit.cover,
       errorWidget: (context, error, stackTrace) {
-        return _noPicture();
+        return _noPicture(true);
       },
     );
   }
 
-  Widget _noPicture() {
+  Widget _noPicture(bool isError) {
     return Center(
-      child: Text(
-        widget.name.isNotEmpty ? widget.name[0].toUpperCase() : '',
-        style: const TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: size / 2.75,
-        ),
-      ),
+      child: isError
+          ? const Icon(Icons.error_outline, size: 40, color: Colors.red)
+          : Text(
+              widget.name.isNotEmpty ? widget.name[0].toUpperCase() : '',
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: size / 2.75,
+              ),
+            ),
     );
   }
 

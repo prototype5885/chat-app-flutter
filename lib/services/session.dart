@@ -31,7 +31,7 @@ Future<void> connectSSE() async {
   final request = http.Request('GET', Uri.parse('$backend/api/v1/session'));
   request.headers['Accept'] = 'text/event-stream';
   request.headers['Cache-Control'] = 'no-cache';
-  if (!kIsWeb) request.headers.addAll(getTokenCookieHeader());
+  if (!kIsWeb) request.headers.addAll(tokenToHeader(await getTokenCookie()));
 
   final response = await client.send(request);
 

@@ -13,23 +13,28 @@ class AttachmentVideoPlayer extends StatefulWidget {
 }
 
 class AttachmentVideoPlayerState extends State<AttachmentVideoPlayer> {
-  late VideoPlayerController _controller;
+  late final Future<void> _tokenFuture;
+  late final VideoPlayerController _controller;
 
-  @override
-  void initState() {
-    super.initState();
-
+  Future<void> _createController() async {
     _controller = VideoPlayerController.networkUrl(
       Uri.parse(widget.url),
-      httpHeaders: getTokenCookieHeader(),
+      httpHeaders: tokenToHeader(await getTokenCookie()),
     );
 
     _controller.addListener(() {
       setState(() {});
     });
     _controller.setLooping(true);
-    _controller.initialize().then((_) => setState(() {}));
+    await _controller.initialize();
+    setState(() {});
     _controller.play();
+  }
+
+  @override
+  void initState() {
+    _tokenFuture = _createController();
+    super.initState();
   }
 
   @override
@@ -42,29 +47,38 @@ class AttachmentVideoPlayerState extends State<AttachmentVideoPlayer> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      color: colorScheme.surfaceContainerLowest,
-      constraints: const BoxConstraints(maxHeight: 256),
-      child: _controller.value.isInitialized
-          ? AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  VideoPlayer(_controller),
-                  _ControlsOverlay(controller: _controller),
-                  VideoProgressIndicator(
-                    _controller,
-                    allowScrubbing: true,
-                    padding: const EdgeInsets.only(bottom: 24),
+    return FutureBuilder(
+      future: _tokenFuture,
+      builder: (context, asyncSnapshot) {
+        if (asyncSnapshot.connectionState != ConnectionState.done) {
+          return const SizedBox();
+        }
+
+        return Container(
+          color: colorScheme.surfaceContainerLowest,
+          constraints: const BoxConstraints(maxHeight: 256),
+          child: _controller.value.isInitialized
+              ? AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      VideoPlayer(_controller),
+                      _ControlsOverlay(controller: _controller),
+                      VideoProgressIndicator(
+                        _controller,
+                        allowScrubbing: true,
+                        padding: const EdgeInsets.only(bottom: 24),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            )
-          : AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              child: const Center(child: CircularProgressIndicator()),
-            ),
+                )
+              : AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+        );
+      },
     );
   }
 }

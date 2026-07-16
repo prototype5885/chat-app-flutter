@@ -1,9 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chat_app_flutter/services/cookies.dart';
 import 'package:chat_app_flutter/services/globals.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
+import 'package:chat_app_flutter/widgets/network_image.dart';
 import 'package:chat_app_flutter/widgets_stateless/video_player.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Attachments extends StatelessWidget {
@@ -45,10 +43,8 @@ class Attachments extends StatelessWidget {
         if (isImage(a.file)) {
           return ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: CachedNetworkImage(
-              cacheKey: a.file,
+            child: ImageWrapper(
               imageUrl: url,
-              httpHeaders: !kIsWeb ? getTokenCookieHeader() : null,
               progressIndicatorBuilder: (context, url, downloadProgress) =>
                   Container(
                     color: colorScheme.surfaceContainerLowest,
@@ -92,7 +88,7 @@ class _FileTile extends StatelessWidget {
       onTap: () {},
       mouseCursor: SystemMouseCursors.click,
       child: Container(
-        height: 48,
+        constraints: const BoxConstraints(minHeight: 64, maxHeight: 256),
         width: 256,
         padding: const EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
@@ -103,7 +99,7 @@ class _FileTile extends StatelessWidget {
           children: [
             const Icon(Icons.insert_drive_file),
             const SizedBox(width: 8),
-            Text(name),
+            Expanded(child: Text(name)),
           ],
         ),
       ),

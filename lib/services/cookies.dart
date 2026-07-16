@@ -23,8 +23,6 @@ Future<void> setupCookieJar() async {
       ignoreExpires: true,
       storage: FileStorage(dir),
     );
-
-    cachedToken = await getTokenCookie();
   }
 }
 
@@ -40,10 +38,11 @@ Future<String?> getTokenCookie() async {
   return null;
 }
 
-Map<String, String> getTokenCookieHeader() {
-  if (cachedToken != null) {
-    return {'Cookie': 'token=$cachedToken;'};
+Map<String, String> tokenToHeader(String? token) {
+  if (token != null) {
+    return {'Cookie': 'token=$token;'};
   } else {
+    // TODO handle this better
     return {};
   }
 }
