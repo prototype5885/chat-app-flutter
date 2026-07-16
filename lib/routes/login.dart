@@ -25,6 +25,10 @@ class LoginState extends State<Login> {
   }
 
   Future<void> _login() async {
+    setState(() {
+      _errorMessage = '';
+    });
+
     try {
       await dio.post(
         '/api/v1/user/login',
@@ -43,7 +47,7 @@ class LoginState extends State<Login> {
       }
     } on DioException catch (e) {
       setState(() {
-        _errorMessage = e.response?.data;
+        _errorMessage = e.response!.data.toString();
       });
     }
   }
@@ -61,7 +65,7 @@ class LoginState extends State<Login> {
             padding: const EdgeInsets.all(30.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              spacing: 26,
               children: [
                 Text(
                   loc.login,
@@ -70,24 +74,26 @@ class LoginState extends State<Login> {
                     fontSize: 26,
                   ),
                 ),
-                const SizedBox(height: 26),
-                TextField(
-                  controller: _usernameController,
-                  decoration: InputDecoration(
-                    labelText: loc.username,
-                    border: const OutlineInputBorder(),
-                  ),
+                Column(
+                  spacing: 16,
+                  children: [
+                    TextField(
+                      controller: _usernameController,
+                      decoration: InputDecoration(
+                        labelText: loc.username,
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                    TextField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: loc.password,
+                        border: const OutlineInputBorder(),
+                      ),
+                      obscureText: true,
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: loc.password,
-                    border: const OutlineInputBorder(),
-                  ),
-                  obscureText: true,
-                ),
-                const SizedBox(height: 26),
                 SizedBox(
                   width: double.infinity,
                   height: 49,
@@ -98,11 +104,10 @@ class LoginState extends State<Login> {
                     child: Text(loc.login),
                   ),
                 ),
-                const SizedBox(height: 26),
                 Center(
                   child: Text(loc.forgotPassword, textAlign: TextAlign.center),
                 ),
-                Text(_errorMessage),
+                Text(_errorMessage, style: const TextStyle(color: Colors.red)),
               ],
             ),
           ),
