@@ -34,6 +34,7 @@
   "login": "Bejelentkezés",
   "username": "Felhasználónév",
   "password": "Jelszó",
+  "passwordRepeat": "Jelszó ismétlése",
   "forgotPassword": "Elfelejtette a jelszavát?",
   "register": "Regisztrálás",
   "demo": "Próba",

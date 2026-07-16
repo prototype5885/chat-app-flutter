@@ -170,10 +170,16 @@ abstract class AppLocalizations {
   /// **'Password'**
   String get password;
 
+  /// No description provided for @passwordRepeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Password repeat'**
+  String get passwordRepeat;
+
   /// No description provided for @forgotPassword.
   ///
   /// In en, this message translates to:
-  /// **'Forgot Password?'**
+  /// **'Forgot password?'**
   String get forgotPassword;
 
   /// No description provided for @register.

@@ -57,6 +57,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get password => 'Jelszó';
 
   @override
+  String get passwordRepeat => 'Jelszó ismétlése';
+
+  @override
   String get forgotPassword => 'Elfelejtette a jelszavát?';
 
   @override
