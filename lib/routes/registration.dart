@@ -26,14 +26,14 @@ class RegistrationState extends State<Registration> {
     super.dispose();
   }
 
-  Future<void> _register() async {
+  Future<void> _register(AppLocalizations loc) async {
     setState(() {
       _errorMessage = '';
     });
 
     if (_passwordController.text != _passwordControllerAgain.text) {
       setState(() {
-        _errorMessage = 'Passwords don\'t match';
+        _errorMessage = loc.passwordsDontMatch;
       });
       return;
     }
@@ -125,7 +125,7 @@ class RegistrationState extends State<Registration> {
                   height: 49,
                   child: ElevatedButton(
                     onPressed: () {
-                      _register();
+                      _register(loc);
                     },
                     child: Text(loc.register),
                   ),

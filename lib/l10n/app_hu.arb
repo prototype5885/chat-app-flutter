@@ -36,6 +36,7 @@
   "password": "Jelszó",
   "passwordRepeat": "Jelszó ismétlése",
   "forgotPassword": "Elfelejtette a jelszavát?",
+  "passwordsDontMatch": "Jelszavak nem egyeznek meg",
   "register": "Regisztrálás",
   "demo": "Próba",
   "requestingSession": "Munkamenet kérése...",

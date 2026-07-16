@@ -36,6 +36,7 @@
   "password": "Password",
   "passwordRepeat": "Password repeat",
   "forgotPassword": "Forgot password?",
+  "passwordsDontMatch": "Passwords don't match",
   "register": "Register",
   "demo": "Demo",
   "requestingSession": "Requesting session...",

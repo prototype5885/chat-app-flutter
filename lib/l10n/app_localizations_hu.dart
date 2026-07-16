@@ -63,6 +63,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get forgotPassword => 'Elfelejtette a jelszavát?';
 
   @override
+  String get passwordsDontMatch => 'Jelszavak nem egyeznek meg';
+
+  @override
   String get register => 'Regisztrálás';
 
   @override

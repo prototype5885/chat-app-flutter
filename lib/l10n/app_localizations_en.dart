@@ -63,6 +63,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forgotPassword => 'Forgot password?';
 
   @override
+  String get passwordsDontMatch => 'Passwords don\'t match';
+
+  @override
   String get register => 'Register';
 
   @override
