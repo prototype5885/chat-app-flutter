@@ -52,6 +52,7 @@ class _MessageListState extends State<MessageList> {
   List<MessageResponse> _messageList = [];
   final ScrollController scrollController = ScrollController();
   List<ChatRow> _rows = [];
+  final simpleMessages = true;
 
   @override
   void initState() {
@@ -78,7 +79,7 @@ class _MessageListState extends State<MessageList> {
   void _setMessages(List<MessageResponse> newList) {
     setState(() {
       _messageList = newList;
-      _rows = _buildRows(_messageList);
+      if (!simpleMessages) _rows = _buildRows(_messageList);
     });
   }
 
@@ -156,24 +157,36 @@ class _MessageListState extends State<MessageList> {
 
               return Stack(
                 children: [
-                  ListView.builder(
-                    reverse: true,
-                    controller: scrollController,
-                    padding: const EdgeInsets.only(bottom: 20),
-                    itemCount: _rows.length,
-                    itemBuilder: (context, index) {
-                      final row = _rows[_rows.length - 1 - index];
-                      return switch (row) {
-                        DateDividerRow(:final id) => _buildDayDivider(id),
-                        MessageRow(:final msg, :final small) => CtxMenu(
-                          buttons: _contextMenuButtons(msg),
-                          builder: (context, controller, child) {
-                            return Message(msg: msg, small: small);
+                  simpleMessages
+                      ? ListView.builder(
+                          reverse: true,
+                          controller: scrollController,
+                          padding: const EdgeInsets.only(bottom: 20),
+                          itemCount: _messageList.length,
+                          itemBuilder: (context, index) {
+                            final msg =
+                                _messageList[_messageList.length - 1 - index];
+                            return Message(msg: msg, small: false);
+                          },
+                        )
+                      : ListView.builder(
+                          reverse: true,
+                          controller: scrollController,
+                          padding: const EdgeInsets.only(bottom: 20),
+                          itemCount: _rows.length,
+                          itemBuilder: (context, index) {
+                            final row = _rows[_rows.length - 1 - index];
+                            return switch (row) {
+                              DateDividerRow(:final id) => _buildDayDivider(id),
+                              MessageRow(:final msg, :final small) => CtxMenu(
+                                buttons: _contextMenuButtons(msg),
+                                builder: (context, controller, child) {
+                                  return Message(msg: msg, small: small);
+                                },
+                              ),
+                            };
                           },
                         ),
-                      };
-                    },
-                  ),
                   Positioned(
                     left: 0,
                     right: 0,
