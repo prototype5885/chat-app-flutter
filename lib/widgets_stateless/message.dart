@@ -7,41 +7,44 @@ import 'package:chat_app_flutter/widgets_stateless/avatar.dart';
 import 'package:chat_app_flutter/widgets_stateless/message_attachments.dart';
 import 'package:flutter/material.dart';
 
-class Message extends StatelessWidget {
+class Message extends StatefulWidget {
   const Message({super.key, required this.msg, required this.small});
   final MessageResponse msg;
   final bool small;
 
+  @override
+  State<Message> createState() => _MessageState();
+}
+
+class _MessageState extends State<Message> {
+  bool isHovering = false;
+
   void _onPressed() {
-    log("Avatar pressed of user ID ${msg.senderId}");
+    log("Avatar pressed of user ID ${widget.msg.senderId}");
   }
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<bool> isHovering = ValueNotifier(false);
-
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: small ? 0 : 4),
+      padding: EdgeInsets.symmetric(vertical: widget.small ? 0 : 4),
       child: InkWell(
         onTap: () {},
-        onHover: (value) => isHovering.value = value,
+        onHover: (value) => setState(() {
+          isHovering = value;
+        }),
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         mouseCursor: SystemMouseCursors.basic,
         child: Stack(
           children: [
             // the date that shows on the left side of small format messages on hover
-            if (small)
-              ValueListenableBuilder(
-                valueListenable: isHovering,
-                builder: (context, value, child) {
-                  return Visibility(visible: value, child: _smallDate());
-                },
-              ),
+            if (widget.small)
+              Visibility(visible: isHovering, child: _smallDate()),
+
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 16,
-                vertical: small ? 0 : 4,
+                vertical: widget.small ? 0 : 4,
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +62,7 @@ class Message extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (!small) _nameWithDate(context),
+                        if (!widget.small) _nameWithDate(context),
                         ..._chatMessage(),
                       ],
                     ),
@@ -78,14 +81,14 @@ class Message extends StatelessWidget {
       children: [
         ClickableText(
           onClicked: () {
-            log('User name pressed for ID: ${msg.senderId}');
+            log('User name pressed for ID: ${widget.msg.senderId}');
           },
-          text: msg.displayName,
+          text: widget.msg.displayName,
         ),
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: Text(
-            getDate(context, msg.id),
+            getDate(context, widget.msg.id),
             style: const TextStyle(
               fontSize: 11,
               color: Colors.grey,
@@ -104,7 +107,7 @@ class Message extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerRight,
         child: Text(
-          getShortDate(msg.id),
+          getShortDate(widget.msg.id),
           style: const TextStyle(fontSize: 10, color: Colors.grey),
         ),
       ),
@@ -114,25 +117,25 @@ class Message extends StatelessWidget {
   List<Widget> _chatMessage() {
     return [
       SelectableText(
-        msg.message,
+        widget.msg.message,
         style: const TextStyle(fontSize: 15),
         contextMenuBuilder: null,
       ),
 
-      if (msg.attachments != null)
+      if (widget.msg.attachments != null)
         Padding(
           padding: const EdgeInsets.only(top: 8),
-          child: Attachments(attachments: msg.attachments!),
+          child: Attachments(attachments: widget.msg.attachments!),
         ),
     ];
   }
 
   Widget _avatarSlot() {
-    if (!small) {
+    if (!widget.small) {
       return Avatar(
         size: 40,
-        pic: msg.picture,
-        name: msg.displayName,
+        pic: widget.msg.picture,
+        name: widget.msg.displayName,
         pressed: _onPressed,
       );
     } else {
