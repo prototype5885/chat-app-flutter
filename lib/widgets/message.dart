@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:chat_app_flutter/services/date.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/widgets/clickable_text.dart';
-import 'package:chat_app_flutter/widgets_stateless/avatar.dart';
-import 'package:chat_app_flutter/widgets_stateless/message_attachments.dart';
+import 'package:chat_app_flutter/widgets/avatar.dart';
+import 'package:chat_app_flutter/widgets/message_attachments.dart';
 import 'package:flutter/material.dart';
 
 class Message extends StatefulWidget {

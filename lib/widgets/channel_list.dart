@@ -4,16 +4,16 @@ import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
-import 'package:chat_app_flutter/widgets_stateless/channel.dart';
+import 'package:chat_app_flutter/widgets/channel.dart';
 import 'package:chat_app_flutter/widgets/message_list.dart';
-import 'package:chat_app_flutter/widgets_stateless/context_menu.dart';
-import 'package:chat_app_flutter/widgets_stateless/context_menu_button.dart';
+import 'package:chat_app_flutter/widgets/context_menu.dart';
+import 'package:chat_app_flutter/widgets/context_menu_button.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../widgets_stateless/top.dart';
+import '../widgets/top.dart';
 
 class ChannelList extends StatefulWidget {
   const ChannelList({

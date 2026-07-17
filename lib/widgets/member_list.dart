@@ -1,4 +1,4 @@
-import 'package:chat_app_flutter/widgets_stateless/top.dart';
+import 'package:chat_app_flutter/widgets/top.dart';
 import 'package:flutter/material.dart';
 
 class MemberList extends StatefulWidget {
