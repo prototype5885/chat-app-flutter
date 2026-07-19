@@ -50,17 +50,19 @@ class _MessageInputState extends State<MessageInput> {
     // return;
     // }
 
-    await dio.post(
-      '/api/v1/channel/${widget.channel.id}/message',
-      data: {"message": message},
-      options: Options(contentType: Headers.formUrlEncodedContentType),
-    );
+    try {
+      await dio.post(
+        '/api/v1/channel/${widget.channel.id}/message',
+        data: {"message": message},
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
 
-    // if (resp.statusCode == 200) {
-    setState(() {
-      controller.clear();
-    });
-    // }
+      setState(() {
+        controller.clear();
+      });
+    } on Exception catch (e) {
+      // TODO
+    }
   }
 
   Future<void> typingValueChanged(String text) async {
@@ -74,7 +76,11 @@ class _MessageInputState extends State<MessageInput> {
     }
 
     if (value.isNotEmpty) {
-      await dio.post('/api/v1/channel/${widget.channel.id}/typing/$value');
+      try {
+        await dio.post('/api/v1/channel/${widget.channel.id}/typing/$value');
+      } on Exception catch (e) {
+        // TODO
+      }
     }
   }
 
