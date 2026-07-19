@@ -56,11 +56,40 @@ class _MessageListState extends State<MessageList> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // listen for new messages
       events.on(SseEvent.createMessage, (String data) {
-        final message = MessageResponse.fromJson(
-          jsonDecode(data) as Map<String, dynamic>,
+        final message = MessageResponse.fromJson(jsonDecode(data));
+        _setMessages([..._messageList, message]);
+      });
+
+      // listen for message edits
+      events.on(SseEvent.editMessage, (String data) {
+        final editedMessage = MessageEditResponse.fromJson(jsonDecode(data));
+
+        for (int i = 0; i < _messageList.length; i++) {
+          if (_messageList[i].id == editedMessage.id) {
+            setState(() {
+              _messageList[i].message = editedMessage.message;
+              _messageList[i].edited = editedMessage.edited;
+            });
+            return;
+          }
+        }
+
+        log(
+          'Tried to edit message ID ${editedMessage.id} but it was not found in the list',
         );
-        _addMessage(message);
+        // TODO popup
+      });
+
+      // listen for message deletions
+      events.on(SseEvent.deleteMessage, (String data) {
+        final messageId = int.parse(data);
+
+        final updatedList = _messageList
+            .where((msg) => msg.id != messageId)
+            .toList();
+        _setMessages(updatedList);
       });
     });
 
@@ -71,6 +100,8 @@ class _MessageListState extends State<MessageList> {
   @override
   void dispose() {
     events.off(type: SseEvent.createMessage);
+    events.off(type: SseEvent.editMessage);
+    events.off(type: SseEvent.deleteMessage);
     super.dispose();
     log('Disposed message_list of channel ID ${widget.channel.id}');
   }
@@ -80,10 +111,6 @@ class _MessageListState extends State<MessageList> {
       _messageList = newList;
       if (!state.simpleMessages.value) _rows = _buildRows(_messageList);
     });
-  }
-
-  void _addMessage(MessageResponse message) {
-    _setMessages([..._messageList, message]);
   }
 
   List<ChatRow> _buildRows(List<MessageResponse> messages) {
@@ -259,7 +286,15 @@ class _MessageListState extends State<MessageList> {
           label: loc.delete,
           leadingIcon: const Icon(Icons.delete_outline, size: 18),
           onPressed: () async {
-            log("Delete message ID ${msg.id}");
+            log("Requesting to delete message ID ${msg.id}");
+            try {
+              // TODO do a popup
+              await dio.delete(
+                "/api/v1/channel/${msg.channelId}/message/${msg.id}",
+              );
+            } catch (e) {
+              // TODO
+            }
           },
           type: CtxMenuButtonVariant.red,
         ),

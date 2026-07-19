@@ -190,21 +190,18 @@ class Attachment {
 class MessageEditResponse {
   final int id;
   final String message;
-  final String? attachments;
-  final String? edited;
+  final int edited;
 
   MessageEditResponse({
     required this.id,
     required this.message,
-    this.attachments,
-    this.edited,
+    required this.edited,
   });
 
   factory MessageEditResponse.fromJson(Map<String, dynamic> json) {
     return MessageEditResponse(
       id: json['id'],
       message: json['message'],
-      attachments: json['attachments'],
       edited: json['edited'],
     );
   }
@@ -214,9 +211,9 @@ class MessageResponse {
   final int id;
   final int senderId;
   final int channelId;
-  final String message;
+  String message;
   final List<Attachment>? attachments;
-  final int? edited;
+  int? edited;
   final String displayName;
   final String? picture;
 
