@@ -46,5 +46,7 @@
   "delete": "Törlés",
   "copyId": "Azonosító Másolása",
   "isTyping": " gépel...",
-  "areTyping": " gépel..."
+  "areTyping": " gépel...",
+  "directMessages": "Üzenetek",
+  "createServer": "Szerver létrehozása"
 }

@@ -46,5 +46,7 @@
   "delete": "Delete",
   "copyId": "Copy ID",
   "isTyping": " is typing...",
-  "areTyping": " are typing..."
+  "areTyping": " are typing...",
+  "directMessages": "Direct Messages",
+  "createServer": "Create a Server"
 }

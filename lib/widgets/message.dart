@@ -115,12 +115,28 @@ class _MessageState extends State<Message> {
   }
 
   List<Widget> _chatMessage() {
+    final textWidget = SelectableText(
+      widget.msg.message,
+      style: const TextStyle(fontSize: 15),
+      contextMenuBuilder: null,
+    );
+
     return [
-      SelectableText(
-        widget.msg.message,
-        style: const TextStyle(fontSize: 15),
-        contextMenuBuilder: null,
-      ),
+      widget.msg.edited == null
+          ? textWidget
+          : Row(
+              spacing: 4,
+              children: [
+                textWidget,
+                Tooltip(
+                  message: editedTimestamp(widget.msg.edited!),
+                  child: const Text(
+                    '(edited)',
+                    style: TextStyle(fontSize: 11, color: Colors.grey),
+                  ),
+                ),
+              ],
+            ),
 
       if (widget.msg.attachments != null)
         Padding(

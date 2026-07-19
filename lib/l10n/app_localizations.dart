@@ -247,6 +247,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **' are typing...'**
   String get areTyping;
+
+  /// No description provided for @directMessages.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct Messages'**
+  String get directMessages;
+
+  /// No description provided for @createServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a Server'**
+  String get createServer;
 }
 
 class _AppLocalizationsDelegate

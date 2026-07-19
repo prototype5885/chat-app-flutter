@@ -94,4 +94,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get areTyping => ' are typing...';
+
+  @override
+  String get directMessages => 'Direct Messages';
+
+  @override
+  String get createServer => 'Create a Server';
 }

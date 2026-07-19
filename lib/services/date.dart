@@ -8,6 +8,13 @@ int extractTimestamp(int id) {
   return (id >> timeshift) + epoch;
 }
 
+String editedTimestamp(int timestamp) {
+  final dateTime = DateTime.fromMillisecondsSinceEpoch(
+    timestamp * 1000,
+  ).toLocal();
+  return DateFormat.yMd().add_jm().format(dateTime);
+}
+
 String getDate(BuildContext context, int id) {
   final timestamp = extractTimestamp(id);
   final dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp).toLocal();

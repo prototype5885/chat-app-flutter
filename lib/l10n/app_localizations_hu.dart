@@ -94,4 +94,10 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get areTyping => ' gépel...';
+
+  @override
+  String get directMessages => 'Üzenetek';
+
+  @override
+  String get createServer => 'Szerver létrehozása';
 }

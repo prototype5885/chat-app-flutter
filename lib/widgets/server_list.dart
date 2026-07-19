@@ -121,6 +121,14 @@ class _ServerListState extends State<ServerList> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final loc = AppLocalizations.of(context)!;
+
+    Offset serverTooltipPos(TooltipPositionContext context) {
+      return Offset(
+        context.target.dx + context.targetSize.width / 2.25,
+        context.target.dy - context.tooltipSize.height / 2,
+      );
+    }
 
     return FutureBuilder(
       future: serverListLoaded,
@@ -152,14 +160,19 @@ class _ServerListState extends State<ServerList> {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Column(
                       children: [
-                        ServerBase(
-                          id: _directMessagesServerId,
-                          name: 'DM',
-                          selected: _directMessagesServerId == currentServerId,
-                          onClicked: selectServer,
-                          centeredChild: const Icon(
-                            Icons.mail_outline,
-                            size: 28,
+                        Tooltip(
+                          message: loc.directMessages,
+                          positionDelegate: serverTooltipPos,
+                          child: ServerBase(
+                            id: _directMessagesServerId,
+                            name: 'DM',
+                            selected:
+                                _directMessagesServerId == currentServerId,
+                            onClicked: selectServer,
+                            centeredChild: const Icon(
+                              Icons.mail_outline,
+                              size: 28,
+                            ),
                           ),
                         ),
                         if (serverList.isNotEmpty) _serverDivider(),
@@ -172,25 +185,33 @@ class _ServerListState extends State<ServerList> {
                             return CtxMenu(
                               buttons: _contextMenuButtons(server),
                               builder: (context, controller, child) {
-                                return ServerBase(
-                                  key: ValueKey(server.name),
-                                  id: server.id,
-                                  name: server.name,
-                                  pic: server.picture,
-                                  selected: server.id == currentServerId,
-                                  onClicked: selectServer,
+                                return Tooltip(
+                                  message: server.name,
+                                  positionDelegate: serverTooltipPos,
+                                  child: ServerBase(
+                                    key: ValueKey(server.name),
+                                    id: server.id,
+                                    name: server.name,
+                                    pic: server.picture,
+                                    selected: server.id == currentServerId,
+                                    onClicked: selectServer,
+                                  ),
                                 );
                               },
                             );
                           },
                         ),
                         _serverDivider(),
-                        ServerBase(
-                          id: -1,
-                          name: '+',
-                          selected: false,
-                          onClicked: (_) async => createServerRequest(),
-                          centeredChild: const Icon(Icons.add),
+                        Tooltip(
+                          message: loc.createServer,
+                          positionDelegate: serverTooltipPos,
+                          child: ServerBase(
+                            id: -1,
+                            name: '+',
+                            selected: false,
+                            onClicked: (_) async => createServerRequest(),
+                            centeredChild: const Icon(Icons.add),
+                          ),
                         ),
                       ],
                     ),
