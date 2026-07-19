@@ -49,6 +49,12 @@ class UsersTypingState extends State<UsersTyping>
             usersTyping.remove(userId);
           }
         });
+
+        if (usersTyping.isNotEmpty && !_controller.isAnimating) {
+          _controller.repeat();
+        } else if (usersTyping.isEmpty) {
+          _controller.reset();
+        }
       });
     });
 
@@ -57,7 +63,7 @@ class UsersTypingState extends State<UsersTyping>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
-    )..repeat();
+    );
   }
 
   @override
