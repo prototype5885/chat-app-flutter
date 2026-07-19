@@ -145,7 +145,7 @@ class _MessageListState extends State<MessageList> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (!state.mobile) Top(childWidget: Text(widget.channel.name)),
+        if (!state.mobile.value) Top(childWidget: Text(widget.channel.name)),
         Expanded(
           child: FutureBuilder(
             future: _messageListLoaded,

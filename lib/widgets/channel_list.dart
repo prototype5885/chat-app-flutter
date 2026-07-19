@@ -76,7 +76,7 @@ class _ChannelListState extends State<ChannelList> {
       });
     }
 
-    if (!state.mobile && _channelList.isNotEmpty) {
+    if (!state.mobile.value && _channelList.isNotEmpty) {
       selectChannel(_channelList.first.id);
     }
   }
@@ -93,7 +93,7 @@ class _ChannelListState extends State<ChannelList> {
     }
 
     // if mobile then show the chat on the screen
-    if (state.mobile && currentChannel != null) {
+    if (state.mobile.value && currentChannel != null) {
       Navigator.of(context).push(
         CupertinoPageRoute(
           builder: (context) => Scaffold(
@@ -122,7 +122,7 @@ class _ChannelListState extends State<ChannelList> {
         children: [
           // if on mobile make channels take up remaining of screen
           // as messages won't be displayed right from it
-          state.mobile
+          state.mobile.value
               ? Expanded(
                   child: Material(
                     color: colorScheme.surfaceContainerLowest,
@@ -135,7 +135,7 @@ class _ChannelListState extends State<ChannelList> {
                 ),
 
           // if on mobile then don't display messages
-          if (!state.mobile && currentChannel != null)
+          if (!state.mobile.value && currentChannel != null)
             Expanded(
               child: MessageList(
                 key: ValueKey(currentChannel),

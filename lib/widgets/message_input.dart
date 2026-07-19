@@ -105,7 +105,7 @@ class _MessageInputState extends State<MessageInput> {
               await typingValueChanged(value);
             },
             textInputAction: TextInputAction.none,
-            autofocus: state.mobile ? false : true,
+            autofocus: state.mobile.value ? false : true,
             autocorrect: true,
             cursorColor: Colors.white,
             cursorWidth: 1,

@@ -31,7 +31,7 @@ class ChatState extends State<Chat> {
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      state.mobile = MediaQuery.of(context).size.width < 600;
+      state.mobile.value = MediaQuery.of(context).size.width < 600;
       if (!widget.isDemo) {
         events.on('user_id', (String msg) {
           setState(() {

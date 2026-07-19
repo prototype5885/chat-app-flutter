@@ -1,5 +1,6 @@
 import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/session.dart';
+import 'package:chat_app_flutter/services/states.dart';
 import 'package:chat_app_flutter/widgets/typing_dots.dart';
 import 'package:flutter/material.dart';
 
@@ -50,10 +51,12 @@ class UsersTypingState extends State<UsersTyping>
           }
         });
 
-        if (usersTyping.isNotEmpty && !_controller.isAnimating) {
-          _controller.repeat();
-        } else if (usersTyping.isEmpty) {
-          _controller.reset();
+        if (!perfMode.value) {
+          if (usersTyping.isNotEmpty && !_controller.isAnimating) {
+            _controller.repeat();
+          } else if (usersTyping.isEmpty) {
+            _controller.reset();
+          }
         }
       });
     });
