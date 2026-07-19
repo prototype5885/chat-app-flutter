@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:chat_app_flutter/services/cookies.dart';
+import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/globals.dart';
 import 'package:events_emitter/emitters/event_emitter.dart';
 import 'package:flutter/foundation.dart';
@@ -31,7 +31,7 @@ Future<void> connectSSE() async {
   final request = http.Request('GET', Uri.parse('$backend/api/v1/session'));
   request.headers['Accept'] = 'text/event-stream';
   request.headers['Cache-Control'] = 'no-cache';
-  if (!kIsWeb) request.headers.addAll(tokenToHeader(await getTokenCookie()));
+  if (!kIsWeb) request.headers.addAll(getCachedTokenCookieHeader());
 
   final response = await client.send(request);
 

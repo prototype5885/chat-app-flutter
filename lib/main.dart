@@ -1,5 +1,4 @@
 import 'package:chat_app_flutter/routes/home.dart';
-import 'package:chat_app_flutter/services/cookies.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';

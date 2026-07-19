@@ -52,7 +52,6 @@ class _MessageListState extends State<MessageList> {
   List<MessageResponse> _messageList = [];
   final ScrollController scrollController = ScrollController();
   List<ChatRow> _rows = [];
-  final simpleMessages = true;
 
   @override
   void initState() {
@@ -79,7 +78,7 @@ class _MessageListState extends State<MessageList> {
   void _setMessages(List<MessageResponse> newList) {
     setState(() {
       _messageList = newList;
-      if (!simpleMessages) _rows = _buildRows(_messageList);
+      if (!state.simpleMessages.value) _rows = _buildRows(_messageList);
     });
   }
 
@@ -157,7 +156,7 @@ class _MessageListState extends State<MessageList> {
 
               return Stack(
                 children: [
-                  simpleMessages
+                  state.simpleMessages.value
                       ? ListView.builder(
                           reverse: true,
                           controller: scrollController,

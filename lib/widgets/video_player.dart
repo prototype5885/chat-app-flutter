@@ -1,4 +1,5 @@
-import 'package:chat_app_flutter/services/cookies.dart';
+import 'package:chat_app_flutter/services/dio_client.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 // ignore: unused_import
@@ -19,7 +20,7 @@ class AttachmentVideoPlayerState extends State<AttachmentVideoPlayer> {
   Future<void> _createController() async {
     _controller = VideoPlayerController.networkUrl(
       Uri.parse(widget.url),
-      httpHeaders: tokenToHeader(await getTokenCookie()),
+      httpHeaders: !kIsWeb ? getCachedTokenCookieHeader() : {},
     );
 
     _controller.addListener(() {

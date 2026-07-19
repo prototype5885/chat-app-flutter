@@ -1,10 +1,32 @@
-import 'package:chat_app_flutter/services/cookies.dart';
+import 'dart:io';
+
 import 'package:chat_app_flutter/services/globals.dart';
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:path_provider/path_provider.dart';
 
+late final PersistCookieJar _cookieJar;
 late final Dio dio;
+
+String? _cachedToken;
+
+class SetCookieInterceptor extends Interceptor {
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    final setCookies = response.headers['set-cookie'];
+    if (setCookies != null) {
+      for (final raw in setCookies) {
+        final cookie = Cookie.fromSetCookieValue(raw);
+        if (cookie.name == 'token') {
+          _cachedToken = cookie.value;
+        }
+      }
+    }
+    handler.next(response);
+  }
+}
 
 Future<void> setupDioClient() async {
   dio = Dio();
@@ -18,8 +40,40 @@ Future<void> setupDioClient() async {
   }
 
   if (!kIsWeb) {
-    dio.interceptors.add(CookieManager(cookieJar));
+    dio.interceptors.add(CookieManager(_cookieJar));
+    dio.interceptors.add(SetCookieInterceptor());
   }
+}
+
+Future<void> setupCookieJar() async {
+  // save cookies into a file if not running on web browser
+  if (!kIsWeb) {
+    final docDir = await getApplicationDocumentsDirectory();
+    final dir = '${docDir.path}/ChatApp/.cookies/';
+
+    final cookiesDir = Directory(dir);
+    if (!await cookiesDir.exists()) {
+      await cookiesDir.create(recursive: true);
+    }
+
+    _cookieJar = PersistCookieJar(storage: FileStorage(dir));
+
+    // cache the token cookie value initially from disk using cookie jar
+    List<Cookie> cookies = await _cookieJar.loadForRequest(backend);
+    for (var cookie in cookies) {
+      if (cookie.name == 'token') {
+        _cachedToken = cookie.value;
+      }
+    }
+  }
+}
+
+String? getCachedToken() {
+  return _cachedToken;
+}
+
+Map<String, String> getCachedTokenCookieHeader() {
+  return _cachedToken != null ? {'Cookie': 'token=$_cachedToken;'} : {};
 }
 
 // Future<void> connectSSE() async {
