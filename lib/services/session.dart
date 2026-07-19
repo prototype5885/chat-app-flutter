@@ -25,7 +25,20 @@ class SseEvent {
   static const String userOnline = "user_online";
 }
 
+// class MiddlewareClient extends http.BaseClient {
+//   final http.Client _inner;
+
+//   MiddlewareClient(this._inner);
+
+//   @override
+//   Future<http.StreamedResponse> send(http.BaseRequest request) async {
+//     final response = await _inner.send(request);
+//     return response;
+//   }
+// }
+
 Future<void> connectSSE() async {
+  // final client = MiddlewareClient(http.Client());
   final client = http.Client();
 
   final request = http.Request('GET', Uri.parse('$backend/api/v1/session'));
