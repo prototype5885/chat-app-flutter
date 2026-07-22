@@ -5,6 +5,7 @@ import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
 import 'package:chat_app_flutter/widgets/channel.dart';
+import 'package:chat_app_flutter/widgets/member_list.dart';
 import 'package:chat_app_flutter/widgets/message_list.dart';
 import 'package:chat_app_flutter/widgets/context_menu.dart';
 import 'package:chat_app_flutter/widgets/context_menu_button.dart';
@@ -129,15 +130,23 @@ class _ChannelListState extends State<ChannelList> {
                   child: SizedBox(width: 240, child: _channelListWidget()),
                 ),
 
-          // if on mobile then don't display messages
+          // display messages on desktop
           if (!state.mobile.value && currentChannel != null)
             Expanded(
-              child: MessageList(
-                key: ValueKey(currentChannel),
-                isDemo: widget.isDemo,
-                channel: currentChannel!,
-                sessionId: widget.sessionId,
-                userId: widget.userId,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: MessageList(
+                      key: ValueKey(currentChannel),
+                      isDemo: widget.isDemo,
+                      channel: currentChannel!,
+                      sessionId: widget.sessionId,
+                      userId: widget.userId,
+                    ),
+                  ),
+                  const VerticalDivider(width: 1),
+                  const MemberList(),
+                ],
               ),
             ),
         ],
@@ -216,7 +225,7 @@ class _ChannelListState extends State<ChannelList> {
         ),
       if (owner) ctxMenuDivier(),
       CtxMenuButton(
-        label: loc.copyId,
+        label: loc.copyChannelId,
         leadingIcon: const Icon(Icons.copy_outlined, size: 18),
         onPressed: () async {
           log("Copy ID of channel ID ${c.id}");

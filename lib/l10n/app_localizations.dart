@@ -230,11 +230,41 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get delete;
 
-  /// No description provided for @copyId.
+  /// No description provided for @copyUserId.
   ///
   /// In en, this message translates to:
-  /// **'Copy ID'**
-  String get copyId;
+  /// **'Copy User ID'**
+  String get copyUserId;
+
+  /// No description provided for @copyServerId.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Server ID'**
+  String get copyServerId;
+
+  /// No description provided for @copyChannelId.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Channel ID'**
+  String get copyChannelId;
+
+  /// No description provided for @copyMessageId.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Message ID'**
+  String get copyMessageId;
+
+  /// No description provided for @block.
+  ///
+  /// In en, this message translates to:
+  /// **'Block'**
+  String get block;
+
+  /// No description provided for @unfriend.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfriend'**
+  String get unfriend;
 
   /// No description provided for @isTyping.
   ///

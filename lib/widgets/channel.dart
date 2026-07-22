@@ -28,6 +28,7 @@ class Channel extends StatelessWidget {
         },
         selected: selected,
         selectedTileColor: colorScheme.surfaceContainer,
+        selectedColor: colorScheme.onSurface,
         splashColor: Colors.transparent,
         dense: true,
         horizontalTitleGap: 8,

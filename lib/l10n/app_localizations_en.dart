@@ -87,7 +87,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete => 'Delete';
 
   @override
-  String get copyId => 'Copy ID';
+  String get copyUserId => 'Copy User ID';
+
+  @override
+  String get copyServerId => 'Copy Server ID';
+
+  @override
+  String get copyChannelId => 'Copy Channel ID';
+
+  @override
+  String get copyMessageId => 'Copy Message ID';
+
+  @override
+  String get block => 'Block';
+
+  @override
+  String get unfriend => 'Unfriend';
 
   @override
   String get isTyping => ' is typing...';

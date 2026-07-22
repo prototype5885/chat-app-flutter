@@ -5,7 +5,7 @@ import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/globals.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/widgets/channel_list.dart';
-import 'package:chat_app_flutter/widgets/member_list.dart';
+import 'package:chat_app_flutter/widgets/friend_list.dart';
 import 'package:chat_app_flutter/widgets/server_base.dart';
 import 'package:chat_app_flutter/widgets/context_menu.dart';
 import 'package:chat_app_flutter/widgets/context_menu_button.dart';
@@ -33,7 +33,7 @@ class ServerList extends StatefulWidget {
 class _ServerListState extends State<ServerList> {
   late Future<void> serverListLoaded;
   late List<ServerSchema> serverList = [];
-  int? currentServerId;
+  int? currentServerId = _directMessagesServerId;
 
   @override
   void initState() {
@@ -60,10 +60,6 @@ class _ServerListState extends State<ServerList> {
           return ServerSchema(id: index, ownerId: 0, name: letter);
         });
       });
-    }
-
-    if (serverList.isNotEmpty) {
-      selectServer(serverList.first.id);
     }
   }
 
@@ -215,8 +211,6 @@ class _ServerListState extends State<ServerList> {
               ),
             ),
             _channelFriendList(),
-            const VerticalDivider(width: 1),
-            const MemberList(),
           ],
         );
       },
@@ -229,7 +223,11 @@ class _ServerListState extends State<ServerList> {
     }
 
     if (currentServerId == _directMessagesServerId) {
-      return const Text('dm');
+      return FriendList(
+        isDemo: widget.isDemo,
+        sessionId: widget.sessionId,
+        userId: widget.userId,
+      );
     }
 
     return ChannelList(
@@ -273,7 +271,7 @@ class _ServerListState extends State<ServerList> {
         ),
       if (owner) ctxMenuDivier(),
       CtxMenuButton(
-        label: loc.copyId,
+        label: loc.copyServerId,
         leadingIcon: const Icon(Icons.copy_outlined, size: 18),
         onPressed: () async {
           log("Copy ID of Server ID ${s.id}");

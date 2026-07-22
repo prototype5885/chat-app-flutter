@@ -295,7 +295,7 @@ class _MessageListState extends State<MessageList> {
         ),
       ctxMenuDivier(),
       CtxMenuButton(
-        label: loc.copyId,
+        label: loc.copyMessageId,
         leadingIcon: const Icon(Icons.copy_outlined, size: 18),
         onPressed: () async {
           log("Copy ID of message ID ${msg.id}");

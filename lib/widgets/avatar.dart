@@ -27,7 +27,7 @@ class Avatar extends StatelessWidget {
           cursor: SystemMouseCursors.click,
           child: ClipOval(
             child: Container(
-              color: colorScheme.surfaceContainerLowest,
+              color: colorScheme.primaryContainer,
               width: size,
               height: size,
               child: ClipOval(
@@ -43,6 +43,7 @@ class Avatar extends StatelessWidget {
                         fit: BoxFit.cover,
                         width: size,
                         height: size,
+                        errorWidget: (context, url, error) => _noPicture(),
                       )
                     : _noPicture(),
               ),
@@ -54,19 +55,6 @@ class Avatar extends StatelessWidget {
   }
 
   Widget _noPicture() {
-    if (name.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return Center(
-      child: Text(
-        name[0].toUpperCase(),
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.normal,
-          fontSize: size / 3,
-        ),
-      ),
-    );
+    return const Center(child: Icon(Icons.person));
   }
 }

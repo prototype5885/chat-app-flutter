@@ -87,7 +87,22 @@ class AppLocalizationsHu extends AppLocalizations {
   String get delete => 'Törlés';
 
   @override
-  String get copyId => 'Azonosító Másolása';
+  String get copyUserId => 'Felhasználó azon. sz. másolása';
+
+  @override
+  String get copyServerId => 'Szerver azon. sz. másolása';
+
+  @override
+  String get copyChannelId => 'Csatorna azon. sz. másolása';
+
+  @override
+  String get copyMessageId => 'Üzenet azon. sz. másolása';
+
+  @override
+  String get block => 'Tíltás';
+
+  @override
+  String get unfriend => 'Barát eltávolítása';
 
   @override
   String get isTyping => ' gépel...';
