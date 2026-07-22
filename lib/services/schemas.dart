@@ -25,6 +25,9 @@ class UserSchema {
       online: json['online'],
     );
   }
+
+  static List<UserSchema> fromJsonList(List<dynamic> list) =>
+      list.map((e) => UserSchema.fromJson(e as Map<String, dynamic>)).toList();
 }
 
 class UserEditRequest {
@@ -98,6 +101,10 @@ class ServerSchema {
       roles: json['roles'],
     );
   }
+
+  static List<ServerSchema> fromJsonList(List<dynamic> list) => list
+      .map((e) => ServerSchema.fromJson(e as Map<String, dynamic>))
+      .toList();
 }
 
 class ServerCreateRequest {
@@ -134,6 +141,10 @@ class ChannelSchema {
       name: json['name'],
     );
   }
+
+  static List<ChannelSchema> fromJsonList(List<dynamic> list) => list
+      .map((e) => ChannelSchema.fromJson(e as Map<String, dynamic>))
+      .toList();
 }
 
 class ChannelCreateRequest {
@@ -185,6 +196,9 @@ class Attachment {
   factory Attachment.fromJson(Map<String, dynamic> json) {
     return Attachment(name: json['name'], file: json['file']);
   }
+
+  static List<Attachment> fromJsonList(List<dynamic> list) =>
+      list.map((e) => Attachment.fromJson(e as Map<String, dynamic>)).toList();
 }
 
 class MessageEditResponse {
@@ -231,10 +245,8 @@ class MessageResponse {
   factory MessageResponse.fromJson(Map<String, dynamic> json) {
     List<Attachment>? parsedAttachments;
 
-    if (json['attachments'] != null && json['attachments'] is List) {
-      parsedAttachments = (json['attachments'] as List)
-          .map((item) => Attachment.fromJson(item as Map<String, dynamic>))
-          .toList();
+    if (json['attachments'] is List) {
+      parsedAttachments = Attachment.fromJsonList(json['attachments']);
     }
 
     return MessageResponse(
@@ -248,6 +260,11 @@ class MessageResponse {
       picture: json['picture'],
     );
   }
+
+  static List<MessageResponse> fromJsonList(List<dynamic> list) => (list)
+      .reversed
+      .map((e) => MessageResponse.fromJson(e as Map<String, dynamic>))
+      .toList();
 }
 
 class TypingSchema {

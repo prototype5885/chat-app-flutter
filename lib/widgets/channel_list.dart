@@ -55,12 +55,7 @@ class _ChannelListState extends State<ChannelList> {
         options: Options(headers: {'Session-ID': widget.sessionId}),
       );
       setState(() {
-        _channelList = (response.data as List<dynamic>)
-            .map(
-              (jsonMap) =>
-                  ChannelSchema.fromJson(jsonMap as Map<String, dynamic>),
-            )
-            .toList();
+        _channelList = ChannelSchema.fromJsonList(response.data);
       });
     } else {
       setState(() {

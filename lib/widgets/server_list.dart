@@ -50,12 +50,7 @@ class _ServerListState extends State<ServerList> {
     if (!widget.isDemo) {
       final response = await dio.get('/api/v1/servers');
       setState(() {
-        serverList = (response.data as List<dynamic>)
-            .map(
-              (jsonMap) =>
-                  ServerSchema.fromJson(jsonMap as Map<String, dynamic>),
-            )
-            .toList();
+        serverList = ServerSchema.fromJsonList(response.data);
       });
     } else {
       setState(() {

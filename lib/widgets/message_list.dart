@@ -145,12 +145,7 @@ class _MessageListState extends State<MessageList> {
         '/api/v1/channel/${widget.channel.id}/messages',
         options: Options(headers: {'Session-ID': widget.sessionId}),
       );
-      final messages = (response.data as List<dynamic>).reversed
-          .map(
-            (jsonMap) =>
-                MessageResponse.fromJson(jsonMap as Map<String, dynamic>),
-          )
-          .toList();
+      final messages = MessageResponse.fromJsonList(response.data);
       _setMessages(messages);
     } else {
       final demoMessages = <MessageResponse>[
