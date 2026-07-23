@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
-import 'package:chat_app_flutter/services/globals.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
+import 'package:chat_app_flutter/widgets/divider_wrapper.dart';
 import 'package:chat_app_flutter/widgets/in_server.dart';
 import 'package:chat_app_flutter/widgets/friend_list.dart';
 import 'package:chat_app_flutter/widgets/server_base.dart';
@@ -140,7 +140,6 @@ class _ServerListState extends State<ServerList> {
               height: double.infinity,
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainerLowest,
-                border: Border(right: defaultBorder(colorScheme)),
               ),
               child: ScrollConfiguration(
                 behavior: ScrollConfiguration.of(
@@ -210,6 +209,7 @@ class _ServerListState extends State<ServerList> {
                 ),
               ),
             ),
+            dividerY(),
             _channelFriendList(),
           ],
         );

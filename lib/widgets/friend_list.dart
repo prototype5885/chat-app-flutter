@@ -7,6 +7,7 @@ import 'package:chat_app_flutter/services/states.dart' as state;
 import 'package:chat_app_flutter/widgets/button_list.dart';
 import 'package:chat_app_flutter/widgets/context_menu.dart';
 import 'package:chat_app_flutter/widgets/context_menu_button.dart';
+import 'package:chat_app_flutter/widgets/divider_wrapper.dart';
 import 'package:chat_app_flutter/widgets/top.dart';
 import 'package:chat_app_flutter/widgets/user_card.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +106,7 @@ class _FriendListState extends State<FriendList> {
             ],
           ),
         ),
-        const Divider(height: 1),
+        dividerX(),
         Expanded(
           child: FutureBuilder(
             future: _friendListLoaded,

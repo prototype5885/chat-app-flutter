@@ -5,6 +5,7 @@ import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
 import 'package:chat_app_flutter/widgets/button_list.dart';
+import 'package:chat_app_flutter/widgets/divider_wrapper.dart';
 import 'package:chat_app_flutter/widgets/member_list.dart';
 import 'package:chat_app_flutter/widgets/message_list.dart';
 import 'package:chat_app_flutter/widgets/context_menu.dart';
@@ -148,6 +149,7 @@ class _ChannelListState extends State<ChannelList> {
                           )
                         : const SizedBox(),
                   ),
+                  dividerX(),
                   Expanded(
                     child: Row(
                       children: [
@@ -160,7 +162,7 @@ class _ChannelListState extends State<ChannelList> {
                             userId: widget.userId,
                           ),
                         ),
-                        const VerticalDivider(width: 1),
+                        dividerY(),
                         MemberList(
                           key: ValueKey(widget.server.id),
                           isDemo: widget.isDemo,
@@ -181,6 +183,7 @@ class _ChannelListState extends State<ChannelList> {
     return Column(
       children: [
         Top(childWidget: Center(child: Text(widget.server.name))),
+        dividerX(),
         Expanded(
           child: FutureBuilder(
             future: _channelListLoaded,
