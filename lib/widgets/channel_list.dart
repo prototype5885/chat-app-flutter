@@ -4,7 +4,7 @@ import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
-import 'package:chat_app_flutter/widgets/channel.dart';
+import 'package:chat_app_flutter/widgets/button_list.dart';
 import 'package:chat_app_flutter/widgets/member_list.dart';
 import 'package:chat_app_flutter/widgets/message_list.dart';
 import 'package:chat_app_flutter/widgets/context_menu.dart';
@@ -180,12 +180,21 @@ class _ChannelListState extends State<ChannelList> {
                       return CtxMenu(
                         buttons: _contextMenuButtons(channel),
                         builder: (context, controller, child) {
-                          return Channel(
-                            key: ValueKey(channel.id),
-                            id: channel.id,
-                            name: channel.name,
+                          return ButtonList(
+                            onClicked: () => selectChannel(channel.id),
                             selected: channel.id == currentChannel?.id,
-                            onClicked: selectChannel,
+                            horizontalTitleGap: 8,
+                            leading: Transform(
+                              transform: Matrix4.skewX(-0.2),
+                              child: const Icon(Icons.tag),
+                            ),
+                            title: Text(
+                              channel.name,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           );
                         },
                       );

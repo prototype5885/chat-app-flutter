@@ -4,6 +4,7 @@ import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
+import 'package:chat_app_flutter/widgets/button_list.dart';
 import 'package:chat_app_flutter/widgets/context_menu.dart';
 import 'package:chat_app_flutter/widgets/context_menu_button.dart';
 import 'package:chat_app_flutter/widgets/top.dart';
@@ -90,6 +91,21 @@ class _FriendListState extends State<FriendList> {
     return Column(
       children: [
         const Top(childWidget: Center(child: Text('Friends'))),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            children: [
+              ButtonList(
+                onClicked: () => {
+                  // TODO
+                },
+                leading: const Icon(Icons.people),
+                titleText: 'Friends',
+              ),
+            ],
+          ),
+        ),
+        const Divider(height: 1),
         Expanded(
           child: FutureBuilder(
             future: _friendListLoaded,
