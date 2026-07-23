@@ -92,6 +92,7 @@ class _FriendListState extends State<FriendList> {
     return Column(
       children: [
         const Top(childWidget: Center(child: Text('Friends'))),
+        dividerX(),
         Padding(
           padding: const EdgeInsets.all(8),
           child: Column(
@@ -111,6 +112,10 @@ class _FriendListState extends State<FriendList> {
           child: FutureBuilder(
             future: _friendListLoaded,
             builder: (context, asyncSnapshot) {
+              if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+                return const SizedBox();
+              }
+
               if (asyncSnapshot.hasError) {
                 final error = asyncSnapshot.error;
                 return Text(error.toString());

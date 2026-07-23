@@ -188,24 +188,25 @@ class _ChannelListState extends State<ChannelList> {
         Top(childWidget: Center(child: Text(widget.server.name))),
         dividerX(),
         Expanded(
-          child: FutureBuilder(
-            future: _channelListLoaded,
-            builder: (context, asyncSnapshot) {
-              if (asyncSnapshot.hasError) {
-                final error = asyncSnapshot.error;
-                return Text(error.toString());
-              }
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: FutureBuilder(
+              future: _channelListLoaded,
+              builder: (context, asyncSnapshot) {
+                if (asyncSnapshot.hasError) {
+                  final error = asyncSnapshot.error;
+                  return Text(error.toString());
+                }
 
-              return MiddleClickScroll(
-                controller: scrollController,
-                child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(
-                    context,
-                  ).copyWith(scrollbars: false),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                return MiddleClickScroll(
+                  controller: scrollController,
+                  child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(
+                      context,
+                    ).copyWith(scrollbars: false),
                     child: ListView.builder(
                       controller: scrollController,
+                      padding: const EdgeInsets.only(bottom: 72),
                       itemCount: _channelList.length,
                       itemBuilder: (context, index) {
                         final channel = _channelList[index];
@@ -224,9 +225,9 @@ class _ChannelListState extends State<ChannelList> {
                       },
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
       ],
