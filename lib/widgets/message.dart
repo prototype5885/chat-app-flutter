@@ -25,52 +25,54 @@ class _MessageState extends State<Message> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: widget.small ? 0 : 4),
-      child: InkWell(
-        onTap: () {},
-        onHover: (value) => setState(() {
-          isHovering = value;
-        }),
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        mouseCursor: SystemMouseCursors.basic,
-        child: Stack(
-          children: [
-            // the date that shows on the left side of small format messages on hover
-            if (widget.small)
-              Visibility(visible: isHovering, child: _smallDate()),
+    return Material(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: widget.small ? 0 : 4),
+        child: InkWell(
+          onTap: () {},
+          onHover: (value) => setState(() {
+            isHovering = value;
+          }),
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          mouseCursor: SystemMouseCursors.basic,
+          child: Stack(
+            children: [
+              // the date that shows on the left side of small format messages on hover
+              if (widget.small)
+                Visibility(visible: isHovering, child: _smallDate()),
 
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: widget.small ? 0 : 4,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // either show avatar or not depending on if normal or small format message
-                  // but if there is no avatar it will take up same amount of width
-                  _avatarSlot(),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: widget.small ? 0 : 4,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // either show avatar or not depending on if normal or small format message
+                    // but if there is no avatar it will take up same amount of width
+                    _avatarSlot(),
 
-                  const SizedBox(width: 12.0),
+                    const SizedBox(width: 12.0),
 
-                  // username, date
-                  // text message
-                  // attachment
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (!widget.small) _nameWithDate(context),
-                        ..._chatMessage(),
-                      ],
+                    // username, date
+                    // text message
+                    // attachment
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (!widget.small) _nameWithDate(context),
+                          ..._chatMessage(),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

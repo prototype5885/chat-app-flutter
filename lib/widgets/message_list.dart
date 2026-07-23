@@ -12,7 +12,6 @@ import 'package:chat_app_flutter/widgets/context_menu_button.dart';
 import 'package:chat_app_flutter/widgets/message.dart';
 import 'package:chat_app_flutter/widgets/message_input.dart';
 import 'package:chat_app_flutter/widgets/users_typing.dart';
-import 'package:chat_app_flutter/widgets/top.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -166,7 +165,6 @@ class _MessageListState extends State<MessageList> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (!state.mobile.value) Top(childWidget: Text(widget.channel.name)),
         Expanded(
           child: FutureBuilder(
             future: _messageListLoaded,

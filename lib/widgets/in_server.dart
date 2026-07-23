@@ -133,19 +133,42 @@ class _ChannelListState extends State<ChannelList> {
           // display messages on desktop
           if (!state.mobile.value && currentChannel != null)
             Expanded(
-              child: Row(
+              child: Column(
                 children: [
+                  Top(
+                    childWidget: currentChannel != null
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              children: [
+                                _hashtag(),
+                                _channelTitle(currentChannel!.name),
+                              ],
+                            ),
+                          )
+                        : const SizedBox(),
+                  ),
                   Expanded(
-                    child: MessageList(
-                      key: ValueKey(currentChannel),
-                      isDemo: widget.isDemo,
-                      channel: currentChannel!,
-                      sessionId: widget.sessionId,
-                      userId: widget.userId,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: MessageList(
+                            key: ValueKey(currentChannel),
+                            isDemo: widget.isDemo,
+                            channel: currentChannel!,
+                            sessionId: widget.sessionId,
+                            userId: widget.userId,
+                          ),
+                        ),
+                        const VerticalDivider(width: 1),
+                        MemberList(
+                          key: ValueKey(widget.server.id),
+                          isDemo: widget.isDemo,
+                          serverId: widget.server.id,
+                        ),
+                      ],
                     ),
                   ),
-                  const VerticalDivider(width: 1),
-                  const MemberList(),
                 ],
               ),
             ),
@@ -184,17 +207,8 @@ class _ChannelListState extends State<ChannelList> {
                             onClicked: () => selectChannel(channel.id),
                             selected: channel.id == currentChannel?.id,
                             horizontalTitleGap: 8,
-                            leading: Transform(
-                              transform: Matrix4.skewX(-0.2),
-                              child: const Icon(Icons.tag),
-                            ),
-                            title: Text(
-                              channel.name,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                            leading: _hashtag(),
+                            title: _channelTitle(channel.name),
                           );
                         },
                       );
@@ -206,6 +220,20 @@ class _ChannelListState extends State<ChannelList> {
           ),
         ),
       ],
+    );
+  }
+
+  Transform _hashtag() {
+    return Transform(
+      transform: Matrix4.skewX(-0.2),
+      child: const Icon(Icons.tag),
+    );
+  }
+
+  Text _channelTitle(String name) {
+    return Text(
+      name,
+      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
     );
   }
 

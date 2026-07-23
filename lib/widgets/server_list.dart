@@ -4,7 +4,7 @@ import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/globals.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
-import 'package:chat_app_flutter/widgets/channel_list.dart';
+import 'package:chat_app_flutter/widgets/in_server.dart';
 import 'package:chat_app_flutter/widgets/friend_list.dart';
 import 'package:chat_app_flutter/widgets/server_base.dart';
 import 'package:chat_app_flutter/widgets/context_menu.dart';
