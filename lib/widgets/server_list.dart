@@ -6,6 +6,7 @@ import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/widgets/divider_wrapper.dart';
 import 'package:chat_app_flutter/widgets/in_server.dart';
 import 'package:chat_app_flutter/widgets/friend_list.dart';
+import 'package:chat_app_flutter/widgets/middle_click_scroll.dart';
 import 'package:chat_app_flutter/widgets/server_base.dart';
 import 'package:chat_app_flutter/widgets/context_menu.dart';
 import 'package:chat_app_flutter/widgets/context_menu_button.dart';
@@ -31,6 +32,7 @@ class ServerList extends StatefulWidget {
 }
 
 class _ServerListState extends State<ServerList> {
+  final ScrollController scrollController = ScrollController();
   late Future<void> serverListLoaded;
   late List<ServerSchema> serverList = [];
   int? currentServerId = _directMessagesServerId;
@@ -43,6 +45,7 @@ class _ServerListState extends State<ServerList> {
 
   @override
   void dispose() {
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -141,69 +144,73 @@ class _ServerListState extends State<ServerList> {
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainerLowest,
               ),
-              child: ScrollConfiguration(
-                behavior: ScrollConfiguration.of(
-                  context,
-                ).copyWith(scrollbars: false),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Column(
-                      children: [
-                        Tooltip(
-                          message: loc.directMessages,
-                          positionDelegate: serverTooltipPos,
-                          child: ServerBase(
-                            id: _directMessagesServerId,
-                            name: 'DM',
-                            selected:
-                                _directMessagesServerId == currentServerId,
-                            onClicked: selectServer,
-                            centeredChild: const Icon(
-                              Icons.mail_outline,
-                              size: 28,
+              child: MiddleClickScroll(
+                controller: scrollController,
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(
+                    context,
+                  ).copyWith(scrollbars: false),
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Column(
+                        children: [
+                          Tooltip(
+                            message: loc.directMessages,
+                            positionDelegate: serverTooltipPos,
+                            child: ServerBase(
+                              id: _directMessagesServerId,
+                              name: 'DM',
+                              selected:
+                                  _directMessagesServerId == currentServerId,
+                              onClicked: selectServer,
+                              centeredChild: const Icon(
+                                Icons.mail_outline,
+                                size: 28,
+                              ),
                             ),
                           ),
-                        ),
-                        if (serverList.isNotEmpty) _serverDivider(),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: serverList.length,
-                          itemBuilder: (context, index) {
-                            final server = serverList[index];
-                            return CtxMenu(
-                              buttons: _contextMenuButtons(server),
-                              builder: (context, controller, child) {
-                                return Tooltip(
-                                  message: server.name,
-                                  positionDelegate: serverTooltipPos,
-                                  child: ServerBase(
-                                    key: ValueKey(server.name),
-                                    id: server.id,
-                                    name: server.name,
-                                    pic: server.picture,
-                                    selected: server.id == currentServerId,
-                                    onClicked: selectServer,
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        _serverDivider(),
-                        Tooltip(
-                          message: loc.createServer,
-                          positionDelegate: serverTooltipPos,
-                          child: ServerBase(
-                            id: -1,
-                            name: '+',
-                            selected: false,
-                            onClicked: (_) async => createServerRequest(),
-                            centeredChild: const Icon(Icons.add),
+                          if (serverList.isNotEmpty) _serverDivider(),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: serverList.length,
+                            itemBuilder: (context, index) {
+                              final server = serverList[index];
+                              return CtxMenu(
+                                buttons: _contextMenuButtons(server),
+                                builder: (context, controller, child) {
+                                  return Tooltip(
+                                    message: server.name,
+                                    positionDelegate: serverTooltipPos,
+                                    child: ServerBase(
+                                      key: ValueKey(server.name),
+                                      id: server.id,
+                                      name: server.name,
+                                      pic: server.picture,
+                                      selected: server.id == currentServerId,
+                                      onClicked: selectServer,
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                           ),
-                        ),
-                      ],
+                          _serverDivider(),
+                          Tooltip(
+                            message: loc.createServer,
+                            positionDelegate: serverTooltipPos,
+                            child: ServerBase(
+                              id: -1,
+                              name: '+',
+                              selected: false,
+                              onClicked: (_) async => createServerRequest(),
+                              centeredChild: const Icon(Icons.add),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

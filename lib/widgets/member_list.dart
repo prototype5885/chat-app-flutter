@@ -1,6 +1,7 @@
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/widgets/context_menu.dart';
+import 'package:chat_app_flutter/widgets/middle_click_scroll.dart';
 import 'package:chat_app_flutter/widgets/user_card.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,7 @@ class MemberList extends StatefulWidget {
 }
 
 class _MemberListState extends State<MemberList> {
+  final ScrollController scrollController = ScrollController();
   late Future<void> _memberListLoaded;
   late List<UserSchema> _memberList = [];
 
@@ -25,6 +27,7 @@ class _MemberListState extends State<MemberList> {
 
   @override
   void dispose() {
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -57,27 +60,31 @@ class _MemberListState extends State<MemberList> {
             return Text(error.toString());
           }
 
-          return ScrollConfiguration(
-            behavior: ScrollConfiguration.of(
-              context,
-            ).copyWith(scrollbars: false),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                itemCount: _memberList.length,
-                itemBuilder: (context, index) {
-                  final friend = _memberList[index];
-                  return CtxMenu(
-                    buttons: _contextMenuButtons(friend),
-                    builder: (context, controller, child) {
-                      return UserCard(
-                        key: ValueKey(friend.id),
-                        user: friend,
-                        onClicked: (id) => {},
-                      );
-                    },
-                  );
-                },
+          return MiddleClickScroll(
+            controller: scrollController,
+            child: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(
+                context,
+              ).copyWith(scrollbars: false),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.builder(
+                  controller: scrollController,
+                  itemCount: _memberList.length,
+                  itemBuilder: (context, index) {
+                    final friend = _memberList[index];
+                    return CtxMenu(
+                      buttons: _contextMenuButtons(friend),
+                      builder: (context, controller, child) {
+                        return UserCard(
+                          key: ValueKey(friend.id),
+                          user: friend,
+                          onClicked: (id) => {},
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           );

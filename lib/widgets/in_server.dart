@@ -10,6 +10,7 @@ import 'package:chat_app_flutter/widgets/member_list.dart';
 import 'package:chat_app_flutter/widgets/message_list.dart';
 import 'package:chat_app_flutter/widgets/context_menu.dart';
 import 'package:chat_app_flutter/widgets/context_menu_button.dart';
+import 'package:chat_app_flutter/widgets/middle_click_scroll.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class ChannelList extends StatefulWidget {
 }
 
 class _ChannelListState extends State<ChannelList> {
+  final ScrollController scrollController = ScrollController();
   late Future<void> _channelListLoaded;
   late List<ChannelSchema> _channelList = [];
   ChannelSchema? currentChannel;
@@ -47,6 +49,7 @@ class _ChannelListState extends State<ChannelList> {
 
   @override
   void dispose() {
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -193,29 +196,33 @@ class _ChannelListState extends State<ChannelList> {
                 return Text(error.toString());
               }
 
-              return ScrollConfiguration(
-                behavior: ScrollConfiguration.of(
-                  context,
-                ).copyWith(scrollbars: false),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                    itemCount: _channelList.length,
-                    itemBuilder: (context, index) {
-                      final channel = _channelList[index];
-                      return CtxMenu(
-                        buttons: _contextMenuButtons(channel),
-                        builder: (context, controller, child) {
-                          return ButtonList(
-                            onClicked: () => selectChannel(channel.id),
-                            selected: channel.id == currentChannel?.id,
-                            horizontalTitleGap: 8,
-                            leading: _hashtag(),
-                            title: _channelTitle(channel.name),
-                          );
-                        },
-                      );
-                    },
+              return MiddleClickScroll(
+                controller: scrollController,
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(
+                    context,
+                  ).copyWith(scrollbars: false),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                      controller: scrollController,
+                      itemCount: _channelList.length,
+                      itemBuilder: (context, index) {
+                        final channel = _channelList[index];
+                        return CtxMenu(
+                          buttons: _contextMenuButtons(channel),
+                          builder: (context, controller, child) {
+                            return ButtonList(
+                              onClicked: () => selectChannel(channel.id),
+                              selected: channel.id == currentChannel?.id,
+                              horizontalTitleGap: 8,
+                              leading: _hashtag(),
+                              title: _channelTitle(channel.name),
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ),
               );

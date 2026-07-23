@@ -11,6 +11,7 @@ import 'package:chat_app_flutter/widgets/context_menu.dart';
 import 'package:chat_app_flutter/widgets/context_menu_button.dart';
 import 'package:chat_app_flutter/widgets/message.dart';
 import 'package:chat_app_flutter/widgets/message_input.dart';
+import 'package:chat_app_flutter/widgets/middle_click_scroll.dart';
 import 'package:chat_app_flutter/widgets/users_typing.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -101,6 +102,7 @@ class _MessageListState extends State<MessageList> {
     events.off(type: SseEvent.createMessage);
     events.off(type: SseEvent.editMessage);
     events.off(type: SseEvent.deleteMessage);
+    scrollController.dispose();
     super.dispose();
     log('Disposed message_list of channel ID ${widget.channel.id}');
   }
@@ -188,23 +190,29 @@ class _MessageListState extends State<MessageList> {
                             return Message(msg: msg, small: false);
                           },
                         )
-                      : ListView.builder(
+                      : MiddleClickScroll(
                           reverse: true,
                           controller: scrollController,
-                          padding: const EdgeInsets.only(bottom: 20),
-                          itemCount: _rows.length,
-                          itemBuilder: (context, index) {
-                            final row = _rows[_rows.length - 1 - index];
-                            return switch (row) {
-                              DateDividerRow(:final id) => _buildDayDivider(id),
-                              MessageRow(:final msg, :final small) => CtxMenu(
-                                buttons: _contextMenuButtons(msg),
-                                builder: (context, controller, child) {
-                                  return Message(msg: msg, small: small);
-                                },
-                              ),
-                            };
-                          },
+                          child: ListView.builder(
+                            reverse: true,
+                            controller: scrollController,
+                            padding: const EdgeInsets.only(bottom: 20),
+                            itemCount: _rows.length,
+                            itemBuilder: (context, index) {
+                              final row = _rows[_rows.length - 1 - index];
+                              return switch (row) {
+                                DateDividerRow(:final id) => _buildDayDivider(
+                                  id,
+                                ),
+                                MessageRow(:final msg, :final small) => CtxMenu(
+                                  buttons: _contextMenuButtons(msg),
+                                  builder: (context, controller, child) {
+                                    return Message(msg: msg, small: small);
+                                  },
+                                ),
+                              };
+                            },
+                          ),
                         ),
                   Positioned(
                     left: 0,
