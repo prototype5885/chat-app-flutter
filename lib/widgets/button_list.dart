@@ -30,7 +30,6 @@ class ButtonList extends StatelessWidget {
         selected: selected,
         selectedTileColor: colorScheme.surfaceContainer,
         selectedColor: colorScheme.onSurface,
-        splashColor: Colors.transparent,
         dense: true,
         horizontalTitleGap: horizontalTitleGap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 8),

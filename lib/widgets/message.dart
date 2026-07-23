@@ -33,8 +33,6 @@ class _MessageState extends State<Message> {
           onHover: (value) => setState(() {
             isHovering = value;
           }),
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
           mouseCursor: SystemMouseCursors.basic,
           child: Stack(
             children: [

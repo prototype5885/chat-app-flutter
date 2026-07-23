@@ -68,8 +68,6 @@ class _UserPanelState extends State<UserPanel> {
                     onHover: (value) => setState(() {
                       // isHovering = value;
                     }),
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
                     mouseCursor: SystemMouseCursors.click,
                     borderRadius: const BorderRadius.all(Radius.circular(6)),
                     child: Padding(

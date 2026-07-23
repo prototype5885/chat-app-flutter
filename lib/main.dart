@@ -28,6 +28,8 @@ class MainApp extends StatelessWidget {
         seedColor: seedColor,
         brightness: Brightness.light,
       ),
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
     );
 
     // dark theme
@@ -59,6 +61,8 @@ class MainApp extends StatelessWidget {
       useMaterial3: useMaterial3,
       colorScheme: darkColorScheme,
       tooltipTheme: darkTooltipTheme,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
     );
 
     return MaterialApp(
