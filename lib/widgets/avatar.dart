@@ -20,6 +20,8 @@ class Avatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
+    const noPicture = Center(child: Icon(Icons.person));
+
     return Center(
       child: GestureDetector(
         onTap: pressed,
@@ -43,18 +45,14 @@ class Avatar extends StatelessWidget {
                         fit: BoxFit.cover,
                         width: size,
                         height: size,
-                        errorWidget: (context, url, error) => _noPicture(),
+                        errorWidget: (context, url, error) => noPicture,
                       )
-                    : _noPicture(),
+                    : noPicture,
               ),
             ),
           ),
         ),
       ),
     );
-  }
-
-  Widget _noPicture() {
-    return const Center(child: Icon(Icons.person));
   }
 }
