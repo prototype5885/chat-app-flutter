@@ -72,15 +72,22 @@ class _MemberListState extends State<MemberList> {
                   controller: scrollController,
                   itemCount: _memberList.length,
                   itemBuilder: (context, index) {
-                    final friend = _memberList[index];
+                    final user = _memberList[index];
                     return CtxMenu(
-                      buttons: _contextMenuButtons(friend),
+                      buttons: _contextMenuButtons(user),
                       builder: (context, controller, child) {
-                        return UserCard(
-                          key: ValueKey(friend.id),
-                          user: friend,
+                        final userCard = UserCard(
+                          key: ValueKey(user.id),
+                          user: user,
                           onClicked: (id) => {},
                         );
+
+                        // only add opacity if user specially has online set to false
+                        if (user.online != null && !user.online!) {
+                          return Opacity(opacity: 0.3, child: userCard);
+                        } else {
+                          return userCard;
+                        }
                       },
                     );
                   },
