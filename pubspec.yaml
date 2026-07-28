@@ -13,8 +13,8 @@ dependencies:
     sdk: flutter
   cached_network_image: 3.4.1
   cookie_jar: 4.0.9
-  dio: 5.10.0
-  dio_cookie_manager: 3.4.0
+  dio: 5.11.0
+  dio_cookie_manager: 3.5.0
   events_emitter: 0.6.0
   http: 1.6.0
   intl: 0.20.2
