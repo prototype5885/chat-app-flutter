@@ -122,9 +122,8 @@ class _FriendListState extends State<FriendList> {
               }
 
               return ScrollConfiguration(
-                behavior: ScrollConfiguration.of(
-                  context,
-                ).copyWith(scrollbars: false),
+                behavior: ScrollConfiguration.of(context)
+                    .copyWith(scrollbars: false),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ListView.builder(
@@ -167,8 +166,14 @@ class _FriendListState extends State<FriendList> {
       CtxMenuButton(
         label: loc.unfriend,
         leadingIcon: const Icon(Icons.person_remove, size: 18),
-        onPressed: () {
-          log("Unfriend user ID ${u.id}");
+        onPressed: () async {
+          log("Requesting to unfriend userId ${u.id}");
+          try {
+            // TODO do a popup
+            await dio.delete("/api/v1/friend/${u.id}");
+          } catch (e) {
+            // TODO
+          }
         },
         type: CtxMenuButtonVariant.red,
       ),
