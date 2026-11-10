@@ -75,16 +75,16 @@ class UserOnline {
 }
 
 class ServerSchema {
-  final int id;
-  final int ownerId;
+  final int? id;
+  final int? ownerId;
   final String name;
   final String? picture;
   final String? banner;
   final String? roles;
 
   ServerSchema({
-    required this.id,
-    required this.ownerId,
+    this.id,
+    this.ownerId,
     required this.name,
     this.picture,
     this.banner,

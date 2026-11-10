@@ -1,21 +1,21 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:chat_app_flutter/features/chat/chat_main.dart';
 import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/session.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
-import 'package:chat_app_flutter/widgets/server_list.dart';
 import 'package:flutter/material.dart';
 
-class Chat extends StatefulWidget {
-  const Chat({super.key, required this.isDemo});
+class ChatEntry extends StatefulWidget {
+  const ChatEntry({super.key, required this.isDemo});
   final bool isDemo;
 
   @override
-  ChatState createState() => ChatState();
+  ChatEntryState createState() => ChatEntryState();
 }
 
-class ChatState extends State<Chat> {
+class ChatEntryState extends State<ChatEntry> {
   int userId = 0;
   int sessionId = 0;
 
@@ -95,11 +95,7 @@ class ChatState extends State<Chat> {
                   ],
                 ),
               )
-            : ServerList(
-                isDemo: widget.isDemo,
-                userId: userId,
-                sessionId: sessionId,
-              ),
+            : Chat(isDemo: widget.isDemo, userId: userId, sessionId: sessionId),
       ),
     );
   }

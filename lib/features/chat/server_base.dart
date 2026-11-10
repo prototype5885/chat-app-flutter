@@ -1,21 +1,18 @@
+import 'package:chat_app_flutter/features/shared/network_image.dart';
 import 'package:chat_app_flutter/services/globals.dart';
-import 'package:chat_app_flutter/widgets/network_image.dart';
+import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:flutter/material.dart';
 
 class ServerBase extends StatefulWidget {
-  final int id;
-  final String name;
+  final ServerSchema server;
   final Widget? centeredChild;
-  final String? pic;
   final bool selected;
-  final Function(int) onClicked;
+  final Function(ServerSchema) onClicked;
 
   const ServerBase({
     super.key,
-    required this.id,
-    required this.name,
+    required this.server,
     this.centeredChild,
-    this.pic,
     required this.selected,
     required this.onClicked,
   });
@@ -47,7 +44,7 @@ class _ServerBaseState extends State<ServerBase> {
 
     return GestureDetector(
       onTap: () {
-        widget.onClicked(widget.id);
+        widget.onClicked(widget.server);
       },
       child: MouseRegion(
         onEnter: (_) => setState(() => _isHovering = true),
@@ -57,7 +54,7 @@ class _ServerBaseState extends State<ServerBase> {
           height: 56,
           child: Stack(
             children: [
-              if (widget.id != -1) _leftIndicator(), // -1 is add button
+              if (widget.server.id != -1) _leftIndicator(), // -1 is add button
               Center(
                 child: TweenAnimationBuilder<double>(
                   duration: const Duration(milliseconds: animationLength),
@@ -78,7 +75,7 @@ class _ServerBaseState extends State<ServerBase> {
                         ),
                         child: widget.centeredChild != null
                             ? Center(child: widget.centeredChild)
-                            : widget.pic != null
+                            : widget.server.picture != null
                             ? _picture()
                             : _noPicture(false),
                       ),
@@ -97,7 +94,7 @@ class _ServerBaseState extends State<ServerBase> {
     return ImageWrapper(
       imageUrl: backend
           .replace(
-            path: "/avatars/${widget.pic}",
+            path: "/avatars/${widget.server.picture}",
             queryParameters: {'size': '96'},
           )
           .toString(),
@@ -113,7 +110,9 @@ class _ServerBaseState extends State<ServerBase> {
       child: isError
           ? const Icon(Icons.error_outline, size: 40, color: Colors.red)
           : Text(
-              widget.name.isNotEmpty ? widget.name[0].toUpperCase() : '',
+              widget.server.name.isNotEmpty
+                  ? widget.server.name[0].toUpperCase()
+                  : '',
               style: const TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: size / 2.75,

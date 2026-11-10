@@ -1,8 +1,10 @@
+import 'dart:developer';
+
+import 'package:chat_app_flutter/features/shared/middle_click_scroll.dart';
+import 'package:chat_app_flutter/features/chat/user_card.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
-import 'package:chat_app_flutter/widgets/context_menu.dart';
-import 'package:chat_app_flutter/widgets/middle_click_scroll.dart';
-import 'package:chat_app_flutter/widgets/user_card.dart';
+import 'package:chat_app_flutter/features/shared/context_menu.dart';
 import 'package:flutter/material.dart';
 
 class MemberList extends StatefulWidget {
@@ -27,6 +29,7 @@ class _MemberListState extends State<MemberList> {
 
   @override
   void dispose() {
+    log('Disposed member_list of server ID ${widget.serverId}');
     scrollController.dispose();
     super.dispose();
   }
@@ -63,9 +66,8 @@ class _MemberListState extends State<MemberList> {
           return MiddleClickScroll(
             controller: scrollController,
             child: ScrollConfiguration(
-              behavior: ScrollConfiguration.of(
-                context,
-              ).copyWith(scrollbars: false),
+              behavior: ScrollConfiguration.of(context)
+                  .copyWith(scrollbars: false),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListView.builder(

@@ -1,5 +1,5 @@
+import 'package:chat_app_flutter/features/chat/chat_entry.dart';
 import 'package:chat_app_flutter/l10n/app_localizations.dart';
-import 'package:chat_app_flutter/routes/chat.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +42,9 @@ class LoginState extends State<Login> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Chat(isDemo: false)),
+          MaterialPageRoute(
+            builder: (context) => const ChatEntry(isDemo: false),
+          ),
         );
       }
     } on DioException catch (e) {

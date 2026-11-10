@@ -1,15 +1,15 @@
 import 'dart:developer';
 
+import 'package:chat_app_flutter/features/chat/top.dart';
+import 'package:chat_app_flutter/features/chat/user_card.dart';
 import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
-import 'package:chat_app_flutter/widgets/button_list.dart';
-import 'package:chat_app_flutter/widgets/context_menu.dart';
-import 'package:chat_app_flutter/widgets/context_menu_button.dart';
-import 'package:chat_app_flutter/widgets/divider_wrapper.dart';
-import 'package:chat_app_flutter/widgets/top.dart';
-import 'package:chat_app_flutter/widgets/user_card.dart';
+import 'package:chat_app_flutter/features/shared/button_list.dart';
+import 'package:chat_app_flutter/features/shared/context_menu.dart';
+import 'package:chat_app_flutter/features/shared/context_menu_button.dart';
+import 'package:chat_app_flutter/features/shared/divider_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -50,7 +50,7 @@ class _FriendListState extends State<FriendList> {
         setState(() {
           _friendList = UserSchema.fromJsonList(response.data);
         });
-      } on Exception catch (e) {
+      } on Exception catch (_) {
         // TODO
       }
     } else {

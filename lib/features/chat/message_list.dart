@@ -1,18 +1,18 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:chat_app_flutter/features/chat/message.dart';
+import 'package:chat_app_flutter/features/chat/message_input.dart';
+import 'package:chat_app_flutter/features/chat/users_typing.dart';
+import 'package:chat_app_flutter/features/shared/middle_click_scroll.dart';
 import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/date.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/session.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
-import 'package:chat_app_flutter/widgets/context_menu.dart';
-import 'package:chat_app_flutter/widgets/context_menu_button.dart';
-import 'package:chat_app_flutter/widgets/message.dart';
-import 'package:chat_app_flutter/widgets/message_input.dart';
-import 'package:chat_app_flutter/widgets/middle_click_scroll.dart';
-import 'package:chat_app_flutter/widgets/users_typing.dart';
+import 'package:chat_app_flutter/features/shared/context_menu.dart';
+import 'package:chat_app_flutter/features/shared/context_menu_button.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -165,71 +165,74 @@ class _MessageListState extends State<MessageList> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: FutureBuilder(
-            future: _messageListLoaded,
-            builder: (context, asyncSnapshot) {
-              if (asyncSnapshot.hasError) {
-                final error = asyncSnapshot.error;
-                return Text(error.toString());
-              }
+    return Expanded(
+      child: Column(
+        children: [
+          Expanded(
+            child: FutureBuilder(
+              future: _messageListLoaded,
+              builder: (context, asyncSnapshot) {
+                if (asyncSnapshot.hasError) {
+                  final error = asyncSnapshot.error;
+                  return Text(error.toString());
+                }
 
-              return Stack(
-                children: [
-                  state.simpleMessages.value
-                      ? ListView.builder(
-                          reverse: true,
-                          controller: scrollController,
-                          padding: const EdgeInsets.only(bottom: 20),
-                          itemCount: _messageList.length,
-                          itemBuilder: (context, index) {
-                            final msg =
-                                _messageList[_messageList.length - 1 - index];
-                            return Message(msg: msg, small: false);
-                          },
-                        )
-                      : MiddleClickScroll(
-                          reverse: true,
-                          controller: scrollController,
-                          child: ListView.builder(
+                return Stack(
+                  children: [
+                    state.simpleMessages.value
+                        ? ListView.builder(
                             reverse: true,
                             controller: scrollController,
                             padding: const EdgeInsets.only(bottom: 20),
-                            itemCount: _rows.length,
+                            itemCount: _messageList.length,
                             itemBuilder: (context, index) {
-                              final row = _rows[_rows.length - 1 - index];
-                              return switch (row) {
-                                DateDividerRow(:final id) => _buildDayDivider(
-                                  id,
-                                ),
-                                MessageRow(:final msg, :final small) => CtxMenu(
-                                  buttons: _contextMenuButtons(msg),
-                                  builder: (context, controller, child) {
-                                    return Message(msg: msg, small: small);
-                                  },
-                                ),
-                              };
+                              final msg =
+                                  _messageList[_messageList.length - 1 - index];
+                              return Message(msg: msg, small: false);
                             },
+                          )
+                        : MiddleClickScroll(
+                            reverse: true,
+                            controller: scrollController,
+                            child: ListView.builder(
+                              reverse: true,
+                              controller: scrollController,
+                              padding: const EdgeInsets.only(bottom: 20),
+                              itemCount: _rows.length,
+                              itemBuilder: (context, index) {
+                                final row = _rows[_rows.length - 1 - index];
+                                return switch (row) {
+                                  DateDividerRow(:final id) => _buildDayDivider(
+                                    id,
+                                  ),
+                                  MessageRow(:final msg, :final small) =>
+                                    CtxMenu(
+                                      buttons: _contextMenuButtons(msg),
+                                      builder: (context, controller, child) {
+                                        return Message(msg: msg, small: small);
+                                      },
+                                    ),
+                                };
+                              },
+                            ),
                           ),
-                        ),
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: UsersTyping(
-                      userId: widget.userId,
-                      isAtBottom: false,
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: UsersTyping(
+                        userId: widget.userId,
+                        isAtBottom: false,
+                      ),
                     ),
-                  ),
-                ],
-              );
-            },
+                  ],
+                );
+              },
+            ),
           ),
-        ),
-        MessageInput(channel: widget.channel),
-      ],
+          MessageInput(channel: widget.channel),
+        ],
+      ),
     );
   }
 

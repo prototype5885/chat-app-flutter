@@ -1,7 +1,7 @@
+import 'package:chat_app_flutter/features/chat/chat_entry.dart';
 import 'package:chat_app_flutter/l10n/app_localizations.dart';
-import 'package:chat_app_flutter/routes/chat.dart';
-import 'package:chat_app_flutter/routes/login.dart';
-import 'package:chat_app_flutter/routes/registration.dart';
+import 'package:chat_app_flutter/features/login/login.dart';
+import 'package:chat_app_flutter/features/registration/registration.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
       // display chat if everything was correct
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Chat(isDemo: false)),
+        MaterialPageRoute(builder: (context) => const ChatEntry(isDemo: false)),
       );
     }
   }
@@ -83,7 +83,9 @@ class _HomeState extends State<Home> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const Chat(isDemo: true)),
+              MaterialPageRoute(
+                builder: (context) => const ChatEntry(isDemo: true),
+              ),
             );
           },
           label: Text(loc.demo),

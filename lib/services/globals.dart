@@ -9,6 +9,8 @@ Uri get backend {
 
 const cors = true;
 
+const int directMessagesServerId = 100;
+
 Color getHoverColor(bool dark) {
   if (dark) {
     return const Color.fromRGBO(255, 255, 255, 0.05);
