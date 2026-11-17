@@ -1,6 +1,6 @@
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:video_player/video_player.dart';
 // ignore: unused_import
 import 'package:video_player_win/video_player_win.dart';

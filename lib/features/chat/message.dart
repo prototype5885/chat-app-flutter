@@ -5,7 +5,7 @@ import 'package:chat_app_flutter/services/date.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/features/shared/clickable_text.dart';
 import 'package:chat_app_flutter/features/chat/avatar.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class Message extends StatefulWidget {
   const Message({super.key, required this.msg, required this.small});

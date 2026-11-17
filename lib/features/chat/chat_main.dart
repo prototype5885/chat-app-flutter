@@ -9,7 +9,7 @@ import 'package:chat_app_flutter/services/states.dart' as state;
 import 'package:chat_app_flutter/features/chat/server_list.dart';
 import 'package:chat_app_flutter/features/chat/user_panel.dart';
 import 'package:chat_app_flutter/features/shared/divider_wrapper.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class Chat extends StatefulWidget {
   const Chat({

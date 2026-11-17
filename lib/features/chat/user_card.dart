@@ -1,7 +1,7 @@
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/features/chat/avatar.dart';
 import 'package:chat_app_flutter/features/shared/button_list.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class UserCard extends StatelessWidget {
   const UserCard({super.key, required this.user, required this.onClicked});

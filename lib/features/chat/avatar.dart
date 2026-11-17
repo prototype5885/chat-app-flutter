@@ -1,6 +1,6 @@
 import 'package:chat_app_flutter/features/shared/network_image.dart';
 import 'package:chat_app_flutter/services/globals.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class Avatar extends StatelessWidget {
   final double size;

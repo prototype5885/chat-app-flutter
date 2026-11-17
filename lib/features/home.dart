@@ -4,7 +4,7 @@ import 'package:chat_app_flutter/features/login/login.dart';
 import 'package:chat_app_flutter/features/registration/registration.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

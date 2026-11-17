@@ -5,7 +5,7 @@ import 'package:chat_app_flutter/features/chat/user_card.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/features/shared/context_menu.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MemberList extends StatefulWidget {
   const MemberList({super.key, required this.isDemo, required this.serverId});

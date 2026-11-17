@@ -10,7 +10,7 @@ import 'package:chat_app_flutter/features/shared/context_menu.dart';
 import 'package:chat_app_flutter/features/shared/context_menu_button.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ServerList extends StatefulWidget {
   const ServerList({

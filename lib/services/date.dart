@@ -1,5 +1,5 @@
 import 'package:chat_app_flutter/l10n/app_localizations.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 int extractTimestamp(int id) {
@@ -9,9 +9,8 @@ int extractTimestamp(int id) {
 }
 
 String editedTimestamp(int timestamp) {
-  final dateTime = DateTime.fromMillisecondsSinceEpoch(
-    timestamp * 1000,
-  ).toLocal();
+  final dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000)
+      .toLocal();
   return DateFormat.yMd().add_jm().format(dateTime);
 }
 

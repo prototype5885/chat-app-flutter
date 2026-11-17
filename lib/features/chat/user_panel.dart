@@ -1,7 +1,7 @@
 import 'package:chat_app_flutter/features/chat/user_card.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class UserPanel extends StatefulWidget {
   const UserPanel({super.key, required this.isDemo});

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ClickableText extends StatefulWidget {
   const ClickableText({super.key, required this.text, required this.onClicked});

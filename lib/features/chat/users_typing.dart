@@ -2,7 +2,7 @@ import 'package:chat_app_flutter/features/chat/typing_dots.dart';
 import 'package:chat_app_flutter/l10n/app_localizations.dart';
 import 'package:chat_app_flutter/services/session.dart';
 import 'package:chat_app_flutter/services/states.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class UsersTyping extends StatefulWidget {
   const UsersTyping({
