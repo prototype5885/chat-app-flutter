@@ -1,8 +1,9 @@
 import 'dart:developer';
 
+import 'package:chat_app_flutter/features/chat/data_sources/servers.dart'
+    as api;
 import 'package:chat_app_flutter/features/shared/middle_click_scroll.dart';
 import 'package:chat_app_flutter/l10n/app_localizations.dart';
-import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/globals.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/features/chat/server_base.dart';
@@ -39,7 +40,7 @@ class _ServerListState extends State<ServerList> {
 
   @override
   void initState() {
-    serverListLoaded = fetchServers();
+    serverListLoaded = _loadData();
     super.initState();
   }
 
@@ -49,21 +50,11 @@ class _ServerListState extends State<ServerList> {
     super.dispose();
   }
 
-  Future<void> fetchServers() async {
-    if (!widget.isDemo) {
-      final response = await dio.get('/api/v1/servers');
-      setState(() {
-        serverList = ServerSchema.fromJsonList(response.data);
-      });
-    } else {
-      setState(() {
-        final alphabet = List.generate(26, (i) => String.fromCharCode(65 + i));
-        serverList = List.generate(26, (index) {
-          final letter = alphabet[index % 26];
-          return ServerSchema(id: index, ownerId: 0, name: letter);
-        });
-      });
-    }
+  Future<void> _loadData() async {
+    final servers = await api.fetchServers(widget.isDemo);
+    // TODO handle error
+    if (!mounted) return;
+    setState(() => serverList = servers);
     dmSelected();
   }
 
@@ -103,24 +94,6 @@ class _ServerListState extends State<ServerList> {
         });
         return;
       }
-    }
-  }
-
-  Future<void> createServerRequest() async {
-    log('Requesting to create server');
-    try {
-      final result = await dio.post(
-        '/api/v1/server',
-        data: {'name': 'Server'},
-        options: Options(contentType: Headers.jsonContentType),
-      );
-
-      final server = ServerSchema.fromJson(result.data);
-      setState(() {
-        serverList.add(server);
-      });
-    } on Exception catch (e) {
-      // TODO
     }
   }
 
@@ -215,14 +188,23 @@ class _ServerListState extends State<ServerList> {
 
                           _serverDivider(),
 
-                          // add server button
+                          // create server button
                           Tooltip(
                             message: loc.createServer,
                             positionDelegate: serverTooltipPos,
                             child: ServerBase(
                               server: ServerSchema(name: '+'),
                               selected: false,
-                              onClicked: (_) async => createServerRequest(),
+                              onClicked: (_) async {
+                                final server = await api.createServerRequest(
+                                  widget.isDemo,
+                                  'Server',
+                                );
+                                // TODO handle error
+                                setState(() {
+                                  serverList.add(server);
+                                });
+                              },
                               centeredChild: const Icon(Icons.add),
                             ),
                           ),

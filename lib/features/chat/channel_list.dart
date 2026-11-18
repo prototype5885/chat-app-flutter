@@ -5,16 +5,16 @@ import 'package:chat_app_flutter/features/chat/top.dart';
 import 'package:chat_app_flutter/features/icons/hashtag.dart';
 import 'package:chat_app_flutter/features/shared/middle_click_scroll.dart';
 import 'package:chat_app_flutter/l10n/app_localizations.dart';
-import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
 import 'package:chat_app_flutter/features/shared/button_list.dart';
 import 'package:chat_app_flutter/features/shared/divider_wrapper.dart';
 import 'package:chat_app_flutter/features/shared/context_menu.dart';
 import 'package:chat_app_flutter/features/shared/context_menu_button.dart';
-import 'package:dio/dio.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:chat_app_flutter/features/chat/data_sources/channels.dart'
+    as api;
 
 class ChannelList extends StatefulWidget {
   const ChannelList({
@@ -44,7 +44,7 @@ class _ChannelListState extends State<ChannelList> {
 
   @override
   void initState() {
-    _channelListLoaded = fetchChannels();
+    _channelListLoaded = _loadData();
     super.initState();
   }
 
@@ -54,28 +54,15 @@ class _ChannelListState extends State<ChannelList> {
     super.dispose();
   }
 
-  Future<void> fetchChannels() async {
-    if (!widget.isDemo) {
-      final response = await dio.get(
-        '/api/v1/server/${widget.server.id}/channels',
-        options: Options(headers: {'Session-ID': widget.sessionId}),
-      );
-      setState(() {
-        _channelList = ChannelSchema.fromJsonList(response.data);
-      });
-    } else {
-      setState(() {
-        for (int i = 0; i < 5; i++) {
-          _channelList.add(
-            ChannelSchema(
-              id: i,
-              serverId: widget.server.id!,
-              name: 'Channel ${i + 1}',
-            ),
-          );
-        }
-      });
-    }
+  Future<void> _loadData() async {
+    final channels = await api.fetchChannels(
+      widget.isDemo,
+      widget.server.id!,
+      widget.sessionId,
+    );
+    // TODO handle error
+    if (!mounted) return;
+    setState(() => _channelList = channels);
 
     if (!state.mobile.value && _channelList.isNotEmpty) {
       selectChannel(_channelList.first);

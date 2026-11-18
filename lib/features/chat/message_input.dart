@@ -1,13 +1,15 @@
 import 'package:chat_app_flutter/l10n/app_localizations.dart';
-import 'package:chat_app_flutter/services/dio_client.dart';
+
 import 'package:chat_app_flutter/services/schemas.dart';
 import 'package:chat_app_flutter/services/states.dart' as state;
-import 'package:dio/dio.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:chat_app_flutter/features/chat/data_sources/messages.dart'
+    as api;
 
 class MessageInput extends StatefulWidget {
-  const MessageInput({super.key, required this.channel});
+  const MessageInput({super.key, required this.isDemo, required this.channel});
+  final bool isDemo;
   final ChannelSchema channel;
 
   @override
@@ -45,24 +47,12 @@ class _MessageInputState extends State<MessageInput> {
       return;
     }
 
-    // if (widget.channel!.id) {
-    // log("Channel ID is empty, cannot send message");
-    // return;
-    // }
+    await api.sendMessage(widget.isDemo, widget.channel.id, message);
+    // TODO handle error
 
-    try {
-      await dio.post(
-        '/api/v1/channel/${widget.channel.id}/message',
-        data: {"message": message},
-        options: Options(contentType: Headers.formUrlEncodedContentType),
-      );
-
-      setState(() {
-        controller.clear();
-      });
-    } on Exception catch (e) {
-      // TODO
-    }
+    setState(() {
+      controller.clear();
+    });
   }
 
   Future<void> typingValueChanged(String text) async {
@@ -76,11 +66,8 @@ class _MessageInputState extends State<MessageInput> {
     }
 
     if (value.isNotEmpty) {
-      try {
-        await dio.post('/api/v1/channel/${widget.channel.id}/typing/$value');
-      } on Exception catch (e) {
-        // TODO
-      }
+      await api.typing(widget.isDemo, widget.channel.id, value);
+      // TODO handle error
     }
   }
 
