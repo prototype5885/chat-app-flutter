@@ -54,6 +54,7 @@ class _ChatState extends State<Chat> {
                   sessionId: widget.sessionId,
                   onDmSelected: () {
                     setState(() {
+                      _mainArea = null;
                       _channelOrDm = const Text('dm');
                     });
                   },
@@ -67,6 +68,7 @@ class _ChatState extends State<Chat> {
                         userId: widget.userId,
                         onChannelSelect: (channel) {
                           setState(() {
+                            _mainArea = null;
                             _mainArea = _chatArea(server, channel);
                           });
                         },
