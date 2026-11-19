@@ -1,3 +1,4 @@
+import 'package:chat_app_flutter/features/chat/title_bar.dart';
 import 'package:chat_app_flutter/features/home.dart';
 import 'package:chat_app_flutter/services/dio_client.dart';
 import 'package:material_ui/material_ui.dart';
@@ -74,6 +75,14 @@ class MainApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: const Locale('en'),
+      builder: (context, child) {
+        return Column(
+          children: [
+            const Titlebar(),
+            Expanded(child: child!),
+          ],
+        );
+      },
       home: const Home(),
     );
   }
