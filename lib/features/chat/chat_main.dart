@@ -1,5 +1,4 @@
 import 'package:chat_app_flutter/features/chat/channel_list.dart';
-import 'package:chat_app_flutter/features/chat/channel_title.dart';
 import 'package:chat_app_flutter/features/chat/member_list.dart';
 import 'package:chat_app_flutter/features/chat/message_list.dart';
 import 'package:chat_app_flutter/features/chat/top.dart';
@@ -155,7 +154,13 @@ class _ChatState extends State<Chat> {
               child: Row(
                 children: [
                   const Hashtag(),
-                  ChannelTitle(name: channel.name),
+                  Text(
+                    channel.name,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:chat_app_flutter/features/chat/channel_title.dart';
 import 'package:chat_app_flutter/features/chat/top.dart';
 import 'package:chat_app_flutter/features/icons/hashtag.dart';
 import 'package:chat_app_flutter/features/shared/middle_click_scroll.dart';
@@ -125,15 +124,25 @@ class _ChannelListState extends State<ChannelList> {
                       itemCount: _channelList.length,
                       itemBuilder: (context, index) {
                         final channel = _channelList[index];
+                        final selected = channel.id == currentChannel?.id;
+                        final color = selected ? Colors.white : Colors.grey;
+
                         return CtxMenu(
                           buttons: _contextMenuButtons(channel),
                           builder: (context, controller, child) {
                             return ButtonList(
                               onClicked: () => selectChannel(channel),
-                              selected: channel.id == currentChannel?.id,
+                              selected: selected,
                               horizontalTitleGap: 8,
-                              leading: const Hashtag(),
-                              title: ChannelTitle(name: channel.name),
+                              leading: Hashtag(color: color),
+                              title: Text(
+                                channel.name,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: color,
+                                ),
+                              ),
                             );
                           },
                         );
